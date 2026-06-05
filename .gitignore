@@ -1,0 +1,21 @@
+# Runtime data (SQLite opportunity DB, traffic snapshots, scratch)
+data/
+reports/
+
+# Private operator profile — NEVER commit (contains your own assets/projects)
+config/profile.local.json
+
+# Generated static site
+site/
+
+# Dependencies
+node_modules/
+
+# OMC / planner runtime
+.omc/
+
+# Logs
+*.log
+
+# macOS
+.DS_Store

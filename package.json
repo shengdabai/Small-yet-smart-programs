@@ -1,0 +1,30 @@
+{
+  "name": "small-yet-smart-programs",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Scan public signal sources for small, profitable, replicable software opportunities and score them on a 7-dimension rubric.",
+  "scripts": {
+    "init": "bun run scripts/db.ts --init",
+    "scan:daily": "bun run scripts/pipeline.ts --mode daily",
+    "scan:monthly": "bun run scripts/pipeline.ts --mode monthly",
+    "scan:hn": "bun run scripts/sources/hackernews.ts",
+    "scan:reddit": "bun run scripts/sources/reddit.ts",
+    "scan:ph": "bun run scripts/sources/producthunt.ts",
+    "scan:ih": "bun run scripts/sources/indiehackers.ts",
+    "scan:toolify": "bun run scripts/sources/toolify.ts",
+    "scan:trends": "bun run scripts/sources/google-trends.ts",
+    "scan:sw": "bun run scripts/sources/similarweb.ts",
+    "report:weekly": "bun run scripts/report.ts --mode weekly",
+    "report:monthly": "bun run scripts/report.ts --mode monthly",
+    "report:html": "bun run scripts/report-html-v2.ts",
+    "notify": "bun run scripts/notify.ts",
+    "gbrain-sync": "bun run scripts/gbrain-sync.ts",
+    "stats": "bun run scripts/db.ts --stats"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "@types/bun": "latest",
+    "typescript": "^5.6.0"
+  }
+}

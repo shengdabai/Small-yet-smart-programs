@@ -1,0 +1,14 @@
+{
+  "_comment": "Copy this to profile.local.json (gitignored) and fill in your real operator profile. The D6 (asset-fit) scoring and the decision matrix read from it. No PII should ever live in this example file.",
+  "owner": "the operator",
+  "assets": [
+    "Asset 1 — e.g. a native language + an owned audience channel",
+    "Asset 2 — e.g. a specific tech stack you ship fast in",
+    "Asset 3 — e.g. a content production pipeline",
+    "Asset 4 — e.g. distribution channels you already run"
+  ],
+  "currentProjects": [
+    { "name": "Project A", "stage": "in progress", "est": 22, "fit": "your core domain" },
+    { "name": "Project B", "stage": "maintaining", "est": 20, "fit": "a secondary domain" }
+  ]
+}

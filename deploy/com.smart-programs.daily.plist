@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!--
+  本机 launchd 模板:每天 12:30 跑 daily-scan.sh(13:15 backstop 重试)。
+  安装前先把 __USER__ / __FEISHU_OPEN_ID__ 替换成真实值,见 docs/AUTOMATION.md。
+-->
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>com.smart-programs.daily</string>
+    <key>ProgramArguments</key>
+    <array>
+        <string>/bin/bash</string>
+        <string>/Users/__USER__/.local/share/smart-programs/daily-scan.sh</string>
+    </array>
+    <key>WorkingDirectory</key>
+    <string>/Users/__USER__/.local/share/smart-programs</string>
+    <key>StartCalendarInterval</key>
+    <array>
+        <dict><key>Hour</key><integer>12</integer><key>Minute</key><integer>30</integer></dict>
+        <dict><key>Hour</key><integer>13</integer><key>Minute</key><integer>15</integer></dict>
+    </array>
+    <key>EnvironmentVariables</key>
+    <dict>
+        <key>PATH</key>
+        <string>/Users/__USER__/.bun/bin:/usr/local/bin:/usr/bin:/bin:/opt/homebrew/bin</string>
+        <key>SMART_PROGRAMS_DIR</key>
+        <string>/Users/__USER__/.local/share/smart-programs</string>
+        <key>SITE_URL</key>
+        <string>http://111.229.77.103:8082</string>
+        <key>SHANGHAI_DEST</key>
+        <string>shanghai:/var/www/smart-programs</string>
+        <key>FEISHU_TARGET</key>
+        <string>__FEISHU_OPEN_ID__</string>
+    </dict>
+    <key>StandardOutPath</key>
+    <string>/Users/__USER__/.claude/logs/smart-programs-launchd.log</string>
+    <key>StandardErrorPath</key>
+    <string>/Users/__USER__/.claude/logs/smart-programs-launchd.err</string>
+</dict>
+</plist>

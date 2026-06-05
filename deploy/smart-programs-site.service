@@ -1,0 +1,19 @@
+# 上海云 systemd unit:serve 静态站于 8082(裸 IP + 非 80 端口 → 无需 ICP 备案)
+# 安装:
+#   sudo cp smart-programs-site.service /etc/systemd/system/
+#   sudo systemctl daemon-reload && sudo systemctl enable --now smart-programs-site
+# 注意:需在腾讯云控制台手动放行 8082/TCP 入站(8080 已被其它站占用)。
+[Unit]
+Description=Small Yet Smart Programs static site
+After=network.target
+
+[Service]
+Type=simple
+WorkingDirectory=/var/www/smart-programs
+ExecStart=/usr/bin/python3 -m http.server 8082
+Restart=always
+RestartSec=3
+User=ubuntu
+
+[Install]
+WantedBy=multi-user.target
