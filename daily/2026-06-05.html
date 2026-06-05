@@ -30,7 +30,9 @@ h2{font-size:1.15rem;margin:32px 0 14px;padding-left:10px;border-left:3px solid 
 .badge.t3{background:rgba(176,108,212,.2);color:var(--p3)} .badge.t2{background:rgba(212,167,44,.2);color:var(--gold)} .badge.sig{color:var(--mut)}
 .src{color:var(--mut);font-size:.72rem;font-family:ui-monospace,monospace;margin-bottom:8px}
 .desc{color:#c4cad6;font-size:.9rem;margin-bottom:10px}
-.pills{display:flex;flex-wrap:wrap;gap:6px}
+.pills{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
+.src-link{display:inline-block;font-size:.82rem;color:var(--acc);text-decoration:none;border:1px solid var(--acc);border-radius:6px;padding:5px 12px;transition:.15s}
+.src-link:hover{background:var(--acc);color:#fff}
 .pill{font-size:.7rem;color:var(--mut);border:1px solid var(--line);padding:2px 8px;border-radius:20px}
 .muted{color:var(--mut);font-style:italic;padding:8px 0}
 .disclaimer{margin-top:40px;padding:16px 20px;background:rgba(212,167,44,.08);border:1px solid rgba(212,167,44,.3);border-radius:10px;color:var(--mut);font-size:.86rem}
@@ -69,6 +71,7 @@ body.lang-en .zh{display:none} body.lang-en .en{display:inline}
     <div class="src">hackernews</div>
     <p class="desc"><span class="zh">命中你的 Claude Code / MCP 生态资产,值得观察(⭐⭐)。</span><span class="en">Hey HN! We (Stephan and Thomas) recently open-sourced Semble. We kept running into the same problem while using Claude Code on large codebases: when the agent can&amp;#x27;t find something directly, it fa…</span></p>
     <div class="pills"><span class="pill">6-12月</span></div>
+    <a class="src-link" href="https://github.com/MinishLab/semble" target="_blank" rel="noopener">🔗 <span class="zh">查看原项目</span><span class="en">View source</span> ↗</a>
   </article></div>
 
 <h2><span class="zh">最新产品信号</span><span class="en">Fresh signals today</span></h2>
@@ -79,6 +82,7 @@ body.lang-en .zh{display:none} body.lang-en .en{display:inline}
     <div class="src">hackernews</div>
     <p class="desc"><span class="zh">把 Gemini 的工具调用能力蒸馏进 26M 参数小模型,消费级设备上预填充 6000 tok/s、解码 1200 tok/s,开源。</span><span class="en">Hey HN, Henry here from Cactus. We open-sourced Needle, a 26M parameter function-calling (tool use) model. It runs at 6000 tok&amp;#x2F;s prefill and 1200 tok&amp;#x2F;s decode on consumer devices.We were alw…</span></p>
     <div class="pills"></div>
+    <a class="src-link" href="https://github.com/cactus-compute/needle" target="_blank" rel="noopener">🔗 <span class="zh">查看原项目</span><span class="en">View source</span> ↗</a>
   </article><article class="card">
     <div class="card-head">
       <a class="name" href="https://github.com/zakirullin/files.md" target="_blank" rel="noopener"><span class="zh">Files.md:Obsidian 的开源替代</span><span class="en">Files.md – Open-source alternative to Obsidian</span></a><span class="badge sig"><span class="zh">热度 730</span><span class="en">signal 730</span></span>
@@ -86,6 +90,7 @@ body.lang-en .zh{display:none} body.lang-en .en{display:inline}
     <div class="src">hackernews</div>
     <p class="desc"><span class="zh">纯本地 Markdown 笔记工具,定位为 Obsidian 的开源平替。</span><span class="en"></span></p>
     <div class="pills"></div>
+    <a class="src-link" href="https://github.com/zakirullin/files.md" target="_blank" rel="noopener">🔗 <span class="zh">查看原项目</span><span class="en">View source</span> ↗</a>
   </article><article class="card">
     <div class="card-head">
       <a class="name" href="https://github.com/antoinezambelli/forge" target="_blank" rel="noopener"><span class="zh">Forge:LLM 工具调用可靠性护栏</span><span class="en">Forge – Guardrails take an 8B model from 53% to 99% on agentic tasks</span></a><span class="badge sig"><span class="zh">热度 687</span><span class="en">signal 687</span></span>
@@ -93,6 +98,7 @@ body.lang-en .zh{display:none} body.lang-en .en{display:inline}
     <div class="src">hackernews</div>
     <p class="desc"><span class="zh">给自托管 LLM 加一层可靠性护栏(重试提示、步骤约束),让 8B 模型在 agentic 任务上从 53% 提到 99%。</span><span class="en">Hi HN, I&amp;#x27;m Antoine Zambelli, AI Director at Texas Instruments.I built Forge, an open-source reliability layer for self-hosted LLM tool-calling.What it does:- Adds domain-and-tool-agnostic guardra…</span></p>
     <div class="pills"></div>
+    <a class="src-link" href="https://github.com/antoinezambelli/forge" target="_blank" rel="noopener">🔗 <span class="zh">查看原项目</span><span class="en">View source</span> ↗</a>
   </article><article class="card">
     <div class="card-head">
       <a class="name" href="https://audiomass.co/?multitrack=1" target="_blank" rel="noopener"><span class="zh">Audiomass:网页多轨音频编辑器</span><span class="en">Audiomass – a free, open-source multitrack audio editor for the web</span></a><span class="badge sig"><span class="zh">热度 553</span><span class="en">signal 553</span></span>
@@ -100,6 +106,7 @@ body.lang-en .zh{display:none} body.lang-en .en{display:inline}
     <div class="src">hackernews</div>
     <p class="desc"><span class="zh">免费、开源的浏览器端多轨音频编辑器。</span><span class="en"></span></p>
     <div class="pills"></div>
+    <a class="src-link" href="https://audiomass.co/?multitrack=1" target="_blank" rel="noopener">🔗 <span class="zh">查看原项目</span><span class="en">View source</span> ↗</a>
   </article><article class="card">
     <div class="card-head">
       <a class="name" href="https://superspl.at/scene/84df8849" target="_blank" rel="noopener"><span class="zh">草莓的高斯泼溅 3D</span><span class="en">Gaussian Splat of a Strawberry</span></a><span class="badge sig"><span class="zh">热度 530</span><span class="en">signal 530</span></span>
@@ -107,6 +114,7 @@ body.lang-en .zh{display:none} body.lang-en .en{display:inline}
     <div class="src">hackernews</div>
     <p class="desc"><span class="zh">一颗草莓的高斯泼溅(Gaussian Splat)3D 场景 demo。</span><span class="en">The Setup:https:&amp;#x2F;&amp;#x2F;i.imgur.com&amp;#x2F;o0hgybh.jpeghttps:&amp;#x2F;&amp;#x2F;i.imgur.com&amp;#x2F;mcNiomp.jpeghttps:&amp;#x2F;&amp;#x2F;i.imgur.com&amp;#x2F;vIjw6pc.jpeghttps:&amp;#x2F;&amp;#x2F;i.imgur.com&amp;#x2F;nzOwmSC.jpeg</span></p>
     <div class="pills"></div>
+    <a class="src-link" href="https://superspl.at/scene/84df8849" target="_blank" rel="noopener">🔗 <span class="zh">查看原项目</span><span class="en">View source</span> ↗</a>
   </article><article class="card">
     <div class="card-head">
       <a class="name" href="https://github.com/MinishLab/semble" target="_blank" rel="noopener"><span class="zh">Semble:给 AI agent 的代码搜索,省 98% token</span><span class="en">Semble – Code search for agents that uses 98% fewer tokens than grep</span></a><span class="badge sig"><span class="zh">热度 445</span><span class="en">signal 445</span></span>
@@ -114,6 +122,7 @@ body.lang-en .zh{display:none} body.lang-en .en{display:inline}
     <div class="src">hackernews</div>
     <p class="desc"><span class="zh">为编码 agent 设计的代码搜索,比 grep 省 98% token;针对 Claude Code 在大型代码库找不到东西时回退 grep 读全文的痛点。</span><span class="en">Hey HN! We (Stephan and Thomas) recently open-sourced Semble. We kept running into the same problem while using Claude Code on large codebases: when the agent can&amp;#x27;t find something directly, it fa…</span></p>
     <div class="pills"></div>
+    <a class="src-link" href="https://github.com/MinishLab/semble" target="_blank" rel="noopener">🔗 <span class="zh">查看原项目</span><span class="en">View source</span> ↗</a>
   </article><article class="card">
     <div class="card-head">
       <a class="name" href="https://hallucinate.site" target="_blank" rel="noopener"><span class="zh">Hallucinate:多人在线蹦迪</span><span class="en">Hallucinate – Massively Multiplayer Online Rave</span></a><span class="badge sig"><span class="zh">热度 442</span><span class="en">signal 442</span></span>
@@ -121,6 +130,7 @@ body.lang-en .zh{display:none} body.lang-en .en{display:inline}
     <div class="src">hackernews</div>
     <p class="desc"><span class="zh">大型多人在线音乐派对(rave)玩具。</span><span class="en">https:&amp;#x2F;&amp;#x2F;github.com&amp;#x2F;stagas&amp;#x2F;hallucinate</span></p>
     <div class="pills"></div>
+    <a class="src-link" href="https://hallucinate.site" target="_blank" rel="noopener">🔗 <span class="zh">查看原项目</span><span class="en">View source</span> ↗</a>
   </article><article class="card">
     <div class="card-head">
       <a class="name" href="https://github.com/imtomt/ymawky" target="_blank" rel="noopener"><span class="zh">ymawky:汇编写的 Web 服务器</span><span class="en">Building a web server in assembly to give my life (a lack of) meaning</span></a><span class="badge sig"><span class="zh">热度 430</span><span class="en">signal 430</span></span>
@@ -128,6 +138,7 @@ body.lang-en .zh{display:none} body.lang-en .en{display:inline}
     <div class="src">hackernews</div>
     <p class="desc"><span class="zh">纯 ARM64 汇编写的 macOS 静态文件服务器,支持 Range 视频流。</span><span class="en">This is ymawky, a static file web server for MacOS written entirely in ARM64 assembly. It supports GET, PUT, DELETE, HEAD, and OPTIONS requests, and supports Range: bytes=X-Y headers (which allows scr…</span></p>
     <div class="pills"></div>
+    <a class="src-link" href="https://github.com/imtomt/ymawky" target="_blank" rel="noopener">🔗 <span class="zh">查看原项目</span><span class="en">View source</span> ↗</a>
   </article><article class="card">
     <div class="card-head">
       <a class="name" href="https://github.com/kageroumado/phosphene" target="_blank" rel="noopener"><span class="zh">Phosphene:Apple 视频壁纸逆向</span><span class="en">I reverse engineered Apple's video wallpapers</span></a><span class="badge sig"><span class="zh">热度 428</span><span class="en">signal 428</span></span>
@@ -135,6 +146,7 @@ body.lang-en .zh{display:none} body.lang-en .en{display:inline}
     <div class="src">hackernews</div>
     <p class="desc"><span class="zh">逆向 Apple 动态壁纸格式,支持把自定义视频设为壁纸。</span><span class="en">Ever since Apple introduced their video wallpapers I wanted to be able to put custom videos there. I decided to reverse engineer and see what I can do.I built Phosphene to sell it, but the existing co…</span></p>
     <div class="pills"></div>
+    <a class="src-link" href="https://github.com/kageroumado/phosphene" target="_blank" rel="noopener">🔗 <span class="zh">查看原项目</span><span class="en">View source</span> ↗</a>
   </article><article class="card">
     <div class="card-head">
       <a class="name" href="https://freenet.org/" target="_blank" rel="noopener"><span class="zh">Freenet:去中心化应用 p2p 平台</span><span class="en">Freenet, a peer-to-peer platform for decentralized apps</span></a><span class="badge sig"><span class="zh">热度 390</span><span class="en">signal 390</span></span>
@@ -142,6 +154,7 @@ body.lang-en .zh{display:none} body.lang-en .en{display:inline}
     <div class="src">hackernews</div>
     <p class="desc"><span class="zh">p2p 去中心化应用平台(原 Hyphanet)的彻底重构版。</span><span class="en">For the past 5 years or so I&amp;#x27;ve been working on a ground-up redesign of Freenet, my peer-to-peer project from the early 2000s (now renamed Hyphanet).The new Freenet has been up and running since …</span></p>
     <div class="pills"></div>
+    <a class="src-link" href="https://freenet.org/" target="_blank" rel="noopener">🔗 <span class="zh">查看原项目</span><span class="en">View source</span> ↗</a>
   </article><article class="card">
     <div class="card-head">
       <a class="name" href="https://llmgame.scalex.dev" target="_blank" rel="noopener"><span class="zh">Continue? Y/N:AI 授权疲劳小游戏</span><span class="en">Continue? Y/N: A 60-second game about AI agent permission fatigue</span></a><span class="badge sig"><span class="zh">热度 386</span><span class="en">signal 386</span></span>
@@ -149,6 +162,7 @@ body.lang-en .zh{display:none} body.lang-en .en{display:inline}
     <div class="src">hackernews</div>
     <p class="desc"><span class="zh">一个 60 秒小游戏,讽刺 AI agent 反复请求授权的疲劳感。</span><span class="en"></span></p>
     <div class="pills"></div>
+    <a class="src-link" href="https://llmgame.scalex.dev" target="_blank" rel="noopener">🔗 <span class="zh">查看原项目</span><span class="en">View source</span> ↗</a>
   </article><article class="card">
     <div class="card-head">
       <a class="name" href="https://github.com/stephenlthorn/auto-identity-remove" target="_blank" rel="noopener"><span class="zh">auto-identity-remove:数据经纪自动退订</span><span class="en">Auto-identity-remove – Automated data broker opt-out runner for macOS</span></a><span class="badge sig"><span class="zh">热度 325</span><span class="en">signal 325</span></span>
@@ -156,6 +170,7 @@ body.lang-en .zh{display:none} body.lang-en .en{display:inline}
     <div class="src">hackernews</div>
     <p class="desc"><span class="zh">macOS 上自动执行各数据经纪商的隐私退订流程。</span><span class="en"></span></p>
     <div class="pills"></div>
+    <a class="src-link" href="https://github.com/stephenlthorn/auto-identity-remove" target="_blank" rel="noopener">🔗 <span class="zh">查看原项目</span><span class="en">View source</span> ↗</a>
   </article><article class="card">
     <div class="card-head">
       <a class="name" href="http://halupedia.com/" target="_blank" rel="noopener"><span class="zh">Hallucinopedia</span><span class="en">Hallucinopedia</span></a><span class="badge sig"><span class="zh">热度 317</span><span class="en">signal 317</span></span>
@@ -163,6 +178,7 @@ body.lang-en .zh{display:none} body.lang-en .en{display:inline}
     <div class="src">hackernews</div>
     <p class="desc"><span class="zh">信息不详的网站,需点链接验证。</span><span class="en"></span></p>
     <div class="pills"></div>
+    <a class="src-link" href="http://halupedia.com/" target="_blank" rel="noopener">🔗 <span class="zh">查看原项目</span><span class="en">View source</span> ↗</a>
   </article><article class="card">
     <div class="card-head">
       <a class="name" href="https://github.com/nooga/let-go" target="_blank" rel="noopener"><span class="zh">let-go:Go 写的 Clojure 方言</span><span class="en">I made a Clojure-like language in Go, boots in 7ms</span></a><span class="badge sig"><span class="zh">热度 292</span><span class="en">signal 292</span></span>
@@ -170,6 +186,7 @@ body.lang-en .zh{display:none} body.lang-en .en{display:inline}
     <div class="src">hackernews</div>
     <p class="desc"><span class="zh">用纯 Go 实现的类 Clojure 语言,10MB 静态二进制,冷启动约 7ms。</span><span class="en">Let-go is a Clojure-like language (~90% compatible with JVM Clojure) written in pure Go. It ships as a ~10MB static binary and cold boots in ~7ms - that&amp;#x27;s about 50x faster than JVM and 3x faster …</span></p>
     <div class="pills"></div>
+    <a class="src-link" href="https://github.com/nooga/let-go" target="_blank" rel="noopener">🔗 <span class="zh">查看原项目</span><span class="en">View source</span> ↗</a>
   </article><article class="card">
     <div class="card-head">
       <a class="name" href="https://eyeball.rory.codes/" target="_blank" rel="noopener"><span class="zh">Eyeball</span><span class="en">Eyeball</span></a><span class="badge sig"><span class="zh">热度 288</span><span class="en">signal 288</span></span>
@@ -177,6 +194,7 @@ body.lang-en .zh{display:none} body.lang-en .en{display:inline}
     <div class="src">hackernews</div>
     <p class="desc"><span class="zh">信息不详,需点链接验证。</span><span class="en"></span></p>
     <div class="pills"></div>
+    <a class="src-link" href="https://eyeball.rory.codes/" target="_blank" rel="noopener">🔗 <span class="zh">查看原项目</span><span class="en">View source</span> ↗</a>
   </article></div>
 
 <div class="disclaimer">
