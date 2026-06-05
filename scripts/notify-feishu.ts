@@ -68,17 +68,22 @@ async function sendWebhook(url: string) {
 
 // ---------- 纯文本(hermes fallback)----------
 function printText() {
+  const focus = top.length ? (top[0].name_zh || top[0].name) : "";
+  const summary = top.length
+    ? `今日扫描 ${fresh} 个新信号,评分后${triple > 0 ? ` ${triple} 个 ⭐⭐⭐ 强候选` : "无 ⭐⭐⭐"}${double > 0 ? `、${double} 个 ⭐⭐ 备选` : ""}。重点关注:${focus}。`
+    : `今日扫描 ${fresh} 个新信号,暂无 ⭐⭐+ 候选 —— 诚实结果,继续手头项目。`;
   const lines = [
-    `📡 机会简报 ${date}`,
+    `📡 **机会简报 ${date}**`,
     `⭐⭐⭐ ${triple} · ⭐⭐ ${double} · 今日新信号 ${fresh}`,
     "",
-    "值得长期推进:",
+    `📌 ${summary}`,
+    "",
+    "**值得长期推进:**",
     ...pickLines,
     "",
-    "🔗 点链接看完整简报(国内秒开):",
-    LINK,
+    `🔗 [点此打开完整简报（国内秒开,可逐项点进原项目）](${LINK})`,
     "",
-    "(机器初评,⭐⭐⭐ 需人工 review;勿因有 ⭐⭐⭐ 就立刻 pivot)",
+    "_机器初评,⭐⭐⭐ 需人工 review;勿因有 ⭐⭐⭐ 就立刻 pivot_",
   ];
   process.stdout.write(lines.join("\n"));
 }

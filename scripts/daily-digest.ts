@@ -118,6 +118,7 @@ function card(r: Row): string {
     <div class="src">${esc(r.source)}</div>
     <p class="desc"><span class="zh">${short(zhDesc(r))}</span><span class="en">${short(r.description)}</span></p>
     <div class="pills">${win}${diff}</div>
+    <a class="src-link" href="${esc(r.url)}" target="_blank" rel="noopener">🔗 <span class="zh">查看原项目</span><span class="en">View source</span> ↗</a>
   </article>`;
 }
 function htmlSection(rows: Row[], emptyZh: string, emptyEn: string): string {
@@ -157,7 +158,9 @@ h2{font-size:1.15rem;margin:32px 0 14px;padding-left:10px;border-left:3px solid 
 .badge.t3{background:rgba(176,108,212,.2);color:var(--p3)} .badge.t2{background:rgba(212,167,44,.2);color:var(--gold)} .badge.sig{color:var(--mut)}
 .src{color:var(--mut);font-size:.72rem;font-family:ui-monospace,monospace;margin-bottom:8px}
 .desc{color:#c4cad6;font-size:.9rem;margin-bottom:10px}
-.pills{display:flex;flex-wrap:wrap;gap:6px}
+.pills{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
+.src-link{display:inline-block;font-size:.82rem;color:var(--acc);text-decoration:none;border:1px solid var(--acc);border-radius:6px;padding:5px 12px;transition:.15s}
+.src-link:hover{background:var(--acc);color:#fff}
 .pill{font-size:.7rem;color:var(--mut);border:1px solid var(--line);padding:2px 8px;border-radius:20px}
 .muted{color:var(--mut);font-style:italic;padding:8px 0}
 .disclaimer{margin-top:40px;padding:16px 20px;background:rgba(212,167,44,.08);border:1px solid rgba(212,167,44,.3);border-radius:10px;color:var(--mut);font-size:.86rem}
