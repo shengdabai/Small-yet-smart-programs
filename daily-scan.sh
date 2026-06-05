@@ -13,7 +13,8 @@ export PATH="$HOME/.bun/bin:/usr/local/bin:/usr/bin:/bin:/opt/homebrew/bin"
 REPO="${SMART_PROGRAMS_DIR:-$HOME/.local/share/smart-programs}"
 SITE_URL="${SITE_URL:-http://111.229.77.103:8082}"
 SHANGHAI_DEST="${SHANGHAI_DEST:-shanghai:/var/www/smart-programs}"   # SSH alias:port 见 ~/.ssh/config
-FEISHU_TARGET="${FEISHU_TARGET:-}"                                    # 你的飞书 DM open_id(为空则跳过飞书)
+FEISHU_WEBHOOK="${FEISHU_WEBHOOK:-}"                                  # 飞书自定义机器人 webhook(优先;链接可点)
+FEISHU_TARGET="${FEISHU_TARGET:-}"                                    # 飞书 DM(hermes fallback,纯文本;形如 feishu:oc_xxx)
 # ----------------
 
 LOGDIR="$HOME/.claude/logs"; mkdir -p "$LOGDIR"
@@ -65,17 +66,19 @@ if [ -d site ]; then
   rsync -az --delete site/ "$SHANGHAI_DEST/" >>"$LOG" 2>&1 || log "rsync to shanghai failed"
 fi
 
-# 7) 飞书推送(可选;走 hermes send,target 形如 feishu:oc_xxx;为空则跳过)
+# 7) 飞书推送:优先 webhook(post 富文本,链接可点),否则 hermes(纯文本)
 HERMES="${HERMES:-$HOME/.local/bin/hermes}"
-if [ -n "$FEISHU_TARGET" ] && [ -x "$HERMES" ]; then
+if [ -n "$FEISHU_WEBHOOK" ]; then
+  FEISHU_WEBHOOK="$FEISHU_WEBHOOK" SITE_URL="$SITE_URL" bun run scripts/notify-feishu.ts --webhook >>"$LOG" 2>&1 \
+    && log "feishu pushed (webhook, clickable)" \
+    || log "feishu webhook failed"
+elif [ -n "$FEISHU_TARGET" ] && [ -x "$HERMES" ]; then
   MSG="$(SITE_URL="$SITE_URL" bun run scripts/notify-feishu.ts 2>>"$LOG")"
-  if [ -n "$MSG" ]; then
-    "$HERMES" send -t "$FEISHU_TARGET" "$MSG" >>"$LOG" 2>&1 \
-      && log "feishu pushed -> $FEISHU_TARGET" \
-      || log "feishu send failed (hermes)"
-  fi
+  [ -n "$MSG" ] && "$HERMES" send -t "$FEISHU_TARGET" "$MSG" >>"$LOG" 2>&1 \
+    && log "feishu pushed (hermes text)" \
+    || log "feishu hermes failed"
 else
-  log "FEISHU_TARGET/hermes not set — skipping Feishu push"
+  log "no FEISHU_WEBHOOK/FEISHU_TARGET — skipping Feishu push"
 fi
 
 touch "$DONE"
