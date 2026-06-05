@@ -22,10 +22,10 @@ const useWebhook = args.includes("--webhook");
 const SITE_URL = (process.env.SITE_URL || "http://111.229.77.103:8082").replace(/\/+$/, "");
 const LINK = `${SITE_URL}/latest.html`;
 
-type R = { name: string; total: number; tier: string; window_estimate: string | null };
+type R = { name: string; name_zh: string | null; total: number; tier: string; window_estimate: string | null };
 
 const top = db.query(`
-  SELECT c.name, s.total, s.tier, s.window_estimate
+  SELECT c.name, c.name_zh, s.total, s.tier, s.window_estimate
   FROM scored s JOIN candidates c ON c.id = s.candidate_id
   WHERE s.tier IN ('⭐⭐⭐','⭐⭐')
     AND s.scored_at >= datetime('now', '-30 days')
@@ -37,7 +37,7 @@ const double = top.filter((r) => r.tier === "⭐⭐").length;
 const fresh = (db.query(`SELECT COUNT(*) n FROM candidates WHERE date(first_seen)=date('${date}')`).get() as { n: number }).n;
 
 const pickLines = top.length
-  ? top.map((r, i) => `${i + 1}. ${r.name} ${r.total}/35 ${r.tier}${r.window_estimate ? ` · 窗口 ${r.window_estimate}` : ""}`)
+  ? top.map((r, i) => `${i + 1}. ${r.name_zh || r.name} ${r.total}/35 ${r.tier}${r.window_estimate ? ` · 窗口 ${r.window_estimate}` : ""}`)
   : ["本期暂无 ⭐⭐+ 候选 —— 诚实结果,继续手头项目。"];
 
 // ---------- webhook(post 富文本,链接可点)----------

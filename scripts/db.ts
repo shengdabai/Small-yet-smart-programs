@@ -96,6 +96,10 @@ let inited = false;
 export function init() {
   if (inited) return;
   db.exec(SCHEMA);
+  // 迁移:中文字段(候选中文名/中文描述 + 中文一句话点评),老库自动补列
+  for (const [t, c] of [["candidates", "name_zh"], ["candidates", "description_zh"], ["scored", "summary_zh"]] as const) {
+    try { db.exec(`ALTER TABLE ${t} ADD COLUMN ${c} TEXT`); } catch { /* 已存在,忽略 */ }
+  }
   inited = true;
   // 日志走 stderr,不污染脚本 stdout(JSON pipe 友好)
   console.error("[db] schema ready at", DB_PATH);

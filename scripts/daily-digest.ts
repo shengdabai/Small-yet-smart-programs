@@ -1,12 +1,15 @@
 /**
- * 每日双语机会简报生成器。
+ * 每日双语机会简报生成器(数据级双语:zh 显示中文名+中文点评,en 显示英文原文)。
  *
  * 从机会库取:
- *   1. 今日(或最近 N 天)评分出的 ⭐⭐⭐ / ⭐⭐ 候选 —— "值得长期推进的项目"
- *   2. 今日新增的高 signal 候选 —— "最新产品信息"
+ *   1. 近 N 天评分出的 ⭐⭐⭐ / ⭐⭐ 候选 —— "值得长期推进的项目"
+ *   2. 当日新增的高 signal 候选 —— "最新产品信息"
  * 产出:
  *   daily/<YYYY-MM-DD>.html   中英双语单页(zh/en 切换),部署到国内站
- *   daily/<YYYY-MM-DD>.md     markdown 留档 + 飞书摘要来源
+ *   daily/<YYYY-MM-DD>.md     中文 markdown 留档
+ *
+ * 中文字段(name_zh / description_zh / summary_zh)由评分步骤的 LLM 产出;
+ * 缺失时优雅回退到英文原文。
  *
  * 用法: bun run scripts/daily-digest.ts [--date YYYY-MM-DD] [--days 30]
  */
@@ -20,8 +23,6 @@ function arg(name: string, def: string): string {
   const i = args.indexOf(name);
   return i >= 0 && args[i + 1] ? args[i + 1] : def;
 }
-
-// 注意:Date.now/new Date() 在主流程脚本里可用(本文件由 launchd/CLI 直接跑,非 workflow)
 const today = arg("--date", new Date().toISOString().slice(0, 10));
 const lookbackDays = parseInt(arg("--days", "30"), 10);
 
@@ -30,15 +31,17 @@ const DAILY_DIR = ROOT + "daily/";
 if (!existsSync(DAILY_DIR)) mkdirSync(DAILY_DIR, { recursive: true });
 
 type Row = {
-  name: string; url: string; description: string | null; source: string;
-  signal_score: number | null; total: number | null; tier: string | null;
-  window_estimate: string | null; replication_difficulty: string | null;
-  why_them: string | null; first_seen: string; scored_at: string | null;
+  name: string; name_zh: string | null; url: string;
+  description: string | null; description_zh: string | null; summary_zh: string | null;
+  source: string; signal_score: number | null;
+  total: number | null; tier: string | null;
+  window_estimate: string | null; replication_difficulty: string | null; why_them: string | null;
+  first_seen: string; scored_at: string | null;
 };
 
-// 值得长期推进:tier ⭐⭐⭐ / ⭐⭐,近 lookbackDays 内评分,按总分降序
 const longTerm = db.query(`
-  SELECT c.name, c.url, c.description, c.source, c.signal_score,
+  SELECT c.name, c.name_zh, c.url, c.description, c.description_zh, s.summary_zh,
+         c.source, c.signal_score,
          s.total, s.tier, s.window_estimate, s.replication_difficulty, s.why_them,
          c.first_seen, s.scored_at
   FROM scored s JOIN candidates c ON c.id = s.candidate_id
@@ -48,9 +51,9 @@ const longTerm = db.query(`
   LIMIT 20
 `).all() as Row[];
 
-// 最新产品信息:今日新增候选,按 signal 降序
 const fresh = db.query(`
-  SELECT c.name, c.url, c.description, c.source, c.signal_score,
+  SELECT c.name, c.name_zh, c.url, c.description, c.description_zh, NULL as summary_zh,
+         c.source, c.signal_score,
          NULL as total, NULL as tier, NULL as window_estimate,
          NULL as replication_difficulty, NULL as why_them,
          c.first_seen, NULL as scored_at
@@ -67,59 +70,54 @@ function esc(s: string | null | undefined): string {
   if (!s) return "";
   return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 }
-function short(s: string | null, n = 160): string {
+function short(s: string | null, n = 200): string {
   if (!s) return "";
   const c = s.replace(/<[^>]+>/g, "").replace(/\s+/g, " ").trim();
   return esc(c.length > n ? c.slice(0, n) + "…" : c);
 }
-function gapNote(why: string | null): string {
-  if (!why) return "";
-  try {
-    const j = JSON.parse(why);
-    const g = j.gap_severity ?? "";
-    return g ? `gap:${esc(g)}` : "";
-  } catch { return ""; }
-}
+const zhName = (r: Row) => r.name_zh || r.name;
+const zhDesc = (r: Row) => r.summary_zh || r.description_zh || r.description;
 
-// ---------- Markdown(留档 + 飞书摘要源)----------
+// ---------- Markdown(中文留档)----------
 function mdSection(title: string, rows: Row[]): string {
-  if (rows.length === 0) return `### ${title}\n\n_none_\n\n`;
+  if (rows.length === 0) return `### ${title}\n\n_无_\n\n`;
   let s = `### ${title}\n\n`;
   for (const r of rows) {
-    const score = r.total ? ` · ${r.total}/35 ${r.tier ?? ""}` : r.signal_score ? ` · signal ${Math.round(r.signal_score)}` : "";
+    const score = r.total ? ` · ${r.total}/35 ${r.tier ?? ""}` : r.signal_score ? ` · 热度 ${Math.round(r.signal_score)}` : "";
     const win = r.window_estimate ? ` · 窗口 ${r.window_estimate}` : "";
-    s += `- **${r.name}**${score}${win} — ${short(r.description, 120)}\n  ${r.url}\n`;
+    s += `- **${zhName(r)}**${score}${win}\n  ${short(zhDesc(r), 120)}\n  ${r.url}\n`;
   }
   return s + "\n";
 }
 const md =
-`# 机会简报 / Opportunity Briefing — ${today}
+`# 机会简报 — ${today}
 
 > 自动生成于 smart-programs · 7 维评分法 (v5 SOP)
 
-## 值得长期推进 / Worth pursuing
+## 值得长期推进
 - ⭐⭐⭐ ${triple.length} · ⭐⭐ ${double.length}
 
-${mdSection("⭐⭐⭐ 高分候选 / Top picks", triple)}${mdSection("⭐⭐ 备选 / Shortlist", double)}## 最新产品信号 / Fresh signals (${today})
+${mdSection("⭐⭐⭐ 高分候选", triple)}${mdSection("⭐⭐ 备选", double)}## 最新产品信号(${today})
 
-${mdSection("今日新增 / New today", fresh)}---
+${mdSection("今日新增", fresh)}---
 _机器初筛 + LLM 初评,⭐⭐⭐ 需人工 review;不要因为有 ⭐⭐⭐ 就立刻 pivot(见 METHODOLOGY.md 反陷阱 5)。_
 `;
 writeFileSync(DAILY_DIR + `${today}.md`, md, "utf8");
 
-// ---------- 双语 HTML ----------
+// ---------- 双语 HTML(数据级双语)----------
 function card(r: Row): string {
   const badge = r.tier
     ? `<span class="badge ${r.tier === "⭐⭐⭐" ? "t3" : "t2"}">${esc(r.tier)} ${r.total ?? ""}</span>`
-    : r.signal_score != null ? `<span class="badge sig">signal ${Math.round(r.signal_score)}</span>` : "";
+    : r.signal_score != null ? `<span class="badge sig"><span class="zh">热度 ${Math.round(r.signal_score)}</span><span class="en">signal ${Math.round(r.signal_score)}</span></span>` : "";
   const win = r.window_estimate ? `<span class="pill">${esc(r.window_estimate)}</span>` : "";
-  const diff = r.replication_difficulty ? `<span class="pill">repl ${esc(r.replication_difficulty)}</span>` : "";
-  const gap = gapNote(r.why_them) ? `<span class="pill">${gapNote(r.why_them)}</span>` : "";
+  const diff = r.replication_difficulty ? `<span class="pill">复刻 ${esc(r.replication_difficulty)}</span>` : "";
   return `<article class="card">
-    <div class="card-head"><a class="name" href="${esc(r.url)}" target="_blank" rel="noopener">${esc(r.name)}</a>${badge}</div>
+    <div class="card-head">
+      <a class="name" href="${esc(r.url)}" target="_blank" rel="noopener"><span class="zh">${esc(zhName(r))}</span><span class="en">${esc(r.name)}</span></a>${badge}
+    </div>
     <div class="src">${esc(r.source)}</div>
-    <p class="desc">${short(r.description, 200)}</p>
-    <div class="pills">${win}${diff}${gap}</div>
+    <p class="desc"><span class="zh">${short(zhDesc(r))}</span><span class="en">${short(r.description)}</span></p>
+    <div class="pills">${win}${diff}</div>
   </article>`;
 }
 function htmlSection(rows: Row[], emptyZh: string, emptyEn: string): string {
@@ -166,7 +164,6 @@ h2{font-size:1.15rem;margin:32px 0 14px;padding-left:10px;border-left:3px solid 
 footer{margin-top:40px;color:var(--mut);font-size:.78rem;text-align:center;font-family:ui-monospace,monospace}
 .en{display:none}
 body.lang-en .zh{display:none} body.lang-en .en{display:inline}
-body.lang-en .desc,body.lang-en .src,body.lang-en .name{} /* data stays bilingual-neutral */
 </style>
 </head>
 <body class="lang-zh">
