@@ -76,13 +76,7 @@ console.error(`pulled ${rows.length} candidates to score`);
 
 ## Step 4: 粗筛 + 7 维 OPC 评分(Claude 当场推理)
 
-**Tony 资产 baseline**(D6 评分用):
-- 中文母语 + 6000+ 学员渠道(教培)
-- Claude Code/Skill/MCP 生态深度玩家
-- TypeScript + Next.js + Python 全栈
-- 教培内容 production pipeline
-- 飞书/微信/小红书/B 站发布渠道
-- macOS + Mac Studio + 2T 外接硬盘
+**运营者资产 baseline**(D6 评分用):评分前先读 `config/profile.local.json` 的 `assets` 数组,把候选成功所依赖的资产,与运营者已有资产逐项比对(命中越多 D6 越高)。未配置时回退 `config/profile.example.json`。
 
 **v5 §09 反陷阱必须遵守**:
 - 单月暴涨自动降权,只信"连续 3 个月 ≥30%"

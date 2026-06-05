@@ -27,7 +27,7 @@
         <key>SMART_PROGRAMS_DIR</key>
         <string>/Users/__USER__/.local/share/smart-programs</string>
         <key>SITE_URL</key>
-        <string>http://111.229.77.103:8082</string>
+        <string>http://YOUR_SERVER:8082</string>
         <key>SHANGHAI_DEST</key>
         <string>shanghai:/var/www/smart-programs</string>
         <key>FEISHU_TARGET</key>

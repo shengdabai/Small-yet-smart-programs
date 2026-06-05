@@ -19,7 +19,7 @@ const args = process.argv.slice(2);
 const di = args.indexOf("--date");
 const date = di >= 0 && args[di + 1] ? args[di + 1] : new Date().toISOString().slice(0, 10);
 const useWebhook = args.includes("--webhook");
-const SITE_URL = (process.env.SITE_URL || "http://111.229.77.103:8082").replace(/\/+$/, "");
+const SITE_URL = (process.env.SITE_URL || "http://YOUR_SERVER:8082").replace(/\/+$/, "");
 const LINK = `${SITE_URL}/latest.html`;
 
 type R = { name: string; name_zh: string | null; total: number; tier: string; window_estimate: string | null };

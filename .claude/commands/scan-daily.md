@@ -39,7 +39,7 @@ console.table(rows);
 '
 ```
 
-### 4. 输出格式给 Tony
+### 4. 输出格式给 运营者
 
 ```
 === /scan-daily 完成 ===

@@ -6,7 +6,7 @@ argument-hint: <url>
 # /score <url>
 
 对一个具体产品做完整 v5 §07 评分。用于:
-- Tony 在浏览时看到一个想立刻评估的产品
+- 运营者 在浏览时看到一个想立刻评估的产品
 - 月扫之外的临时调研
 
 ## 步骤
@@ -104,7 +104,7 @@ ON CONFLICT(candidate_id) DO UPDATE SET
 读 `prompts/pivot-memo.md`,填充字段输出到:
 `reports/<date>-<name-slug>-pivot.md`
 
-### 7. 输出给 Tony
+### 7. 输出给 运营者
 
 ```
 === /score <url> 完成 ===
@@ -125,7 +125,7 @@ ON CONFLICT(candidate_id) DO UPDATE SET
 - **Firecrawl MCP scrape 失败 / 超时**: 记录 `firecrawl_error=<reason>` 到 candidate.raw_payload,跳过 step 2-3,直接用 URL + domain 进入 step 4 (BuiltWith 仍可独立跑)。
 - **SimilarWeb 页面 404 / 抓不到流量**: trend_6m 置 `unknown`,traffic_source 置 `[]`,继续评分但在输出里标注 `traffic data: missing`。
 - **`enrichBuiltWith` 失败**: replication_difficulty 置 `unknown`,继续评分,在输出里标注 `tech stack: unknown`。
-- **7 维评分 JSON 解析失败**: 报错并打印原始输出供 Tony 复查,不写 scored 表,本次中止 (避免脏数据)。
+- **7 维评分 JSON 解析失败**: 报错并打印原始输出供 运营者 复查,不写 scored 表,本次中止 (避免脏数据)。
 - **pivot 备忘写文件失败 (磁盘满 / 权限)**: 在输出 step 7 里标注 `pivot memo: write failed, 评分已落库`,不阻断主流程。
 
 整体原则: 数据采集失败 → 降级 + 标注;评分写入失败 → 中止 + 报错。

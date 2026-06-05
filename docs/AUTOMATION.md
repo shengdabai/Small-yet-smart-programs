@@ -52,7 +52,7 @@ sudo systemctl daemon-reload && sudo systemctl enable --now smart-programs-site
 group). Port 8080 is already taken by another site on this host, so this project
 uses **8082**. Bare IP + non-80 port means no ICP filing is required.
 
-Public URL: `http://111.229.77.103:8082/latest.html` (and `/index.html` for the
+Public URL: `http://YOUR_SERVER:8082/latest.html` (and `/index.html` for the
 archive timeline).
 
 ## 3. Feishu push
@@ -73,7 +73,7 @@ If `hermes` is unavailable, leave `FEISHU_TARGET` empty to skip the push.
 | Env var | Default | Meaning |
 |---------|---------|---------|
 | `SMART_PROGRAMS_DIR` | `~/.local/share/smart-programs` | runtime repo location |
-| `SITE_URL` | `http://111.229.77.103:8082` | public site root (used in Feishu msg) |
+| `SITE_URL` | `http://YOUR_SERVER:8082` | public site root (used in Feishu msg) |
 | `SHANGHAI_DEST` | `shanghai:/var/www/smart-programs` | rsync target (SSH alias) |
 | `FEISHU_TARGET` | _(empty)_ | your Feishu DM open_id; empty = skip push |
 

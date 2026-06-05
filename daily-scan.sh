@@ -11,7 +11,7 @@ export PATH="$HOME/.bun/bin:/usr/local/bin:/usr/bin:/bin:/opt/homebrew/bin"
 
 # ---- 可配置 ----
 REPO="${SMART_PROGRAMS_DIR:-$HOME/.local/share/smart-programs}"
-SITE_URL="${SITE_URL:-http://111.229.77.103:8082}"
+SITE_URL="${SITE_URL:-http://YOUR_SERVER:8082}"
 SHANGHAI_DEST="${SHANGHAI_DEST:-shanghai:/var/www/smart-programs}"   # SSH alias:port 见 ~/.ssh/config
 FEISHU_WEBHOOK="${FEISHU_WEBHOOK:-}"                                  # 飞书自定义机器人 webhook(优先;链接可点)
 FEISHU_TARGET="${FEISHU_TARGET:-}"                                    # 飞书 DM(hermes fallback,纯文本;形如 feishu:oc_xxx)

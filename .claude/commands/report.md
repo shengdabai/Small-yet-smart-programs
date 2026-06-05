@@ -44,7 +44,7 @@ ls -t reports/*.md | head -1 | xargs cat
 
 ### 4. (可选) 推送
 
-如果 Tony 想要飞书推送:
+如果 运营者 想要飞书推送:
 - 用 lark-cli 或 webhook 把报告发到 "扫描周报" 群
 - 短摘要(TL;DR 段)发 IM,完整 markdown 链接附后
 
@@ -55,7 +55,7 @@ ls -t reports/*.md | head -1 | xargs cat
   -d "{\"msg_type\":\"text\",\"content\":{\"text\":\"$(head -20 reports/$(ls -t reports/ | head -1) | sed 's/\"/\\\"/g' | tr '\n' ' ')\"}}"
 ```
 
-### 5. 输出给 Tony
+### 5. 输出给 运营者
 
 显示报告路径 + TL;DR 段 + ⭐⭐⭐ 数量。
 
