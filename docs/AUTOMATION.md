@@ -57,19 +57,16 @@ archive timeline).
 
 ## 3. Feishu push
 
-`daily-scan.sh` sends a Chinese summary + the 国内 URL via `lark-cli`. Set
-`FEISHU_TARGET` (your DM open_id) in the launchd plist. The send command is:
+`daily-scan.sh` sends a Chinese summary + the 国内 URL via `hermes send`
+(the same reliable channel `tony-articles` uses). Set `FEISHU_TARGET` in the
+launchd plist as `feishu:oc_xxxx` (your Feishu DM). The send command is:
 
 ```bash
-LARK_CLI_NO_PROXY=1 lark-cli im +send \
-  --receive-id "$FEISHU_TARGET" --receive-id-type open_id \
-  --msg-type text --content "<message>"
+"$HOME/.local/bin/hermes" send -t "$FEISHU_TARGET" "<message>"
 ```
 
-If your installed `lark-cli` uses different flags, calibrate once with the
-`/lark-im` skill — the send step is non-fatal (logs and continues) so it never
-blocks publishing. `LARK_CLI_NO_PROXY=1` is mandatory (Clash global mode
-hijacks Feishu domains otherwise).
+The send step is non-fatal (logs and continues) so it never blocks publishing.
+If `hermes` is unavailable, leave `FEISHU_TARGET` empty to skip the push.
 
 ## 4. Config
 

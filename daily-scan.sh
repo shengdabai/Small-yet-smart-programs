@@ -65,17 +65,17 @@ if [ -d site ]; then
   rsync -az --delete site/ "$SHANGHAI_DEST/" >>"$LOG" 2>&1 || log "rsync to shanghai failed"
 fi
 
-# 7) 飞书推送(可选;FEISHU_TARGET 为空则跳过)
-if [ -n "$FEISHU_TARGET" ]; then
+# 7) 飞书推送(可选;走 hermes send,target 形如 feishu:oc_xxx;为空则跳过)
+HERMES="${HERMES:-$HOME/.local/bin/hermes}"
+if [ -n "$FEISHU_TARGET" ] && [ -x "$HERMES" ]; then
   MSG="$(SITE_URL="$SITE_URL" bun run scripts/notify-feishu.ts 2>>"$LOG")"
   if [ -n "$MSG" ]; then
-    LARK_CLI_NO_PROXY=1 lark-cli im +send \
-      --receive-id "$FEISHU_TARGET" --receive-id-type open_id \
-      --msg-type text --content "$MSG" >>"$LOG" 2>&1 \
-      || log "feishu send failed (check lark-cli im syntax via /lark-im)"
+    "$HERMES" send -t "$FEISHU_TARGET" "$MSG" >>"$LOG" 2>&1 \
+      && log "feishu pushed -> $FEISHU_TARGET" \
+      || log "feishu send failed (hermes)"
   fi
 else
-  log "FEISHU_TARGET empty — skipping Feishu push"
+  log "FEISHU_TARGET/hermes not set — skipping Feishu push"
 fi
 
 touch "$DONE"
