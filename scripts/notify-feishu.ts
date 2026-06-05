@@ -41,7 +41,9 @@ if (top.length > 0) {
   lines.push("本期暂无 ⭐⭐+ 候选 —— 诚实结果,继续手头项目。");
 }
 lines.push("");
-lines.push(`🔗 国内查看:${SITE_URL}/latest.html`);
-lines.push("（机器初评,⭐⭐⭐ 需人工 review;勿因有 ⭐⭐⭐ 就立刻 pivot）");
+lines.push("🔗 点链接看完整简报(国内秒开):");
+lines.push(`${SITE_URL}/latest.html`);
+lines.push("");
+lines.push("(机器初评,⭐⭐⭐ 需人工 review;勿因有 ⭐⭐⭐ 就立刻 pivot)");
 
 process.stdout.write(lines.join("\n"));
