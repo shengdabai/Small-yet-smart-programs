@@ -52,8 +52,11 @@ bun run scripts/daily-digest.ts >>"$LOG" 2>&1 || { log "FATAL: daily-digest fail
 # 4) 组装静态站
 bun run scripts/build-site.ts >>"$LOG" 2>&1 || log "build-site failed (continuing)"
 
-# 5) git 留档(只 add daily/,运行时数据已被 .gitignore 挡住)
-git add daily/ >>"$LOG" 2>&1
+# 4.5) 重建 README 首页的每日简报索引(逐日链接列表)
+bun run scripts/gen-readme-index.ts >>"$LOG" 2>&1 || log "gen-readme-index failed (continuing)"
+
+# 5) git 留档(add daily/ + README 索引,运行时数据已被 .gitignore 挡住)
+git add daily/ README.md >>"$LOG" 2>&1
 if ! git diff --cached --quiet; then
   git commit -m "daily briefing $DATE" >>"$LOG" 2>&1 || log "commit failed"
   git push >>"$LOG" 2>&1 || log "git push failed (will retry next run)"
