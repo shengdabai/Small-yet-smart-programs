@@ -59,7 +59,7 @@ if (rows.length === 0) {
 
 let synced = 0;
 for (const r of rows) {
-  const title = `LiuxiaopaiMining_${slug(r.name)}`;
+  const title = `SmartProgramsMining_${slug(r.name)}`;
   const content = `# ${r.name}
 
 **评分**: ${r.total}/35 (${r.tier}) | **窗口**: ${r.window_estimate} | **复刻**: ${r.replication_difficulty}
