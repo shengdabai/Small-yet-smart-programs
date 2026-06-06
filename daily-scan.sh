@@ -21,12 +21,23 @@ LOGDIR="$HOME/.claude/logs"; mkdir -p "$LOGDIR"
 LOG="$LOGDIR/smart-programs-daily.log"
 DATE="$(date +%F)"
 DONE="$LOGDIR/.smart-programs-done-$DATE"
-LOCK="$LOGDIR/.smart-programs.lock"
+LOCKD="$LOGDIR/.smart-programs.lockd"   # mkdir 原子锁(macOS 无 flock)
 
 log(){ echo "[$(date '+%F %T')] $*" >> "$LOG"; }
 
 [ -f "$DONE" ] && { log "already done $DATE — skip"; exit 0; }
-exec 9>"$LOCK"; flock -n 9 || { log "another run holds the lock — skip"; exit 0; }
+
+# mkdir 原子锁(macOS 无 flock(1))。持锁进程已死则抢锁,防卡死永久占用。
+if ! mkdir "$LOCKD" 2>/dev/null; then
+  OLDPID="$(cat "$LOCKD/pid" 2>/dev/null || true)"
+  if [ -n "$OLDPID" ] && kill -0 "$OLDPID" 2>/dev/null; then
+    log "another run (pid $OLDPID) holds the lock — skip"; exit 0
+  fi
+  log "stale lock (pid ${OLDPID:-?} dead) — taking over"
+  rm -rf "$LOCKD"; mkdir "$LOCKD" 2>/dev/null || { log "lock race — skip"; exit 0; }
+fi
+echo "$$" > "$LOCKD/pid"
+trap 'rm -rf "$LOCKD" 2>/dev/null' EXIT
 
 cd "$REPO" 2>/dev/null || { log "FATAL: repo not found at $REPO"; exit 1; }
 log "=== start $DATE (repo=$REPO) ==="
@@ -40,7 +51,7 @@ bun run scan:daily >>"$LOG" 2>&1 || log "scan:daily had per-source errors (conti
 
 # 2) LLM 评分:用 Claude Code 跑 skill,仅对未评分候选粗筛+7维评分入库(不重复采集、不出 HTML)
 if command -v claude >/dev/null 2>&1; then
-  claude -p "运行 smart-programs 技能的评分环节:只对机会库里本月未评分(scored.total IS NULL)的候选做 4 问粗筛 + 7 维 OPC 评分并写回 scored 表;不要重复采集信号源,不要生成 HTML 报告。读 prompts/coarse-filter.md 和 prompts/opc-score.md 作为评分规则,读 config/profile.local.json 作为运营者画像。完成后只回一行统计(评了几个、各 tier 几个)。" \
+  timeout 600 claude -p "运行 smart-programs 技能的评分环节:只对机会库里本月未评分(scored.total IS NULL)的候选做 4 问粗筛 + 7 维 OPC 评分并写回 scored 表;不要重复采集信号源,不要生成 HTML 报告。读 prompts/coarse-filter.md 和 prompts/opc-score.md 作为评分规则,读 config/profile.local.json 作为运营者画像。完成后只回一行统计(评了几个、各 tier 几个)。" \
     --dangerously-skip-permissions >>"$LOG" 2>&1 || log "claude scoring step failed (continuing with existing scores)"
 else
   log "claude CLI not found — skipping LLM scoring, using existing scores"
