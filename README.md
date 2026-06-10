@@ -25,6 +25,7 @@
 
 ### 📅 每日简报 · Daily Briefings
 
+- **[2026-06-10](daily/2026-06-10.md)** · ⭐⭐⭐ 0 · ⭐⭐ 1 — Semble:给 AI agent 的代码搜索,省 98% token
 - **[2026-06-09](daily/2026-06-09.md)** · ⭐⭐⭐ 0 · ⭐⭐ 1 — Semble:给 AI agent 的代码搜索,省 98% token
 - **[2026-06-08](daily/2026-06-08.md)** · ⭐⭐⭐ 0 · ⭐⭐ 1 — Semble:给 AI agent 的代码搜索,省 98% token
 - **[2026-06-07](daily/2026-06-07.md)** · ⭐⭐⭐ 0 · ⭐⭐ 1 — Semble:给 AI agent 的代码搜索,省 98% token
