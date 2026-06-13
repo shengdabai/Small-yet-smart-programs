@@ -1,3 +1,21 @@
+<!-- BRIEFINGS:START -->
+
+### 📅 每日简报 · Daily Briefings
+
+- **[2026-06-13](daily/2026-06-13.md)** · ⭐⭐⭐ 0 · ⭐⭐ 3 — Lowfat – pluggable CLI filter that saved 91.8% of my LLM tokens、Semble:给 AI agent 的代码搜索,省 98% token、I built an open-source email builder, alternative to Beefree/Unlayer
+- **[2026-06-12](daily/2026-06-12.md)** · ⭐⭐⭐ 0 · ⭐⭐ 3 — Lowfat – pluggable CLI filter that saved 91.8% of my LLM tokens、Semble:给 AI agent 的代码搜索,省 98% token、I built an open-source email builder, alternative to Beefree/Unlayer
+- **[2026-06-11](daily/2026-06-11.md)** · ⭐⭐⭐ 0 · ⭐⭐ 3 — Lowfat – pluggable CLI filter that saved 91.8% of my LLM tokens、Semble:给 AI agent 的代码搜索,省 98% token、I built an open-source email builder, alternative to Beefree/Unlayer
+- **[2026-06-10](daily/2026-06-10.md)** · ⭐⭐⭐ 0 · ⭐⭐ 1 — Semble:给 AI agent 的代码搜索,省 98% token
+- **[2026-06-09](daily/2026-06-09.md)** · ⭐⭐⭐ 0 · ⭐⭐ 1 — Semble:给 AI agent 的代码搜索,省 98% token
+- **[2026-06-08](daily/2026-06-08.md)** · ⭐⭐⭐ 0 · ⭐⭐ 1 — Semble:给 AI agent 的代码搜索,省 98% token
+- **[2026-06-07](daily/2026-06-07.md)** · ⭐⭐⭐ 0 · ⭐⭐ 1 — Semble:给 AI agent 的代码搜索,省 98% token
+- **[2026-06-06](daily/2026-06-06.md)** · ⭐⭐⭐ 0 · ⭐⭐ 1 — Semble:给 AI agent 的代码搜索,省 98% token
+- **[2026-06-05](daily/2026-06-05.md)** · ⭐⭐⭐ 0 · ⭐⭐ 1 — Semble:给 AI agent 的代码搜索,省 98% token
+
+> 每天中午 12:30 自动更新 · Auto-updated daily at 12:30 · [全部简报 →](daily/)
+
+<!-- BRIEFINGS:END -->
+
 # Small-yet-smart-programs
 
 Daily scout for small, profitable, replicable software opportunities — scores them on a 7-dim anti-hype rubric, ships a bilingual briefing.
