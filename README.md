@@ -4,20 +4,20 @@ Daily scout for small, profitable, replicable software opportunities — scores 
 
 ## Business Context
 
-- **Category:** security and governance tool
-- **Audience:** builders and operators who need safer repositories, cleaner handoffs, and repeatable security checks.
+- **Category:** opportunity research workflow
+- **Audience:** indie builders and creators looking for small, testable software opportunities without hype.
 - **Repository status:** Public repository. Keep examples, docs, and issues free of credentials, private data, and machine-specific paths.
 - **Topics:** ai, bilingual, bun, indie-hacking, indiehackers, opportunity-scanner, side-project, sqlite, typescript, web-scraping
 
 ## What This Project Is For
 
 - Daily scout for small, profitable, replicable software opportunities — scores them on a 7-dim anti-hype rubric, ships a bilingual briefing.
-- Find repository risks early without exposing secrets in reports.
-- Make security review repeatable across public and private codebases.
+- Turn scattered market signals into a repeatable opportunity-scanning process.
+- Score ideas against explicit criteria before investing build time.
 
 ## Where It Fits
 
-This repository belongs in the trust-and-safety layer of the workbench: it helps make code, configuration, and public handoffs safer before they are reused or shown to clients.
+This repository supports the front of the product pipeline: discovering, scoring, and packaging small software opportunities before committing build time.
 
 ## Technical Overview
 
