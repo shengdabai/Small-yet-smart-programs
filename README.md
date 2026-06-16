@@ -2,6 +2,7 @@
 
 ### 📅 每日简报 · Daily Briefings
 
+- **[2026-06-16](daily/2026-06-16.md)** · ⭐⭐⭐ 0 · ⭐⭐ 3 — Lowfat – pluggable CLI filter that saved 91.8% of my LLM tokens、Semble:给 AI agent 的代码搜索,省 98% token、I built an open-source email builder, alternative to Beefree/Unlayer
 - **[2026-06-15](daily/2026-06-15.md)** · ⭐⭐⭐ 0 · ⭐⭐ 3 — Lowfat – pluggable CLI filter that saved 91.8% of my LLM tokens、Semble:给 AI agent 的代码搜索,省 98% token、I built an open-source email builder, alternative to Beefree/Unlayer
 - **[2026-06-14](daily/2026-06-14.md)** · ⭐⭐⭐ 0 · ⭐⭐ 3 — Lowfat – pluggable CLI filter that saved 91.8% of my LLM tokens、Semble:给 AI agent 的代码搜索,省 98% token、I built an open-source email builder, alternative to Beefree/Unlayer
 - **[2026-06-13](daily/2026-06-13.md)** · ⭐⭐⭐ 0 · ⭐⭐ 3 — Lowfat – pluggable CLI filter that saved 91.8% of my LLM tokens、Semble:给 AI agent 的代码搜索,省 98% token、I built an open-source email builder, alternative to Beefree/Unlayer
