@@ -16,6 +16,7 @@ node_modules/
 
 # Logs
 *.log
+.logs/
 
 # macOS
 .DS_Store

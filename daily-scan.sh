@@ -4,7 +4,7 @@
 # 幂等(当天成功后跳过)+ 进程锁 + 单源/单步失败不阻断整体。
 #
 # 手动跑:  bash daily-scan.sh
-# 强制重跑:rm ~/.claude/logs/.smart-programs-done-$(date +%F) && bash daily-scan.sh
+# 强制重跑:rm "${LOGDIR:-$REPO/.logs}/.smart-programs-done-$(date +%F)" && bash daily-scan.sh
 #
 set -uo pipefail
 export PATH="$HOME/.bun/bin:/usr/local/bin:/usr/bin:/bin:/opt/homebrew/bin"
@@ -17,7 +17,12 @@ FEISHU_WEBHOOK="${FEISHU_WEBHOOK:-}"                                  # 飞书�
 FEISHU_TARGET="${FEISHU_TARGET:-}"                                    # 飞书 DM(hermes fallback,纯文本;形如 feishu:oc_xxx)
 # ----------------
 
-LOGDIR="$HOME/.claude/logs"; mkdir -p "$LOGDIR"
+LOGDIR="${LOGDIR:-$REPO/.logs}"; mkdir -p "$LOGDIR"
+
+# 检查 SITE_URL 是否仍为占位符
+if [[ "$SITE_URL" == *"YOUR_SERVER"* ]]; then
+  echo "[warn] SITE_URL 仍为占位符 ($SITE_URL)，飞书消息中的链接将无效。请设置 SITE_URL 环境变量。" >&2
+fi
 LOG="$LOGDIR/smart-programs-daily.log"
 DATE="$(date +%F)"
 DONE="$LOGDIR/.smart-programs-done-$DATE"
