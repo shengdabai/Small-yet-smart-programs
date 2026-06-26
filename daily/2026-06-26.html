@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>机会简报 2026-06-26 · Opportunity Briefing</title>
+<style>
+:root{--bg:#0f1115;--card:#171a21;--line:#262b36;--ink:#e8eaed;--mut:#9aa3b2;--gold:#d4a72c;--p3:#b06cd4;--acc:#4a9eff}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--ink);font-family:-apple-system,"PingFang SC","Segoe UI",system-ui,sans-serif;line-height:1.6}
+.wrap{max-width:1100px;margin:0 auto;padding:32px 20px 80px}
+header{border-bottom:1px solid var(--line);padding-bottom:20px;margin-bottom:28px;display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:12px}
+h1{font-size:1.7rem;letter-spacing:-.01em}
+.date{color:var(--mut);font-family:ui-monospace,monospace;font-size:.85rem}
+.toggle{display:flex;gap:6px}
+.toggle button{background:var(--card);color:var(--mut);border:1px solid var(--line);padding:6px 14px;border-radius:6px;cursor:pointer;font-size:.85rem}
+.toggle button.on{background:var(--acc);color:#fff;border-color:var(--acc)}
+.summary{display:flex;gap:18px;margin-bottom:28px;flex-wrap:wrap}
+.stat{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px 20px;min-width:120px}
+.stat .n{font-size:2rem;font-weight:700}
+.stat.t3 .n{color:var(--p3)} .stat.t2 .n{color:var(--gold)}
+.stat .l{color:var(--mut);font-size:.78rem;text-transform:uppercase;letter-spacing:.05em}
+h2{font-size:1.15rem;margin:32px 0 14px;padding-left:10px;border-left:3px solid var(--acc)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:14px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:16px}
+.card-head{display:flex;justify-content:space-between;align-items:start;gap:8px;margin-bottom:4px}
+.name{color:var(--ink);font-weight:600;text-decoration:none;font-size:1.02rem}
+.name:hover{color:var(--acc)}
+.badge{font-size:.72rem;font-family:ui-monospace,monospace;padding:2px 8px;border-radius:20px;white-space:nowrap;background:#222}
+.badge.t3{background:rgba(176,108,212,.2);color:var(--p3)} .badge.t2{background:rgba(212,167,44,.2);color:var(--gold)} .badge.sig{color:var(--mut)}
+.src{color:var(--mut);font-size:.72rem;font-family:ui-monospace,monospace;margin-bottom:8px}
+.desc{color:#c4cad6;font-size:.9rem;margin-bottom:10px}
+.pills{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
+.src-link{display:inline-block;font-size:.82rem;color:var(--acc);text-decoration:none;border:1px solid var(--acc);border-radius:6px;padding:5px 12px;transition:.15s}
+.src-link:hover{background:var(--acc);color:#fff}
+.pill{font-size:.7rem;color:var(--mut);border:1px solid var(--line);padding:2px 8px;border-radius:20px}
+.muted{color:var(--mut);font-style:italic;padding:8px 0}
+.disclaimer{margin-top:40px;padding:16px 20px;background:rgba(212,167,44,.08);border:1px solid rgba(212,167,44,.3);border-radius:10px;color:var(--mut);font-size:.86rem}
+footer{margin-top:40px;color:var(--mut);font-size:.78rem;text-align:center;font-family:ui-monospace,monospace}
+.en{display:none}
+body.lang-en .zh{display:none} body.lang-en .en{display:inline}
+</style>
+</head>
+<body class="lang-zh">
+<div class="wrap">
+<header>
+  <div>
+    <h1><span class="zh">机会简报</span><span class="en">Opportunity Briefing</span></h1>
+    <div class="date">2026-06-26 · smart-programs</div>
+  </div>
+  <div class="toggle">
+    <button id="b-zh" class="on" onclick="setLang('zh')">中文</button>
+    <button id="b-en" onclick="setLang('en')">EN</button>
+  </div>
+</header>
+
+<div class="summary">
+  <div class="stat t3"><div class="n">0</div><div class="l">⭐⭐⭐</div></div>
+  <div class="stat t2"><div class="n">3</div><div class="l">⭐⭐</div></div>
+  <div class="stat"><div class="n">15</div><div class="l"><span class="zh">今日新信号</span><span class="en">fresh today</span></div></div>
+</div>
+
+<h2><span class="zh">值得长期推进</span><span class="en">Worth pursuing — top picks</span></h2>
+<p class="muted"><span class="zh">本期暂无 ⭐⭐⭐(诚实结果,继续手头项目)</span><span class="en">No ⭐⭐⭐ this round (an honest result — keep building).</span></p>
+
+<h2><span class="zh">备选(3 个月后回访)</span><span class="en">Shortlist (revisit in 3 months)</span></h2>
+<div class="grid"><article class="card">
+    <div class="card-head">
+      <a class="name" href="https://github.com/zdk/lowfat" target="_blank" rel="noopener"><span class="zh">Lowfat – pluggable CLI filter that saved 91.8% of my LLM tokens</span><span class="en">Lowfat – pluggable CLI filter that saved 91.8% of my LLM tokens</span></a><span class="badge t2">⭐⭐ 24</span>
+    </div>
+    <div class="src">hackernews</div>
+    <p class="desc"><span class="zh">Hi HN, not sure if anyone would be interested, but just wanted to share that I&amp;#x27;ve been maintaining my small tool called &amp;#x27;lowfat&amp;#x27; that helps me filters some of my verbose CLI output. It&amp;…</span><span class="en">Hi HN, not sure if anyone would be interested, but just wanted to share that I&amp;#x27;ve been maintaining my small tool called &amp;#x27;lowfat&amp;#x27; that helps me filters some of my verbose CLI output. It&amp;…</span></p>
+    <div class="pills"><span class="pill">6-12月</span></div>
+    <a class="src-link" href="https://github.com/zdk/lowfat" target="_blank" rel="noopener">🔗 <span class="zh">查看原项目</span><span class="en">View source</span> ↗</a>
+  </article><article class="card">
+    <div class="card-head">
+      <a class="name" href="https://github.com/MinishLab/semble" target="_blank" rel="noopener"><span class="zh">Semble:给 AI agent 的代码搜索,省 98% token</span><span class="en">Semble – Code search for agents that uses 98% fewer tokens than grep</span></a><span class="badge t2">⭐⭐ 22</span>
+    </div>
+    <div class="src">hackernews</div>
+    <p class="desc"><span class="zh">命中你的 Claude Code / MCP 生态资产,值得观察(⭐⭐)。</span><span class="en">Hey HN! We (Stephan and Thomas) recently open-sourced Semble. We kept running into the same problem while using Claude Code on large codebases: when the agent can&amp;#x27;t find something directly, it fa…</span></p>
+    <div class="pills"><span class="pill">6-12月</span></div>
+    <a class="src-link" href="https://github.com/MinishLab/semble" target="_blank" rel="noopener">🔗 <span class="zh">查看原项目</span><span class="en">View source</span> ↗</a>
+  </article><article class="card">
+    <div class="card-head">
+      <a class="name" href="https://play.templatical.com" target="_blank" rel="noopener"><span class="zh">I built an open-source email builder, alternative to Beefree/Unlayer</span><span class="en">I built an open-source email builder, alternative to Beefree/Unlayer</span></a><span class="badge t2">⭐⭐ 22</span>
+    </div>
+    <div class="src">hackernews</div>
+    <p class="desc"><span class="zh"></span><span class="en"></span></p>
+    <div class="pills"><span class="pill">6-12月</span></div>
+    <a class="src-link" href="https://play.templatical.com" target="_blank" rel="noopener">🔗 <span class="zh">查看原项目</span><span class="en">View source</span> ↗</a>
+  </article></div>
+
+<h2><span class="zh">最新产品信号</span><span class="en">Fresh signals today</span></h2>
+<div class="grid"><article class="card">
+    <div class="card-head">
+      <a class="name" href="https://hackernewstrends.com" target="_blank" rel="noopener"><span class="zh">I made Google Trends for Hacker News by indexing 18 years of comments</span><span class="en">I made Google Trends for Hacker News by indexing 18 years of comments</span></a><span class="badge sig"><span class="zh">热度 681</span><span class="en">signal 681</span></span>
+    </div>
+    <div class="src">hackernews</div>
+    <p class="desc"><span class="zh"></span><span class="en"></span></p>
+    <div class="pills"></div>
+    <a class="src-link" href="https://hackernewstrends.com" target="_blank" rel="noopener">🔗 <span class="zh">查看原项目</span><span class="en">View source</span> ↗</a>
+  </article><article class="card">
+    <div class="card-head">
+      <a class="name" href="https://princechazz.com" target="_blank" rel="noopener"><span class="zh">Chess-Inspired Roguelike</span><span class="en">Chess-Inspired Roguelike</span></a><span class="badge sig"><span class="zh">热度 244</span><span class="en">signal 244</span></span>
+    </div>
+    <div class="src">hackernews</div>
+    <p class="desc"><span class="zh"></span><span class="en"></span></p>
+    <div class="pills"></div>
+    <a class="src-link" href="https://princechazz.com" target="_blank" rel="noopener">🔗 <span class="zh">查看原项目</span><span class="en">View source</span> ↗</a>
+  </article><article class="card">
+    <div class="card-head">
+      <a class="name" href="https://github.com/inkeep/open-knowledge" target="_blank" rel="noopener"><span class="zh">OpenKnowledge – open source AI-first alternative to Obsidian/Notion</span><span class="en">OpenKnowledge – open source AI-first alternative to Obsidian/Notion</span></a><span class="badge sig"><span class="zh">热度 228</span><span class="en">signal 228</span></span>
+    </div>
+    <div class="src">hackernews</div>
+    <p class="desc"><span class="zh">Hi HN, Nick here. We’re launching OpenKnowledge (https:&amp;#x2F;&amp;#x2F;openknowledge.ai&amp;#x2F;), a “what you see is what you get” markdown editor that has direct integrations with Claude, Codex, and other …</span><span class="en">Hi HN, Nick here. We’re launching OpenKnowledge (https:&amp;#x2F;&amp;#x2F;openknowledge.ai&amp;#x2F;), a “what you see is what you get” markdown editor that has direct integrations with Claude, Codex, and other …</span></p>
+    <div class="pills"></div>
+    <a class="src-link" href="https://github.com/inkeep/open-knowledge" target="_blank" rel="noopener">🔗 <span class="zh">查看原项目</span><span class="en">View source</span> ↗</a>
+  </article><article class="card">
+    <div class="card-head">
+      <a class="name" href="https://www.crosscanon.com/" target="_blank" rel="noopener"><span class="zh">Bible as RAG Database</span><span class="en">Bible as RAG Database</span></a><span class="badge sig"><span class="zh">热度 134</span><span class="en">signal 134</span></span>
+    </div>
+    <div class="src">hackernews</div>
+    <p class="desc"><span class="zh">Made this in a free evening. Index an permissive license translation of the Bible (WEB) into a RAG database to allow returning passages of similar semantic meaning. Lots of fun. For example, &amp;quot;mor…</span><span class="en">Made this in a free evening. Index an permissive license translation of the Bible (WEB) into a RAG database to allow returning passages of similar semantic meaning. Lots of fun. For example, &amp;quot;mor…</span></p>
+    <div class="pills"></div>
+    <a class="src-link" href="https://www.crosscanon.com/" target="_blank" rel="noopener">🔗 <span class="zh">查看原项目</span><span class="en">View source</span> ↗</a>
+  </article><article class="card">
+    <div class="card-head">
+      <a class="name" href="https://minipcs.zip" target="_blank" rel="noopener"><span class="zh">MiniPCs.zip – Charting the Pareto frontier of Mini PCs</span><span class="en">MiniPCs.zip – Charting the Pareto frontier of Mini PCs</span></a><span class="badge sig"><span class="zh">热度 105</span><span class="en">signal 105</span></span>
+    </div>
+    <div class="src">hackernews</div>
+    <p class="desc"><span class="zh">The overall idea is to chart out the thousands of Mini PCs by benchmark and reveal the Pareto Front so you can get the most Compute per Dollar. Definitely a labor of love as I have a number of Mini PC…</span><span class="en">The overall idea is to chart out the thousands of Mini PCs by benchmark and reveal the Pareto Front so you can get the most Compute per Dollar. Definitely a labor of love as I have a number of Mini PC…</span></p>
+    <div class="pills"></div>
+    <a class="src-link" href="https://minipcs.zip" target="_blank" rel="noopener">🔗 <span class="zh">查看原项目</span><span class="en">View source</span> ↗</a>
+  </article><article class="card">
+    <div class="card-head">
+      <a class="name" href="https://lingochunk.com/try" target="_blank" rel="noopener"><span class="zh">Turn native language audio into flashcards and shadowing practice</span><span class="en">Turn native language audio into flashcards and shadowing practice</span></a><span class="badge sig"><span class="zh">热度 76</span><span class="en">signal 76</span></span>
+    </div>
+    <div class="src">hackernews</div>
+    <p class="desc"><span class="zh">Here is a tool I built initially for myself to help with my German and Greek language studies. It started as a hack for creating Anki cards from native language audio. It extracts the words, finds the…</span><span class="en">Here is a tool I built initially for myself to help with my German and Greek language studies. It started as a hack for creating Anki cards from native language audio. It extracts the words, finds the…</span></p>
+    <div class="pills"></div>
+    <a class="src-link" href="https://lingochunk.com/try" target="_blank" rel="noopener">🔗 <span class="zh">查看原项目</span><span class="en">View source</span> ↗</a>
+  </article><article class="card">
+    <div class="card-head">
+      <a class="name" href="https://github.com/wolfoo2931/linkedrecords/" target="_blank" rel="noopener"><span class="zh">Write SaaS apps where users control where their data is stored</span><span class="en">Write SaaS apps where users control where their data is stored</span></a><span class="badge sig"><span class="zh">热度 69</span><span class="en">signal 69</span></span>
+    </div>
+    <div class="src">hackernews</div>
+    <p class="desc"><span class="zh">Hello HN,I would like to share with you linkedrecords.com - an open source backend as a service I&amp;#x27;m working on since some time now. You can think of it as an firebase&amp;#x2F;convex alternative with…</span><span class="en">Hello HN,I would like to share with you linkedrecords.com - an open source backend as a service I&amp;#x27;m working on since some time now. You can think of it as an firebase&amp;#x2F;convex alternative with…</span></p>
+    <div class="pills"></div>
+    <a class="src-link" href="https://github.com/wolfoo2931/linkedrecords/" target="_blank" rel="noopener">🔗 <span class="zh">查看原项目</span><span class="en">View source</span> ↗</a>
+  </article><article class="card">
+    <div class="card-head">
+      <a class="name" href="https://www.startupsbr.com/sao-paulo" target="_blank" rel="noopener"><span class="zh">StartupsBR – A map of Brazilian startups</span><span class="en">StartupsBR – A map of Brazilian startups</span></a><span class="badge sig"><span class="zh">热度 52</span><span class="en">signal 52</span></span>
+    </div>
+    <div class="src">hackernews</div>
+    <p class="desc"><span class="zh">I couldn&amp;#x27;t find a simple way to explore the Brazilian startup ecosystem geographically, as I can in other places like the Bay Area or London, so I built one.The map currently includes hundreds of…</span><span class="en">I couldn&amp;#x27;t find a simple way to explore the Brazilian startup ecosystem geographically, as I can in other places like the Bay Area or London, so I built one.The map currently includes hundreds of…</span></p>
+    <div class="pills"></div>
+    <a class="src-link" href="https://www.startupsbr.com/sao-paulo" target="_blank" rel="noopener">🔗 <span class="zh">查看原项目</span><span class="en">View source</span> ↗</a>
+  </article><article class="card">
+    <div class="card-head">
+      <a class="name" href="https://www.toolify.ai/tool/myintelbrief" target="_blank" rel="noopener"><span class="zh">myintelbrief</span><span class="en">myintelbrief</span></a><span class="badge sig"><span class="zh">热度 5</span><span class="en">signal 5</span></span>
+    </div>
+    <div class="src">toolify</div>
+    <p class="desc"><span class="zh"></span><span class="en"></span></p>
+    <div class="pills"></div>
+    <a class="src-link" href="https://www.toolify.ai/tool/myintelbrief" target="_blank" rel="noopener">🔗 <span class="zh">查看原项目</span><span class="en">View source</span> ↗</a>
+  </article><article class="card">
+    <div class="card-head">
+      <a class="name" href="https://www.toolify.ai/tool/navos" target="_blank" rel="noopener"><span class="zh">navos</span><span class="en">navos</span></a><span class="badge sig"><span class="zh">热度 5</span><span class="en">signal 5</span></span>
+    </div>
+    <div class="src">toolify</div>
+    <p class="desc"><span class="zh"></span><span class="en"></span></p>
+    <div class="pills"></div>
+    <a class="src-link" href="https://www.toolify.ai/tool/navos" target="_blank" rel="noopener">🔗 <span class="zh">查看原项目</span><span class="en">View source</span> ↗</a>
+  </article><article class="card">
+    <div class="card-head">
+      <a class="name" href="https://www.toolify.ai/tool/alun-lucas" target="_blank" rel="noopener"><span class="zh">alun lucas</span><span class="en">alun lucas</span></a><span class="badge sig"><span class="zh">热度 5</span><span class="en">signal 5</span></span>
+    </div>
+    <div class="src">toolify</div>
+    <p class="desc"><span class="zh"></span><span class="en"></span></p>
+    <div class="pills"></div>
+    <a class="src-link" href="https://www.toolify.ai/tool/alun-lucas" target="_blank" rel="noopener">🔗 <span class="zh">查看原项目</span><span class="en">View source</span> ↗</a>
+  </article><article class="card">
+    <div class="card-head">
+      <a class="name" href="https://www.toolify.ai/tool/doodara" target="_blank" rel="noopener"><span class="zh">doodara</span><span class="en">doodara</span></a><span class="badge sig"><span class="zh">热度 5</span><span class="en">signal 5</span></span>
+    </div>
+    <div class="src">toolify</div>
+    <p class="desc"><span class="zh"></span><span class="en"></span></p>
+    <div class="pills"></div>
+    <a class="src-link" href="https://www.toolify.ai/tool/doodara" target="_blank" rel="noopener">🔗 <span class="zh">查看原项目</span><span class="en">View source</span> ↗</a>
+  </article><article class="card">
+    <div class="card-head">
+      <a class="name" href="https://www.toolify.ai/tool/face2social" target="_blank" rel="noopener"><span class="zh">face2social</span><span class="en">face2social</span></a><span class="badge sig"><span class="zh">热度 5</span><span class="en">signal 5</span></span>
+    </div>
+    <div class="src">toolify</div>
+    <p class="desc"><span class="zh"></span><span class="en"></span></p>
+    <div class="pills"></div>
+    <a class="src-link" href="https://www.toolify.ai/tool/face2social" target="_blank" rel="noopener">🔗 <span class="zh">查看原项目</span><span class="en">View source</span> ↗</a>
+  </article><article class="card">
+    <div class="card-head">
+      <a class="name" href="https://www.toolify.ai/tool/socialprofiler" target="_blank" rel="noopener"><span class="zh">socialprofiler</span><span class="en">socialprofiler</span></a><span class="badge sig"><span class="zh">热度 5</span><span class="en">signal 5</span></span>
+    </div>
+    <div class="src">toolify</div>
+    <p class="desc"><span class="zh"></span><span class="en"></span></p>
+    <div class="pills"></div>
+    <a class="src-link" href="https://www.toolify.ai/tool/socialprofiler" target="_blank" rel="noopener">🔗 <span class="zh">查看原项目</span><span class="en">View source</span> ↗</a>
+  </article><article class="card">
+    <div class="card-head">
+      <a class="name" href="https://www.toolify.ai/tool/videoall-ai" target="_blank" rel="noopener"><span class="zh">videoall ai</span><span class="en">videoall ai</span></a><span class="badge sig"><span class="zh">热度 5</span><span class="en">signal 5</span></span>
+    </div>
+    <div class="src">toolify</div>
+    <p class="desc"><span class="zh"></span><span class="en"></span></p>
+    <div class="pills"></div>
+    <a class="src-link" href="https://www.toolify.ai/tool/videoall-ai" target="_blank" rel="noopener">🔗 <span class="zh">查看原项目</span><span class="en">View source</span> ↗</a>
+  </article></div>
+
+<div class="disclaimer">
+  <span class="zh">机器初筛 + LLM 初评。⭐⭐⭐ 仅代表"值得人工 review",不是"立刻 pivot"。pivot 前必须和手头项目比较,差 +5 分才动(见 METHODOLOGY.md 反陷阱 5)。</span>
+  <span class="en">Machine pre-filter + LLM first-pass scoring. ⭐⭐⭐ means "worth a human review", not "pivot now". Only switch if it beats your current project by +5 points (see METHODOLOGY.md, anti-trap 5).</span>
+</div>
+
+<footer>smart-programs · 7-dimension rubric (v5 SOP) · 2026-06-26</footer>
+</div>
+<script>
+function setLang(l){
+  document.body.className = 'lang-' + l;
+  document.getElementById('b-zh').classList.toggle('on', l==='zh');
+  document.getElementById('b-en').classList.toggle('on', l==='en');
+  try{ localStorage.setItem('sp-lang', l); }catch(e){}
+}
+try{ const s = localStorage.getItem('sp-lang'); if(s) setLang(s); }catch(e){}
+</script>
+</body>
+</html>
