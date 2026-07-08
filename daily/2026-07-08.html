@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>机会简报 2026-07-08 · Opportunity Briefing</title>
+<style>
+:root{--bg:#0f1115;--card:#171a21;--line:#262b36;--ink:#e8eaed;--mut:#9aa3b2;--gold:#d4a72c;--p3:#b06cd4;--acc:#4a9eff}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--ink);font-family:-apple-system,"PingFang SC","Segoe UI",system-ui,sans-serif;line-height:1.6}
+.wrap{max-width:1100px;margin:0 auto;padding:32px 20px 80px}
+header{border-bottom:1px solid var(--line);padding-bottom:20px;margin-bottom:28px;display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:12px}
+h1{font-size:1.7rem;letter-spacing:-.01em}
+.date{color:var(--mut);font-family:ui-monospace,monospace;font-size:.85rem}
+.toggle{display:flex;gap:6px}
+.toggle button{background:var(--card);color:var(--mut);border:1px solid var(--line);padding:6px 14px;border-radius:6px;cursor:pointer;font-size:.85rem}
+.toggle button.on{background:var(--acc);color:#fff;border-color:var(--acc)}
+.summary{display:flex;gap:18px;margin-bottom:28px;flex-wrap:wrap}
+.stat{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px 20px;min-width:120px}
+.stat .n{font-size:2rem;font-weight:700}
+.stat.t3 .n{color:var(--p3)} .stat.t2 .n{color:var(--gold)}
+.stat .l{color:var(--mut);font-size:.78rem;text-transform:uppercase;letter-spacing:.05em}
+h2{font-size:1.15rem;margin:32px 0 14px;padding-left:10px;border-left:3px solid var(--acc)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:14px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:16px}
+.card-head{display:flex;justify-content:space-between;align-items:start;gap:8px;margin-bottom:4px}
+.name{color:var(--ink);font-weight:600;text-decoration:none;font-size:1.02rem}
+.name:hover{color:var(--acc)}
+.badge{font-size:.72rem;font-family:ui-monospace,monospace;padding:2px 8px;border-radius:20px;white-space:nowrap;background:#222}
+.badge.t3{background:rgba(176,108,212,.2);color:var(--p3)} .badge.t2{background:rgba(212,167,44,.2);color:var(--gold)} .badge.sig{color:var(--mut)}
+.src{color:var(--mut);font-size:.72rem;font-family:ui-monospace,monospace;margin-bottom:8px}
+.desc{color:#c4cad6;font-size:.9rem;margin-bottom:10px}
+.pills{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
+.src-link{display:inline-block;font-size:.82rem;color:var(--acc);text-decoration:none;border:1px solid var(--acc);border-radius:6px;padding:5px 12px;transition:.15s}
+.src-link:hover{background:var(--acc);color:#fff}
+.pill{font-size:.7rem;color:var(--mut);border:1px solid var(--line);padding:2px 8px;border-radius:20px}
+.muted{color:var(--mut);font-style:italic;padding:8px 0}
+.disclaimer{margin-top:40px;padding:16px 20px;background:rgba(212,167,44,.08);border:1px solid rgba(212,167,44,.3);border-radius:10px;color:var(--mut);font-size:.86rem}
+footer{margin-top:40px;color:var(--mut);font-size:.78rem;text-align:center;font-family:ui-monospace,monospace}
+.en{display:none}
+body.lang-en .zh{display:none} body.lang-en .en{display:inline}
+</style>
+</head>
+<body class="lang-zh">
+<div class="wrap">
+<header>
+  <div>
+    <h1><span class="zh">机会简报</span><span class="en">Opportunity Briefing</span></h1>
+    <div class="date">2026-07-08 · smart-programs</div>
+  </div>
+  <div class="toggle">
+    <button id="b-zh" class="on" onclick="setLang('zh')">中文</button>
+    <button id="b-en" onclick="setLang('en')">EN</button>
+  </div>
+</header>
+
+<div class="summary">
+  <div class="stat t3"><div class="n">0</div><div class="l">⭐⭐⭐</div></div>
+  <div class="stat t2"><div class="n">2</div><div class="l">⭐⭐</div></div>
+  <div class="stat"><div class="n">5</div><div class="l"><span class="zh">今日新信号</span><span class="en">fresh today</span></div></div>
+</div>
+
+<h2><span class="zh">值得长期推进</span><span class="en">Worth pursuing — top picks</span></h2>
+<p class="muted"><span class="zh">本期暂无 ⭐⭐⭐(诚实结果,继续手头项目)</span><span class="en">No ⭐⭐⭐ this round (an honest result — keep building).</span></p>
+
+<h2><span class="zh">备选(3 个月后回访)</span><span class="en">Shortlist (revisit in 3 months)</span></h2>
+<div class="grid"><article class="card">
+    <div class="card-head">
+      <a class="name" href="https://github.com/zdk/lowfat" target="_blank" rel="noopener"><span class="zh">Lowfat – pluggable CLI filter that saved 91.8% of my LLM tokens</span><span class="en">Lowfat – pluggable CLI filter that saved 91.8% of my LLM tokens</span></a><span class="badge t2">⭐⭐ 24</span>
+    </div>
+    <div class="src">hackernews</div>
+    <p class="desc"><span class="zh">Hi HN, not sure if anyone would be interested, but just wanted to share that I&amp;#x27;ve been maintaining my small tool called &amp;#x27;lowfat&amp;#x27; that helps me filters some of my verbose CLI output. It&amp;…</span><span class="en">Hi HN, not sure if anyone would be interested, but just wanted to share that I&amp;#x27;ve been maintaining my small tool called &amp;#x27;lowfat&amp;#x27; that helps me filters some of my verbose CLI output. It&amp;…</span></p>
+    <div class="pills"><span class="pill">6-12月</span></div>
+    <a class="src-link" href="https://github.com/zdk/lowfat" target="_blank" rel="noopener">🔗 <span class="zh">查看原项目</span><span class="en">View source</span> ↗</a>
+  </article><article class="card">
+    <div class="card-head">
+      <a class="name" href="https://play.templatical.com" target="_blank" rel="noopener"><span class="zh">I built an open-source email builder, alternative to Beefree/Unlayer</span><span class="en">I built an open-source email builder, alternative to Beefree/Unlayer</span></a><span class="badge t2">⭐⭐ 22</span>
+    </div>
+    <div class="src">hackernews</div>
+    <p class="desc"><span class="zh"></span><span class="en"></span></p>
+    <div class="pills"><span class="pill">6-12月</span></div>
+    <a class="src-link" href="https://play.templatical.com" target="_blank" rel="noopener">🔗 <span class="zh">查看原项目</span><span class="en">View source</span> ↗</a>
+  </article></div>
+
+<h2><span class="zh">最新产品信号</span><span class="en">Fresh signals today</span></h2>
+<div class="grid"><article class="card">
+    <div class="card-head">
+      <a class="name" href="https://davit.app" target="_blank" rel="noopener"><span class="zh">Davit, a Apple Containers UI</span><span class="en">Davit, a Apple Containers UI</span></a><span class="badge sig"><span class="zh">热度 242</span><span class="en">signal 242</span></span>
+    </div>
+    <div class="src">hackernews</div>
+    <p class="desc"><span class="zh">Mostly vibe-coded Apple Containers front-end that I&amp;#x27;d like to use myself. But if others want to use it, here&amp;#x27;s the source code.</span><span class="en">Mostly vibe-coded Apple Containers front-end that I&amp;#x27;d like to use myself. But if others want to use it, here&amp;#x27;s the source code.</span></p>
+    <div class="pills"></div>
+    <a class="src-link" href="https://davit.app" target="_blank" rel="noopener">🔗 <span class="zh">查看原项目</span><span class="en">View source</span> ↗</a>
+  </article><article class="card">
+    <div class="card-head">
+      <a class="name" href="https://github.com/rowboatlabs/rowboat" target="_blank" rel="noopener"><span class="zh">Rowboat – Open-source, local-first alternative to Claude Desktop</span><span class="en">Rowboat – Open-source, local-first alternative to Claude Desktop</span></a><span class="badge sig"><span class="zh">热度 118</span><span class="en">signal 118</span></span>
+    </div>
+    <div class="src">hackernews</div>
+    <p class="desc"><span class="zh">Claude’s desktop app is brilliant, but for our own daily work we kept wanting it to be less like a chat app and more like a full-fledged work app. Rowboat is our attempt at that, including the ability…</span><span class="en">Claude’s desktop app is brilliant, but for our own daily work we kept wanting it to be less like a chat app and more like a full-fledged work app. Rowboat is our attempt at that, including the ability…</span></p>
+    <div class="pills"></div>
+    <a class="src-link" href="https://github.com/rowboatlabs/rowboat" target="_blank" rel="noopener">🔗 <span class="zh">查看原项目</span><span class="en">View source</span> ↗</a>
+  </article><article class="card">
+    <div class="card-head">
+      <a class="name" href="https://postgres.saneengineer.com" target="_blank" rel="noopener"><span class="zh">PostgreSQL performance and cost across 23 EC2 instance types</span><span class="en">PostgreSQL performance and cost across 23 EC2 instance types</span></a><span class="badge sig"><span class="zh">热度 83</span><span class="en">signal 83</span></span>
+    </div>
+    <div class="src">hackernews</div>
+    <p class="desc"><span class="zh">Hey! I&amp;#x27;m Andrei.I got frustrated by how people tend to build overcomplicated backend systems, being &amp;quot;motivated&amp;quot; by big tech case studies and popular books.So, I started exploring lean a…</span><span class="en">Hey! I&amp;#x27;m Andrei.I got frustrated by how people tend to build overcomplicated backend systems, being &amp;quot;motivated&amp;quot; by big tech case studies and popular books.So, I started exploring lean a…</span></p>
+    <div class="pills"></div>
+    <a class="src-link" href="https://postgres.saneengineer.com" target="_blank" rel="noopener">🔗 <span class="zh">查看原项目</span><span class="en">View source</span> ↗</a>
+  </article><article class="card">
+    <div class="card-head">
+      <a class="name" href="https://whimfiles.com" target="_blank" rel="noopener"><span class="zh">Fast, native Mac file manager (filters, fuzzy find, 9 MB, no Electron)</span><span class="en">Fast, native Mac file manager (filters, fuzzy find, 9 MB, no Electron)</span></a><span class="badge sig"><span class="zh">热度 82</span><span class="en">signal 82</span></span>
+    </div>
+    <div class="src">hackernews</div>
+    <p class="desc"><span class="zh">My Downloads folder had been left unkept for a really long time and cleaning it up using Finder was quite cumbersome. So I started creating a simple app to help me filter out and delete or move the fi…</span><span class="en">My Downloads folder had been left unkept for a really long time and cleaning it up using Finder was quite cumbersome. So I started creating a simple app to help me filter out and delete or move the fi…</span></p>
+    <div class="pills"></div>
+    <a class="src-link" href="https://whimfiles.com" target="_blank" rel="noopener">🔗 <span class="zh">查看原项目</span><span class="en">View source</span> ↗</a>
+  </article><article class="card">
+    <div class="card-head">
+      <a class="name" href="https://github.com/kklimuk/docx-cli" target="_blank" rel="noopener"><span class="zh">Docx-CLI: agents read/edit Word docs using 1/2 the time and tokens</span><span class="en">Docx-CLI: agents read/edit Word docs using 1/2 the time and tokens</span></a><span class="badge sig"><span class="zh">热度 60</span><span class="en">signal 60</span></span>
+    </div>
+    <div class="src">hackernews</div>
+    <p class="desc"><span class="zh"></span><span class="en"></span></p>
+    <div class="pills"></div>
+    <a class="src-link" href="https://github.com/kklimuk/docx-cli" target="_blank" rel="noopener">🔗 <span class="zh">查看原项目</span><span class="en">View source</span> ↗</a>
+  </article></div>
+
+<div class="disclaimer">
+  <span class="zh">机器初筛 + LLM 初评。⭐⭐⭐ 仅代表"值得人工 review",不是"立刻 pivot"。pivot 前必须和手头项目比较,差 +5 分才动(见 METHODOLOGY.md 反陷阱 5)。</span>
+  <span class="en">Machine pre-filter + LLM first-pass scoring. ⭐⭐⭐ means "worth a human review", not "pivot now". Only switch if it beats your current project by +5 points (see METHODOLOGY.md, anti-trap 5).</span>
+</div>
+
+<footer>smart-programs · 7-dimension rubric (v5 SOP) · 2026-07-08</footer>
+</div>
+<script>
+function setLang(l){
+  document.body.className = 'lang-' + l;
+  document.getElementById('b-zh').classList.toggle('on', l==='zh');
+  document.getElementById('b-en').classList.toggle('on', l==='en');
+  try{ localStorage.setItem('sp-lang', l); }catch(e){}
+}
+try{ const s = localStorage.getItem('sp-lang'); if(s) setLang(s); }catch(e){}
+</script>
+</body>
+</html>
