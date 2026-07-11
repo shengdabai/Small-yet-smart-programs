@@ -2,6 +2,7 @@
 
 ### 📅 每日简报 · Daily Briefings
 
+- **[2026-07-11](daily/2026-07-11.md)** · ⭐⭐⭐ 0 · ⭐⭐ 2 — Frugon – Find which LLM calls a cheaper model could handle (local, MIT)、Wyrm – Solve algebra by touch, built on an open-source soundness engine
 - **[2026-07-10](daily/2026-07-10.md)** · ⭐⭐⭐ 0 · ⭐⭐ 2 — Lowfat – pluggable CLI filter that saved 91.8% of my LLM tokens、I built an open-source email builder, alternative to Beefree/Unlayer
 - **[2026-07-09](daily/2026-07-09.md)** · ⭐⭐⭐ 0 · ⭐⭐ 2 — Lowfat – pluggable CLI filter that saved 91.8% of my LLM tokens、I built an open-source email builder, alternative to Beefree/Unlayer
 - **[2026-07-08](daily/2026-07-08.md)** · ⭐⭐⭐ 0 · ⭐⭐ 2 — Lowfat – pluggable CLI filter that saved 91.8% of my LLM tokens、I built an open-source email builder, alternative to Beefree/Unlayer
