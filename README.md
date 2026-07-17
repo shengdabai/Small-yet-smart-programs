@@ -2,6 +2,7 @@
 
 ### 📅 每日简报 · Daily Briefings
 
+- **[2026-07-17](daily/2026-07-17.md)** · ⭐⭐⭐ 0 · ⭐⭐ 2 — Frugon – Find which LLM calls a cheaper model could handle (local, MIT)、Wyrm – Solve algebra by touch, built on an open-source soundness engine
 - **[2026-07-16](daily/2026-07-16.md)** · ⭐⭐⭐ 0 · ⭐⭐ 2 — Frugon – Find which LLM calls a cheaper model could handle (local, MIT)、Wyrm – Solve algebra by touch, built on an open-source soundness engine
 - **[2026-07-15](daily/2026-07-15.md)** · ⭐⭐⭐ 0 · ⭐⭐ 2 — Frugon – Find which LLM calls a cheaper model could handle (local, MIT)、Wyrm – Solve algebra by touch, built on an open-source soundness engine
 - **[2026-07-14](daily/2026-07-14.md)** · ⭐⭐⭐ 0 · ⭐⭐ 2 — Frugon – Find which LLM calls a cheaper model could handle (local, MIT)、Wyrm – Solve algebra by touch, built on an open-source soundness engine
