@@ -2,6 +2,7 @@
 
 ### 📅 每日简报 · Daily Briefings
 
+- **[2026-08-06](daily/2026-08-06.md)** · ⭐⭐⭐ 0 · ⭐⭐ 3 — Frugon – Find which LLM calls a cheaper model could handle (local, MIT)、Wyrm – Solve algebra by touch, built on an open-source soundness engine、DeepSQL – A self-hostable DBA agent for Postgres and MySQL
 - **[2026-08-05](daily/2026-08-05.md)** · ⭐⭐⭐ 0 · ⭐⭐ 3 — Frugon – Find which LLM calls a cheaper model could handle (local, MIT)、Wyrm – Solve algebra by touch, built on an open-source soundness engine、DeepSQL – A self-hostable DBA agent for Postgres and MySQL
 - **[2026-08-04](daily/2026-08-04.md)** · ⭐⭐⭐ 0 · ⭐⭐ 3 — Frugon – Find which LLM calls a cheaper model could handle (local, MIT)、Wyrm – Solve algebra by touch, built on an open-source soundness engine、DeepSQL – A self-hostable DBA agent for Postgres and MySQL
 - **[2026-08-03](daily/2026-08-03.md)** · ⭐⭐⭐ 0 · ⭐⭐ 3 — Frugon – Find which LLM calls a cheaper model could handle (local, MIT)、Wyrm – Solve algebra by touch, built on an open-source soundness engine、DeepSQL – A self-hostable DBA agent for Postgres and MySQL
