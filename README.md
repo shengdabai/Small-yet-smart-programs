@@ -2,6 +2,7 @@
 
 ### 📅 每日简报 · Daily Briefings
 
+- **[2026-08-12](daily/2026-08-12.md)** · ⭐⭐⭐ 0 · ⭐⭐ 1 — DeepSQL – A self-hostable DBA agent for Postgres and MySQL
 - **[2026-08-11](daily/2026-08-11.md)** · ⭐⭐⭐ 0 · ⭐⭐ 1 — DeepSQL – A self-hostable DBA agent for Postgres and MySQL
 - **[2026-08-10](daily/2026-08-10.md)** · ⭐⭐⭐ 0 · ⭐⭐ 3 — Frugon – Find which LLM calls a cheaper model could handle (local, MIT)、Wyrm – Solve algebra by touch, built on an open-source soundness engine、DeepSQL – A self-hostable DBA agent for Postgres and MySQL
 - **[2026-08-09](daily/2026-08-09.md)** · ⭐⭐⭐ 0 · ⭐⭐ 3 — Frugon – Find which LLM calls a cheaper model could handle (local, MIT)、Wyrm – Solve algebra by touch, built on an open-source soundness engine、DeepSQL – A self-hostable DBA agent for Postgres and MySQL
