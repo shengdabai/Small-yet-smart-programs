@@ -2,6 +2,7 @@
 
 ### 📅 每日简报 · Daily Briefings
 
+- **[2026-08-14](daily/2026-08-14.md)** · ⭐⭐⭐ 0 · ⭐⭐ 1 — DeepSQL – A self-hostable DBA agent for Postgres and MySQL
 - **[2026-08-13](daily/2026-08-13.md)** · ⭐⭐⭐ 0 · ⭐⭐ 1 — DeepSQL – A self-hostable DBA agent for Postgres and MySQL
 - **[2026-08-12](daily/2026-08-12.md)** · ⭐⭐⭐ 0 · ⭐⭐ 1 — DeepSQL – A self-hostable DBA agent for Postgres and MySQL
 - **[2026-08-11](daily/2026-08-11.md)** · ⭐⭐⭐ 0 · ⭐⭐ 1 — DeepSQL – A self-hostable DBA agent for Postgres and MySQL
