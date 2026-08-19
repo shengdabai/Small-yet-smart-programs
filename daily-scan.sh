@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# 每日 12:30 编排:采集 → LLM 评分 → 双语日报 → 建站 → git 留档 → 同步上海云 → 飞书
+# 每日 12:30 编排:采集 → Codex 评分 → 双语日报 → 建站 → git 留档 → 同步上海云 → 飞书
 # 幂等(当天成功后跳过)+ 进程锁 + 单源/单步失败不阻断整体。
 #
 # 手动跑:  bash daily-scan.sh
@@ -15,20 +15,54 @@ SITE_URL="${SITE_URL:-http://YOUR_SERVER:8082}"
 SHANGHAI_DEST="${SHANGHAI_DEST:-shanghai:/var/www/smart-programs}"   # SSH alias:port 见 ~/.ssh/config
 FEISHU_WEBHOOK="${FEISHU_WEBHOOK:-}"                                  # 飞书自定义机器人 webhook(优先;链接可点)
 FEISHU_TARGET="${FEISHU_TARGET:-}"                                    # 飞书 DM(hermes fallback,纯文本;形如 feishu:oc_xxx)
+CODEX_BIN="${CODEX_BIN:-}"                                            # launchd 建议显式传入 command -v codex 的结果
+CODEX_TIMEOUT_SECONDS="${CODEX_TIMEOUT_SECONDS:-900}"
 # ----------------
 
 LOGDIR="${LOGDIR:-$REPO/.logs}"; mkdir -p "$LOGDIR"
 
-# 检查 SITE_URL 是否仍为占位符
-if [[ "$SITE_URL" == *"YOUR_SERVER"* ]]; then
-  echo "[warn] SITE_URL 仍为占位符 ($SITE_URL)，飞书消息中的链接将无效。请设置 SITE_URL 环境变量。" >&2
-fi
 LOG="$LOGDIR/smart-programs-daily.log"
 DATE="$(date +%F)"
 DONE="$LOGDIR/.smart-programs-done-$DATE"
 LOCKD="$LOGDIR/.smart-programs.lockd"   # mkdir 原子锁(macOS 无 flock)
 
 log(){ echo "[$(date '+%F %T')] $*" >> "$LOG"; }
+
+run_scoring() {
+  local codex_bin="$CODEX_BIN"
+  if [ -z "$codex_bin" ]; then
+    codex_bin="$(command -v codex 2>/dev/null || true)"
+  fi
+  if [ -z "$codex_bin" ] || [ ! -x "$codex_bin" ]; then
+    log "codex CLI not found — skipping LLM scoring, using existing scores"
+    return 127
+  fi
+  if ! command -v timeout >/dev/null 2>&1; then
+    log "timeout command not found — refusing unbounded Codex scoring"
+    return 127
+  fi
+
+  timeout "$CODEX_TIMEOUT_SECONDS" "$codex_bin" exec \
+    -C "$REPO" \
+    --sandbox workspace-write \
+    --config 'approval_policy="never"' \
+    --config 'model_reasoning_effort="high"' \
+    --dangerously-bypass-hook-trust \
+    --color never \
+    '运行机会简报评分：读 .agents/skills/smart-programs-scoring/SKILL.md 并执行。' \
+    >>"$LOG" 2>&1
+}
+
+if [ "${1:-}" = "--score-only" ]; then
+  cd "$REPO" 2>/dev/null || { log "FATAL: repo not found at $REPO"; exit 1; }
+  run_scoring
+  exit $?
+fi
+
+# 检查 SITE_URL 是否仍为占位符
+if [[ "$SITE_URL" == *"YOUR_SERVER"* ]]; then
+  echo "[warn] SITE_URL 仍为占位符 ($SITE_URL)，飞书消息中的链接将无效。请设置 SITE_URL 环境变量。" >&2
+fi
 
 [ -f "$DONE" ] && { log "already done $DATE — skip"; exit 0; }
 
@@ -54,13 +88,8 @@ git pull --rebase >>"$LOG" 2>&1 || log "git pull failed (continuing)"
 # 1) 采集增量公开信号
 bun run scan:daily >>"$LOG" 2>&1 || log "scan:daily had per-source errors (continuing)"
 
-# 2) LLM 评分:用 Claude Code 跑 skill,仅对未评分候选粗筛+7维评分入库(不重复采集、不出 HTML)
-if command -v claude >/dev/null 2>&1; then
-  timeout 600 claude -p "运行 smart-programs 技能的评分环节:只对机会库里本月未评分(scored.total IS NULL)的候选做 4 问粗筛 + 7 维 OPC 评分并写回 scored 表;不要重复采集信号源,不要生成 HTML 报告。读 prompts/coarse-filter.md 和 prompts/opc-score.md 作为评分规则,读 config/profile.local.json 作为运营者画像。完成后只回一行统计(评了几个、各 tier 几个)。" \
-    --dangerously-skip-permissions >>"$LOG" 2>&1 || log "claude scoring step failed (continuing with existing scores)"
-else
-  log "claude CLI not found — skipping LLM scoring, using existing scores"
-fi
+# 2) LLM 评分:用 Codex 跑评分专用 skill(不重复采集、不出 HTML)
+run_scoring || log "codex scoring step failed (continuing with existing scores)"
 
 # 3) 生成中英双语日报
 bun run scripts/daily-digest.ts >>"$LOG" 2>&1 || { log "FATAL: daily-digest failed"; exit 1; }

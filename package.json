@@ -6,6 +6,8 @@
   "description": "Scan public signal sources for small, profitable, replicable software opportunities and score them on a 7-dimension rubric.",
   "scripts": {
     "init": "bun run scripts/db.ts --init",
+    "score:export": "bun run scripts/export-unscored.ts",
+    "score:import": "bun run scripts/import-scores.ts",
     "scan:daily": "bun run scripts/pipeline.ts --mode daily",
     "scan:monthly": "bun run scripts/pipeline.ts --mode monthly",
     "scan:hn": "bun run scripts/sources/hackernews.ts",

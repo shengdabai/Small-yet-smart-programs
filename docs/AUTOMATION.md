@@ -6,7 +6,7 @@ URL on a Shanghai cloud host.
 
 ```
 12:30 launchd ──► daily-scan.sh ──► scan:daily (collect)
-                                  └► claude -p  (7-dim scoring → SQLite)
+                                  └► codex exec (7-dim scoring → SQLite)
                                   └► daily-digest.ts (zh/en briefing → daily/)
                                   └► build-site.ts   (→ site/)
                                   └► git push        (daily/ archive on GitHub)
@@ -29,6 +29,7 @@ bun run init
 
 # install the launchd job (replace placeholders first)
 sed -e "s/__USER__/$USER/g" \
+    -e "s|__CODEX_BIN__|$(command -v codex)|g" \
     -e "s/__FEISHU_OPEN_ID__/<your-feishu-dm-open_id>/g" \
     deploy/com.smart-programs.daily.plist > ~/Library/LaunchAgents/com.smart-programs.daily.plist
 launchctl load ~/Library/LaunchAgents/com.smart-programs.daily.plist
@@ -36,6 +37,7 @@ launchctl load ~/Library/LaunchAgents/com.smart-programs.daily.plist
 
 - Logs: `~/.claude/logs/smart-programs-daily.log`
 - Manual run: `bash ~/.local/share/smart-programs/daily-scan.sh`
+- Scoring-only probe: `bash ~/.local/share/smart-programs/daily-scan.sh --score-only`
 - Force re-run: `rm ~/.claude/logs/.smart-programs-done-$(date +%F)` then run manually
 - Idempotent: one success per day (done-marker), 13:15 is a backstop retry.
 
@@ -76,12 +78,13 @@ If `hermes` is unavailable, leave `FEISHU_TARGET` empty to skip the push.
 | `SITE_URL` | `http://YOUR_SERVER:8082` | public site root (used in Feishu msg) |
 | `SHANGHAI_DEST` | `shanghai:/var/www/smart-programs` | rsync target (SSH alias) |
 | `FEISHU_TARGET` | _(empty)_ | your Feishu DM open_id; empty = skip push |
+| `CODEX_BIN` | discovered from `PATH` | absolute Codex CLI path for launchd |
 
 ## 5. Troubleshooting
 
 - **Nothing published**: check `smart-programs-daily.log`; verify `bun` on PATH.
 - **国内打不开**: confirm 8082 is open in the Tencent console and the systemd
   service is `active` (`ssh shanghai systemctl status smart-programs-site`).
-- **No scores**: the `claude -p` step may have hit a usage limit — existing
+- **No scores**: the `codex exec` step may have hit a usage limit — existing
   scores are still used; the briefing degrades gracefully.
 - **rsync fails**: confirm the `shanghai` SSH alias resolves (`ssh shanghai true`).
