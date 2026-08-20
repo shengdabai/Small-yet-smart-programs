@@ -7,24 +7,31 @@
  *   bun run scripts/notify.ts                  # 检查最近 24h 是否有新 ⭐⭐⭐
  *   bun run scripts/notify.ts --force "msg"    # 强制通知
  */
-import { db, init } from "./db.ts";
-import { execSync } from "node:child_process";
+import { execFileSync } from "node:child_process";
 
-init();
+type OsaScriptRunner = (file: string, args: string[], options: { stdio: "ignore" }) => unknown;
 
-function osascriptNotify(title: string, body: string) {
-  const safe = (s: string) => s.replace(/"/g, '\\"').replace(/\n/g, " ");
+export function buildNotificationScript(title: string, body: string) {
+  const safe = (s: string) => s.replace(/\\/g, "\\\\").replace(/"/g, '\\"').replace(/[\r\n]+/g, " ");
+  return `display notification "${safe(body)}" with title "${safe(title)}" sound name "Glass"`;
+}
+
+export function osascriptNotify(
+  title: string,
+  body: string,
+  run: OsaScriptRunner = execFileSync as OsaScriptRunner,
+) {
   try {
-    execSync(`osascript -e 'display notification "${safe(body)}" with title "${safe(title)}" sound name "Glass"'`, {
-      stdio: "ignore",
-    });
+    run("osascript", ["-e", buildNotificationScript(title, body)], { stdio: "ignore" });
     return true;
   } catch {
     return false;
   }
 }
 
-function checkNewTriple() {
+async function checkNewTriple() {
+  const { db, init } = await import("./db.ts");
+  init();
   const rows = db
     .query(
       `SELECT c.name, c.url, s.total, s.scored_at
@@ -38,20 +45,22 @@ function checkNewTriple() {
   return rows;
 }
 
-const args = process.argv.slice(2);
-const force = args.indexOf("--force");
+if (import.meta.main) {
+  const args = process.argv.slice(2);
+  const force = args.indexOf("--force");
 
-if (force >= 0) {
-  const msg = args[force + 1] ?? "manual notification";
-  osascriptNotify("扫描器", msg);
-  console.log("[notify] forced");
-} else {
-  const triple = checkNewTriple();
-  if (triple.length === 0) {
-    console.log("[notify] 最近 24h 无新 ⭐⭐⭐,不通知");
+  if (force >= 0) {
+    const msg = args[force + 1] ?? "manual notification";
+    osascriptNotify("扫描器", msg);
+    console.log("[notify] forced");
   } else {
-    const body = triple.map((r) => `${r.name} (${r.total}/35)`).join(" · ");
-    osascriptNotify(`扫描器: ${triple.length} 个 ⭐⭐⭐`, body);
-    console.log(`[notify] 通知 ${triple.length} 个新 ⭐⭐⭐`);
+    const triple = await checkNewTriple();
+    if (triple.length === 0) {
+      console.log("[notify] 最近 24h 无新 ⭐⭐⭐,不通知");
+    } else {
+      const body = triple.map((r) => `${r.name} (${r.total}/35)`).join(" · ");
+      osascriptNotify(`扫描器: ${triple.length} 个 ⭐⭐⭐`, body);
+      console.log(`[notify] 通知 ${triple.length} 个新 ⭐⭐⭐`);
+    }
   }
 }
