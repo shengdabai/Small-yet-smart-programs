@@ -2,6 +2,7 @@
 
 ### 📅 每日简报 · Daily Briefings
 
+- **[2026-08-21](daily/2026-08-21.md)** · ⭐⭐⭐ 0 · ⭐⭐ 3 — Check if any of the $656M in unclaimed royalties at The MLC is yours、Open-source Stripe Connect alternative、DeepSQL – A self-hostable DBA agent for Postgres and MySQL
 - **[2026-08-20](daily/2026-08-20.md)** · ⭐⭐⭐ 0 · ⭐⭐ 1 — DeepSQL – A self-hostable DBA agent for Postgres and MySQL
 - **[2026-08-19](daily/2026-08-19.md)** · ⭐⭐⭐ 0 · ⭐⭐ 1 — DeepSQL – A self-hostable DBA agent for Postgres and MySQL
 - **[2026-08-18](daily/2026-08-18.md)** · ⭐⭐⭐ 0 · ⭐⭐ 1 — DeepSQL – A self-hostable DBA agent for Postgres and MySQL
