@@ -2,6 +2,7 @@
 
 ### 📅 每日简报 · Daily Briefings
 
+- **[2026-08-25](daily/2026-08-25.md)** · ⭐⭐⭐ 0 · ⭐⭐ 2 — Check if any of the $656M in unclaimed royalties at The MLC is yours、Open-source Stripe Connect alternative
 - **[2026-08-24](daily/2026-08-24.md)** · ⭐⭐⭐ 0 · ⭐⭐ 2 — Check if any of the $656M in unclaimed royalties at The MLC is yours、Open-source Stripe Connect alternative
 - **[2026-08-23](daily/2026-08-23.md)** · ⭐⭐⭐ 0 · ⭐⭐ 2 — Check if any of the $656M in unclaimed royalties at The MLC is yours、Open-source Stripe Connect alternative
 - **[2026-08-22](daily/2026-08-22.md)** · ⭐⭐⭐ 0 · ⭐⭐ 3 — Check if any of the $656M in unclaimed royalties at The MLC is yours、Open-source Stripe Connect alternative、DeepSQL – A self-hostable DBA agent for Postgres and MySQL
