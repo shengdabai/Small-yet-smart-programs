@@ -35,6 +35,18 @@ TASK_BRIDGE="${TASK_BRIDGE:-$HOME/Desktop/01-项目开发/15-飞书桥接/task-p
 
 log(){ echo "[$(date '+%F %T')] $*" >> "$LOG"; }
 
+process_age_seconds() {
+  local pid="$1"
+  ps -p "$pid" -o etime= 2>/dev/null | awk -F '[-:]' '
+    {
+      gsub(/[[:space:]]/, "")
+      if (NF == 4) print ($1 * 86400) + ($2 * 3600) + ($3 * 60) + $4
+      else if (NF == 3) print ($1 * 3600) + ($2 * 60) + $3
+      else if (NF == 2) print ($1 * 60) + $2
+    }
+  '
+}
+
 send_hermes() {
   local message="$1" attempt
   [ -n "$FEISHU_TARGET" ] && [ -x "$HERMES" ] || return 1
@@ -143,7 +155,7 @@ fi
 if ! mkdir "$LOCKD" 2>/dev/null; then
   OLDPID="$(cat "$LOCKD/pid" 2>/dev/null || true)"
   if [ -n "$OLDPID" ] && kill -0 "$OLDPID" 2>/dev/null; then
-    LOCK_AGE="$(ps -p "$OLDPID" -o etimes= 2>/dev/null | tr -d ' ' || true)"
+    LOCK_AGE="$(process_age_seconds "$OLDPID" || true)"
     log "another run (pid $OLDPID) holds the lock — skip"
     if [ -n "$LOCK_AGE" ] && [ "$LOCK_AGE" -ge 1200 ] 2>/dev/null; then
       PHASE="lock-watchdog"

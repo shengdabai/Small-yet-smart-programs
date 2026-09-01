@@ -17,6 +17,8 @@ HERMES=/usr/bin/false \
 TASK_BRIDGE=/nonexistent \
 bash -c '
   source "$1/daily-scan.sh"
+  age="$(process_age_seconds $$)"
+  [ -n "$age" ] && [ "$age" -ge 0 ]
   if notify_failure_once "simulated failure"; then
     exit 10
   fi
