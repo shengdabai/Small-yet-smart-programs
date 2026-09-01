@@ -42,6 +42,7 @@ launchctl load ~/Library/LaunchAgents/com.smart-programs.daily.plist
 - Idempotent: one confirmed success per day (done-marker); 12:30 and 13:00 are backstop retries.
 - Delivery-aware: the done-marker is written only after build, Git push, Shanghai deploy, and Feishu delivery all return confirmed success.
 - Failure-aware: hard failures send one deduplicated Feishu alert; scoring/source failures are surfaced as a degraded-mode note in the delivered briefing.
+- Network-aware: launchd sets `SMART_PROGRAMS_PROXY_URL`; the script exports it for Bun/curl and probes the public-signal route before collection.
 
 ## 2. Shanghai cloud (the publisher)
 

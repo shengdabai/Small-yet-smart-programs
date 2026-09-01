@@ -27,6 +27,8 @@
         <string>/Users/__USER__/.bun/bin:/usr/local/bin:/usr/bin:/bin:/opt/homebrew/bin</string>
         <key>CODEX_BIN</key>
         <string>__CODEX_BIN__</string>
+        <key>SMART_PROGRAMS_PROXY_URL</key>
+        <string>http://127.0.0.1:7897</string>
         <key>SMART_PROGRAMS_DIR</key>
         <string>/Users/__USER__/.local/share/smart-programs</string>
         <key>SITE_URL</key>

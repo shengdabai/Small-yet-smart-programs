@@ -16,6 +16,7 @@ SHANGHAI_DEST="${SHANGHAI_DEST:-shanghai:/var/www/smart-programs}"   # SSH alias
 FEISHU_WEBHOOK="${FEISHU_WEBHOOK:-}"                                  # 飞书自定义机器人 webhook(优先;链接可点)
 FEISHU_TARGET="${FEISHU_TARGET:-}"                                    # 飞书 DM(hermes fallback,纯文本;形如 feishu:oc_xxx)
 CODEX_BIN="${CODEX_BIN:-}"                                            # launchd 建议显式传入 command -v codex 的结果
+SMART_PROGRAMS_PROXY_URL="${SMART_PROGRAMS_PROXY_URL:-}"              # 可选：本机 HTTP 代理，稳定 Bun TLS 路由
 CODEX_TIMEOUT_SECONDS="${CODEX_TIMEOUT_SECONDS:-360}"
 SCAN_TIMEOUT_SECONDS="${SCAN_TIMEOUT_SECONDS:-480}"
 STEP_TIMEOUT_SECONDS="${STEP_TIMEOUT_SECONDS:-180}"
@@ -34,6 +35,12 @@ HERMES="${HERMES:-$HOME/.local/bin/hermes}"
 TASK_BRIDGE="${TASK_BRIDGE:-$HOME/Desktop/01-项目开发/15-飞书桥接/task-progress-bridge.py}"
 
 log(){ echo "[$(date '+%F %T')] $*" >> "$LOG"; }
+
+if [ -n "$SMART_PROGRAMS_PROXY_URL" ]; then
+  export HTTP_PROXY="$SMART_PROGRAMS_PROXY_URL" HTTPS_PROXY="$SMART_PROGRAMS_PROXY_URL" ALL_PROXY="$SMART_PROGRAMS_PROXY_URL"
+  export http_proxy="$SMART_PROGRAMS_PROXY_URL" https_proxy="$SMART_PROGRAMS_PROXY_URL" all_proxy="$SMART_PROGRAMS_PROXY_URL"
+  export NO_PROXY="${NO_PROXY:-localhost,127.0.0.1,::1}" no_proxy="${no_proxy:-${NO_PROXY:-localhost,127.0.0.1,::1}}"
+fi
 
 process_age_seconds() {
   local pid="$1"
@@ -180,6 +187,12 @@ timeout "$STEP_TIMEOUT_SECONDS" git pull --rebase >>"$LOG" 2>&1 || fail "git pul
 
 # 1) 采集增量公开信号
 PHASE="source-scan"
+if [ -n "$SMART_PROGRAMS_PROXY_URL" ]; then
+  timeout 20 curl -x "$SMART_PROGRAMS_PROXY_URL" -fsSI https://www.toolify.ai/ >/dev/null 2>>"$LOG" || {
+    DEGRADED_REASON="公开信号代理预检未通过"
+    log "$DEGRADED_REASON，继续采集并保留单源错误"
+  }
+fi
 timeout "$SCAN_TIMEOUT_SECONDS" bun run scan:daily >>"$LOG" 2>&1 || {
   DEGRADED_REASON="公开信号采集部分失败或超时"
   log "$DEGRADED_REASON，使用已采集数据继续"

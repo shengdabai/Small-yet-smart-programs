@@ -12,11 +12,13 @@ trap cleanup EXIT
 
 LOGDIR="$TEST_LOGDIR" \
 SMART_PROGRAMS_LIBRARY_ONLY=1 \
+SMART_PROGRAMS_PROXY_URL="http://127.0.0.1:7897" \
 FEISHU_TARGET="test-target" \
 HERMES=/usr/bin/false \
 TASK_BRIDGE=/nonexistent \
 bash -c '
   source "$1/daily-scan.sh"
+  [ "$HTTPS_PROXY" = "$SMART_PROGRAMS_PROXY_URL" ]
   age="$(process_age_seconds $$)"
   [ -n "$age" ] && [ "$age" -ge 0 ]
   if notify_failure_once "simulated failure"; then
