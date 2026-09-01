@@ -65,19 +65,30 @@ send_hermes() {
   return 1
 }
 
+send_webhook() {
+  local attempt
+  for attempt in 1 2 3; do
+    timeout 60 env FEISHU_WEBHOOK="$FEISHU_WEBHOOK" SITE_URL="$SITE_URL" \
+      DEGRADED_REASON="$DEGRADED_REASON" bun run scripts/notify-feishu.ts --webhook >>"$LOG" 2>&1 && return 0
+    log "Feishu webhook 第 ${attempt} 次发送失败"
+    sleep $((attempt * 2))
+  done
+  return 1
+}
+
 send_bridge_failure() {
   local summary="$1" stable_id="smart-programs-${DATE}" result status
   [ -f "$TASK_BRIDGE" ] && command -v jq >/dev/null 2>&1 || return 1
   jq -nc --arg session_id "$stable_id" --arg turn_id "$stable_id" --arg cwd "$REPO" \
     --arg prompt "机会日报每日自动任务 · ${DATE}" \
     '{session_id:$session_id,turn_id:$turn_id,cwd:$cwd,prompt:$prompt}' |
-    env CODEX_NOTIFY_DISABLE=0 AI_TASK_NOTIFY_DISABLE=0 \
-      /usr/bin/python3 "$TASK_BRIDGE" --source codex --event UserPromptSubmit >/dev/null 2>&1 || true
+    timeout 30 env CODEX_NOTIFY_DISABLE=0 AI_TASK_NOTIFY_DISABLE=0 \
+      /usr/bin/python3 "$TASK_BRIDGE" --source codex --event UserPromptSubmit --emit-result >/dev/null 2>&1 || true
   result="$(jq -nc --arg session_id "$stable_id" --arg turn_id "$stable_id" --arg cwd "$REPO" \
     --arg summary "$summary" \
     '{session_id:$session_id,turn_id:$turn_id,cwd:$cwd,last_assistant_message:$summary}' |
-    env CODEX_NOTIFY_DISABLE=0 AI_TASK_NOTIFY_DISABLE=0 \
-      /usr/bin/python3 "$TASK_BRIDGE" --source codex --event StopFailure 2>/dev/null || true)"
+    timeout 30 env CODEX_NOTIFY_DISABLE=0 AI_TASK_NOTIFY_DISABLE=0 \
+      /usr/bin/python3 "$TASK_BRIDGE" --source codex --event StopFailure --emit-result 2>/dev/null || true)"
   status="$(printf '%s' "$result" | jq -r '.status // empty' 2>/dev/null || true)"
   [ "$status" = "sent" ] || [ "$status" = "deduped" ]
 }
@@ -153,7 +164,7 @@ fi
 
 # 检查 SITE_URL 是否仍为占位符
 if [[ "$SITE_URL" == *"YOUR_SERVER"* ]]; then
-  echo "[warn] SITE_URL 仍为占位符 ($SITE_URL)，飞书消息中的链接将无效。请设置 SITE_URL 环境变量。" >&2
+  fail "SITE_URL 仍为占位符 ($SITE_URL)"
 fi
 
 [ -f "$DONE" ] && { log "already done $DATE — skip"; exit 0; }
@@ -164,9 +175,9 @@ if ! mkdir "$LOCKD" 2>/dev/null; then
   if [ -n "$OLDPID" ] && kill -0 "$OLDPID" 2>/dev/null; then
     LOCK_AGE="$(process_age_seconds "$OLDPID" || true)"
     log "another run (pid $OLDPID) holds the lock — skip"
-    if [ -n "$LOCK_AGE" ] && [ "$LOCK_AGE" -ge 1200 ] 2>/dev/null; then
+    if [ -n "$LOCK_AGE" ] && [ "$LOCK_AGE" -ge 2400 ] 2>/dev/null; then
       PHASE="lock-watchdog"
-      notify_failure_once "运行中任务 PID ${OLDPID} 已占锁 ${LOCK_AGE} 秒，超过 20 分钟" || true
+      notify_failure_once "运行中任务 PID ${OLDPID} 已占锁 ${LOCK_AGE} 秒，超过 40 分钟" || true
     fi
     exit 0
   fi
@@ -236,9 +247,8 @@ fi
 # 7) 飞书推送:优先 webhook(post 富文本,链接可点),否则 hermes(纯文本)
 PHASE="feishu-delivery"
 if [ -n "$FEISHU_WEBHOOK" ]; then
-  timeout 60 env FEISHU_WEBHOOK="$FEISHU_WEBHOOK" SITE_URL="$SITE_URL" bun run scripts/notify-feishu.ts --webhook >>"$LOG" 2>&1 \
-    || fail "Feishu webhook 发送失败或超时"
-  log "feishu pushed (webhook, clickable)"
+  send_webhook || fail "Feishu webhook 三次发送均失败"
+  log "feishu pushed (webhook, clickable, receipt confirmed)"
 elif [ -n "$FEISHU_TARGET" ] && [ -x "$HERMES" ]; then
   MSG="$(SITE_URL="$SITE_URL" bun run scripts/notify-feishu.ts 2>>"$LOG")"
   [ -n "$MSG" ] || fail "Feishu 消息生成为空"

@@ -21,6 +21,7 @@ const date = di >= 0 && args[di + 1] ? args[di + 1] : new Date().toISOString().s
 const useWebhook = args.includes("--webhook");
 const SITE_URL = (process.env.SITE_URL || "http://YOUR_SERVER:8082").replace(/\/+$/, "");
 const LINK = `${SITE_URL}/latest.html`;
+const DEGRADED_REASON = (process.env.DEGRADED_REASON || "").trim();
 
 type R = { name: string; name_zh: string | null; total: number; tier: string; window_estimate: string | null };
 
@@ -47,6 +48,7 @@ async function sendWebhook(url: string) {
     [{ tag: "text", text: "" }],
     [{ tag: "text", text: "值得长期推进:" }],
     ...pickLines.map((l) => [{ tag: "text", text: l }]),
+    ...(DEGRADED_REASON ? [[{ tag: "text", text: `⚠️ 降级说明：${DEGRADED_REASON}` }]] : []),
     [{ tag: "text", text: "" }],
     [{ tag: "a", text: "🔗 点此查看完整简报(国内秒开)", href: LINK }],
     [{ tag: "text", text: "" }],
@@ -80,6 +82,7 @@ function printText() {
     "",
     "**值得长期推进:**",
     ...pickLines,
+    ...(DEGRADED_REASON ? ["", `⚠️ 降级说明：${DEGRADED_REASON}`] : []),
     "",
     `🔗 [点此打开完整简报（国内秒开,可逐项点进原项目）](${LINK})`,
     "",

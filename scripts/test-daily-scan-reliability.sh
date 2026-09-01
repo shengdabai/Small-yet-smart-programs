@@ -46,4 +46,8 @@ awk '
   }
 ' "$REPO_ROOT/daily-scan.sh"
 
+grep -q 'timeout 30 env CODEX_NOTIFY_DISABLE=0' "$REPO_ROOT/daily-scan.sh"
+grep -q 'send_webhook || fail' "$REPO_ROOT/daily-scan.sh"
+grep -q 'DEGRADED_REASON' "$REPO_ROOT/scripts/notify-feishu.ts"
+
 echo "daily-scan reliability smoke tests passed"
