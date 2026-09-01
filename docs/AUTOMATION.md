@@ -1,11 +1,11 @@
 # Automation & Deployment Guide
 
 The daily pipeline: **collect → LLM score → bilingual briefing → publish → Feishu**,
-driven by a launchd job on the Mac at **12:30**, publishing to a China-reachable
+driven by a launchd job on the Mac at **12:00**, publishing to a China-reachable
 URL on a Shanghai cloud host.
 
 ```
-12:30 launchd ──► daily-scan.sh ──► scan:daily (collect)
+12:00 launchd ──► daily-scan.sh ──► scan:daily (collect)
                                   └► codex exec (7-dim scoring → SQLite)
                                   └► daily-digest.ts (zh/en briefing → daily/)
                                   └► build-site.ts   (→ site/)
@@ -39,7 +39,9 @@ launchctl load ~/Library/LaunchAgents/com.smart-programs.daily.plist
 - Manual run: `bash ~/.local/share/smart-programs/daily-scan.sh`
 - Scoring-only probe: `bash ~/.local/share/smart-programs/daily-scan.sh --score-only`
 - Force re-run: `rm ~/.claude/logs/.smart-programs-done-$(date +%F)` then run manually
-- Idempotent: one success per day (done-marker), 13:15 is a backstop retry.
+- Idempotent: one confirmed success per day (done-marker); 12:30 and 13:00 are backstop retries.
+- Delivery-aware: the done-marker is written only after build, Git push, Shanghai deploy, and Feishu delivery all return confirmed success.
+- Failure-aware: hard failures send one deduplicated Feishu alert; scoring/source failures are surfaced as a degraded-mode note in the delivered briefing.
 
 ## 2. Shanghai cloud (the publisher)
 

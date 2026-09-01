@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <!--
-  本机 launchd 模板:每天 12:30 跑 daily-scan.sh(13:15 backstop 重试)。
+  本机 launchd 模板:每天 12:00 跑 daily-scan.sh(12:30/13:00 backstop 重试)。
   安装前先把 __USER__ / __FEISHU_OPEN_ID__ 替换成真实值,见 docs/AUTOMATION.md。
 -->
 <plist version="1.0">
@@ -17,8 +17,9 @@
     <string>/Users/__USER__/.local/share/smart-programs</string>
     <key>StartCalendarInterval</key>
     <array>
+        <dict><key>Hour</key><integer>12</integer><key>Minute</key><integer>0</integer></dict>
         <dict><key>Hour</key><integer>12</integer><key>Minute</key><integer>30</integer></dict>
-        <dict><key>Hour</key><integer>13</integer><key>Minute</key><integer>15</integer></dict>
+        <dict><key>Hour</key><integer>13</integer><key>Minute</key><integer>0</integer></dict>
     </array>
     <key>EnvironmentVariables</key>
     <dict>
