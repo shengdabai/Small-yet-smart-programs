@@ -2,6 +2,7 @@
 
 ### 📅 每日简报 · Daily Briefings
 
+- **[2026-09-02](daily/2026-09-02.md)** · ⭐⭐⭐ 0 · ⭐⭐ 2 — Check if any of the $656M in unclaimed royalties at The MLC is yours、Open-source Stripe Connect alternative
 - **[2026-09-01](daily/2026-09-01.md)** · ⭐⭐⭐ 0 · ⭐⭐ 2 — Check if any of the $656M in unclaimed royalties at The MLC is yours、Open-source Stripe Connect alternative
 - **[2026-08-31](daily/2026-08-31.md)** · ⭐⭐⭐ 0 · ⭐⭐ 2 — Check if any of the $656M in unclaimed royalties at The MLC is yours、Open-source Stripe Connect alternative
 - **[2026-08-30](daily/2026-08-30.md)** · ⭐⭐⭐ 0 · ⭐⭐ 2 — Check if any of the $656M in unclaimed royalties at The MLC is yours、Open-source Stripe Connect alternative
@@ -92,7 +93,7 @@
 - **[2026-06-06](daily/2026-06-06.md)** · ⭐⭐⭐ 0 · ⭐⭐ 1 — Semble:给 AI agent 的代码搜索,省 98% token
 - **[2026-06-05](daily/2026-06-05.md)** · ⭐⭐⭐ 0 · ⭐⭐ 1 — Semble:给 AI agent 的代码搜索,省 98% token
 
-> 每天中午 12:00 开始自动更新 · Auto-updated daily from 12:00 · [全部简报 →](daily/)
+> 每天中午 12:30 自动更新 · Auto-updated daily at 12:30 · [全部简报 →](daily/)
 
 <!-- BRIEFINGS:END -->
 
