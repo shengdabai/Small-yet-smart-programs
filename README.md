@@ -2,6 +2,7 @@
 
 ### 📅 每日简报 · Daily Briefings
 
+- **[2026-09-09](daily/2026-09-09.md)** · ⭐⭐⭐ 0 · ⭐⭐ 2 — Check if any of the $656M in unclaimed royalties at The MLC is yours、Open-source Stripe Connect alternative
 - **[2026-09-08](daily/2026-09-08.md)** · ⭐⭐⭐ 0 · ⭐⭐ 2 — Check if any of the $656M in unclaimed royalties at The MLC is yours、Open-source Stripe Connect alternative
 - **[2026-09-07](daily/2026-09-07.md)** · ⭐⭐⭐ 0 · ⭐⭐ 2 — Check if any of the $656M in unclaimed royalties at The MLC is yours、Open-source Stripe Connect alternative
 - **[2026-09-06](daily/2026-09-06.md)** · ⭐⭐⭐ 0 · ⭐⭐ 2 — Check if any of the $656M in unclaimed royalties at The MLC is yours、Open-source Stripe Connect alternative
