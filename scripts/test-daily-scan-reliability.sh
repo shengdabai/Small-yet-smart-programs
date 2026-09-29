@@ -10,6 +10,14 @@ cleanup() {
 }
 trap cleanup EXIT
 
+# launchd 的 PATH 会优先选中被 Xcode 许可挡住的 /usr/bin/git。
+# 无须启动整条日报流水线，也能验证自动任务选中可用的独立 Git。
+LOGDIR="$TEST_LOGDIR" SMART_PROGRAMS_LIBRARY_ONLY=1 bash -c '
+  source "$1/daily-scan.sh"
+  [ "$GIT_BIN" = /opt/homebrew/bin/git ]
+  "$GIT_BIN" --version >/dev/null
+' _ "$REPO_ROOT"
+
 LOGDIR="$TEST_LOGDIR" \
 SMART_PROGRAMS_LIBRARY_ONLY=1 \
 SMART_PROGRAMS_PROXY_URL="http://127.0.0.1:7897" \

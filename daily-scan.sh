@@ -16,6 +16,7 @@ SHANGHAI_DEST="${SHANGHAI_DEST:-shanghai:/var/www/smart-programs}"   # SSH alias
 FEISHU_WEBHOOK="${FEISHU_WEBHOOK:-}"                                  # 飞书自定义机器人 webhook(优先;链接可点)
 FEISHU_TARGET="${FEISHU_TARGET:-}"                                    # 飞书 DM(hermes fallback,纯文本;形如 feishu:oc_xxx)
 CODEX_BIN="${CODEX_BIN:-}"                                            # launchd 建议显式传入 command -v codex 的结果
+GIT_BIN="${SMART_PROGRAMS_GIT_BIN:-}"                                # 避免 launchd 的 /usr/bin/git 被 Xcode 许可门禁拦截
 SMART_PROGRAMS_PROXY_URL="${SMART_PROGRAMS_PROXY_URL:-}"              # 可选：本机 HTTP 代理，稳定 Bun TLS 路由
 CODEX_TIMEOUT_SECONDS="${CODEX_TIMEOUT_SECONDS:-360}"
 SCAN_TIMEOUT_SECONDS="${SCAN_TIMEOUT_SECONDS:-480}"
@@ -35,6 +36,16 @@ HERMES="${HERMES:-$HOME/.local/bin/hermes}"
 TASK_BRIDGE="${TASK_BRIDGE:-$HOME/Desktop/01-项目开发/15-飞书桥接/task-progress-bridge.py}"
 
 log(){ echo "[$(date '+%F %T')] $*" >> "$LOG"; }
+
+if [ -z "$GIT_BIN" ]; then
+  if [ -x /opt/homebrew/bin/git ]; then
+    GIT_BIN=/opt/homebrew/bin/git
+  elif [ -x /usr/local/bin/git ]; then
+    GIT_BIN=/usr/local/bin/git
+  else
+    GIT_BIN="$(command -v git 2>/dev/null || true)"
+  fi
+fi
 
 if [ -n "$SMART_PROGRAMS_PROXY_URL" ]; then
   export HTTP_PROXY="$SMART_PROGRAMS_PROXY_URL" HTTPS_PROXY="$SMART_PROGRAMS_PROXY_URL" ALL_PROXY="$SMART_PROGRAMS_PROXY_URL"
@@ -191,10 +202,11 @@ cd "$REPO" 2>/dev/null || { log "FATAL: repo not found at $REPO"; exit 1; }
 log "=== start $DATE (repo=$REPO) ==="
 PHASE="dependencies"
 
+[ -n "$GIT_BIN" ] && [ -x "$GIT_BIN" ] && "$GIT_BIN" --version >>"$LOG" 2>&1 || fail "可用的 Git 不存在（当前：${GIT_BIN:-未找到}）"
 [ -d node_modules ] || timeout "$STEP_TIMEOUT_SECONDS" bun install >>"$LOG" 2>&1 || fail "bun install 失败或超时"
 
 PHASE="repository-sync"
-timeout "$STEP_TIMEOUT_SECONDS" git pull --rebase >>"$LOG" 2>&1 || fail "git pull --rebase 失败或超时"
+timeout "$STEP_TIMEOUT_SECONDS" "$GIT_BIN" pull --rebase >>"$LOG" 2>&1 || fail "git pull --rebase 失败或超时"
 
 # 1) 采集增量公开信号
 PHASE="source-scan"
@@ -230,10 +242,10 @@ timeout "$STEP_TIMEOUT_SECONDS" bun run scripts/gen-readme-index.ts >>"$LOG" 2>&
 
 # 5) git 留档(add daily/ + README 索引,运行时数据已被 .gitignore 挡住)
 PHASE="git-publish"
-git add daily/ README.md >>"$LOG" 2>&1 || fail "git add 失败"
-if ! git diff --cached --quiet; then
-  git commit -m "daily briefing $DATE" >>"$LOG" 2>&1 || fail "git commit 失败"
-  timeout "$STEP_TIMEOUT_SECONDS" git push >>"$LOG" 2>&1 || fail "git push 失败或超时"
+"$GIT_BIN" add daily/ README.md >>"$LOG" 2>&1 || fail "git add 失败"
+if ! "$GIT_BIN" diff --cached --quiet; then
+  "$GIT_BIN" commit -m "daily briefing $DATE" >>"$LOG" 2>&1 || fail "git commit 失败"
+  timeout "$STEP_TIMEOUT_SECONDS" "$GIT_BIN" push >>"$LOG" 2>&1 || fail "git push 失败或超时"
 else
   log "no daily/ changes to commit"
 fi
