@@ -351,6 +351,7 @@ fail() {
 
 on_exit() {
   local rc=$?
+  [ -n "${SCAN_OUT:-}" ] && rm -f "$SCAN_OUT"
   release_lock
   if [ "$rc" -ne 0 ] && [ ! -f "$DONE" ]; then
     notify_failure_once "任务异常退出（rc=${rc}）" || true
@@ -467,13 +468,25 @@ public_signal_preflight || {
   DEGRADED_REASON="公开信号代理预检未通过"
   log "${DEGRADED_REASON}，继续采集并保留单源错误"
 }
-SCAN_LOG_START="$(wc -c < "$LOG" 2>/dev/null | tr -d '[:space:]')"
-timeout "$SCAN_TIMEOUT_SECONDS" bun run scan:daily >>"$LOG" 2>&1 || {
-  DEGRADED_REASON="公开信号采集部分失败或超时"
-  log "${DEGRADED_REASON}，使用已采集数据继续"
-}
+# 本次采集输出先写独立文件,再并入总日志。单源失败只从这份输出统计,总日志轮转、截断或历史内容都不影响。
+SCAN_OUT="$(mktemp "$LOGDIR/.scan-daily.XXXXXX" 2>/dev/null)" || SCAN_OUT=""
+SCAN_RC=0
+timeout "$SCAN_TIMEOUT_SECONDS" bun run scan:daily >>"${SCAN_OUT:-$LOG}" 2>&1 || SCAN_RC=$?
 # 单源失败(Reddit 403、Toolify 不可达)不会让 scan:daily 退出非 0,只能从本次输出里读出来
-SOURCE_FAILURES="$(tail -c "+$(( ${SCAN_LOG_START:-0} + 1 ))" "$LOG" 2>/dev/null | summarize_source_failures)"
+SOURCE_FAILURES=""
+if [ -n "$SCAN_OUT" ]; then
+  cat "$SCAN_OUT" >> "$LOG" 2>/dev/null || true
+  SOURCE_FAILURES="$(summarize_source_failures < "$SCAN_OUT")"
+  rm -f "$SCAN_OUT"
+  SCAN_OUT=""
+else
+  log "无法创建本次采集的独立输出文件，本期不统计单源失败"
+fi
+if [ "$SCAN_RC" -ne 0 ]; then
+  # 追加而不是覆盖:预检失败与采集失败同时发生时两条都要保留
+  DEGRADED_REASON="${DEGRADED_REASON:+${DEGRADED_REASON}；}公开信号采集部分失败或超时"
+  log "公开信号采集部分失败或超时（rc=${SCAN_RC}），使用已采集数据继续"
+fi
 if [ -n "$SOURCE_FAILURES" ]; then
   DEGRADED_REASON="${DEGRADED_REASON:+${DEGRADED_REASON}；}${SOURCE_FAILURES}"
   log "单源采集失败：${SOURCE_FAILURES}"

@@ -1,5 +1,5 @@
 import { afterAll, describe, expect, test } from "bun:test";
-import { chmodSync, existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { chmodSync, existsSync, mkdirSync, mkdtempSync, readdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 
@@ -28,7 +28,7 @@ const HEAD = ["$ bun run scripts/pipeline.ts --mode daily", "=== DAILY SCAN === 
 const TAIL = ["[hackernews] fetched=100  new=1  threshold=50pts/30d", "[google-trends] daily=0  seeds=10  new=0", "=== DAILY DONE === new=1  elapsed=22.7s"];
 
 const allRedditBlocked = [...HEAD, ...REDDIT_PATHS.map(([p, t]) => redditSkip(p, t, "403")), "[toolify] unreachable — 后续可走 Firecrawl MCP", ...TAIL].join("\n") + "\n";
-const allHealthy = [...HEAD, ...REDDIT_PATHS.map(([p]) => redditOk(p)), "[toolify] fetched=30  new=3", ...TAIL].join("\n") + "\n";
+const allHealthy = [...HEAD, ...REDDIT_PATHS.map(([p]) => redditOk(p)), "[toolify] tools_found=30  new=3", ...TAIL].join("\n") + "\n";
 
 function summarize(log: string) {
   const result = Bun.spawnSync({
@@ -57,7 +57,7 @@ describe("summarize_source_failures", () => {
       ...HEAD,
       redditSkip("/r/SideProject", "week", "403"), redditOk("/r/SaaS"), redditSkip("/r/microsaas", "week", "429"),
       redditSkip("/r/Entrepreneur", "week", "403"), redditOk("/r/sidehustle"),
-      "[toolify] fetched=30  new=3", ...TAIL,
+      "[toolify] tools_found=30  new=3", ...TAIL,
     ].join("\n");
     expect(summarize(log).out).toBe("Reddit 3/5 个板块 403/429");
   });
@@ -70,7 +70,7 @@ describe("summarize_source_failures", () => {
   test("reports Toolify alone, and ignores a per-URL warning when the fallback URL worked", () => {
     const toolifyDown = [...HEAD, ...REDDIT_PATHS.map(([p]) => redditOk(p)), "[toolify] https://www.toolify.ai/category/most-monthly-visits failed: x", "[toolify] unreachable — 后续可走 Firecrawl MCP", ...TAIL].join("\n");
     expect(summarize(toolifyDown).out).toBe("Toolify 不可达");
-    const fallbackWorked = [...HEAD, ...REDDIT_PATHS.map(([p]) => redditOk(p)), "[toolify] https://www.toolify.ai/category/most-monthly-visits failed: x", "[toolify] fetched=30  new=3", ...TAIL].join("\n");
+    const fallbackWorked = [...HEAD, ...REDDIT_PATHS.map(([p]) => redditOk(p)), "[toolify] https://www.toolify.ai/category/most-monthly-visits failed: x", "[toolify] tools_found=30  new=3", ...TAIL].join("\n");
     expect(summarize(fallbackWorked).out).toBe("");
   });
 
@@ -133,7 +133,7 @@ function stub(path: string, body: string) {
   chmodSync(path, 0o755);
 }
 
-async function dailyRun(opts: { scanLog: string; scanExit?: number; proxy?: string; preflightUrl?: string; oldLog?: string }) {
+async function dailyRun(opts: { scanLog: string; scanExit?: number; proxy?: string; preflightUrl?: string; oldLog?: string; rotateDuringScan?: boolean }) {
   const root = mkdtempSync(join(tmpdir(), "smart-programs-e2e-"));
   dirs.push(root);
   const repo = join(root, "repo");
@@ -146,7 +146,7 @@ async function dailyRun(opts: { scanLog: string; scanExit?: number; proxy?: stri
   // The script puts $HOME/.bun/bin first on PATH, so a stub bun there replaces the real one.
   stub(join(root, "home", ".bun", "bin", "bun"), `
 case "$*" in
-  "run scan:daily") cat "${join(root, "scan.log")}"; exit ${opts.scanExit ?? 0} ;;
+  "run scan:daily") ${opts.rotateDuringScan ? `: > "${join(logs, "smart-programs-daily.log")}";` : ""} cat "${join(root, "scan.log")}"; exit ${opts.scanExit ?? 0} ;;
   "run scripts/daily-digest.ts") mkdir -p daily; d="$(date +%F)"; echo md > "daily/$d.md"; echo html > "daily/$d.html" ;;
   "run scripts/notify-feishu.ts") printf 'BRIEFING' ;;
 esac
@@ -183,6 +183,7 @@ exit 0`);
     code: await proc.exited,
     message: existsSync(sent) ? readFileSync(sent, "utf8") : null,
     log: readFileSync(join(logs, "smart-programs-daily.log"), "utf8"),
+    leftovers: readdirSync(logs).filter((name) => name.startsWith(".scan-daily.")),
   };
 }
 
@@ -206,6 +207,26 @@ describe("daily-scan.sh degradation notice", () => {
     expect(r.message).toBe("BRIEFING");
   });
 
+  test("a log rotated during the scan still reports this run's failures", async () => {
+    const r = await dailyRun({ scanLog: allRedditBlocked, oldLog: "x".repeat(4096) + "\n", rotateDuringScan: true });
+    expect(r.message).toBe("BRIEFING\n\n⚠️ 降级说明：Reddit 9/9 个板块 403；Toolify 不可达");
+    expect(r.log).toContain("[reddit] /r/SideProject skip:");
+  });
+
+  test("the scan output still reaches the main log and no temporary file is left", async () => {
+    const r = await dailyRun({ scanLog: allRedditBlocked });
+    expect(r.log).toContain("=== DAILY DONE ===");
+    expect(r.leftovers).toEqual([]);
+  });
+
+  test("a failed preflight and a failed scan are both kept", async () => {
+    const p = loopbackProxy(403);
+    try {
+      const r = await dailyRun({ scanLog: allRedditBlocked, scanExit: 1, proxy: p.url, preflightUrl: "http://hn.example.invalid/api/probe" });
+      expect(r.message).toBe("BRIEFING\n\n⚠️ 降级说明：公开信号代理预检未通过；公开信号采集部分失败或超时；Reddit 9/9 个板块 403；Toolify 不可达");
+    } finally { p.server.stop(true); }
+  });
+
   test("a scan that exits non-zero keeps its own notice and appends what the log shows", async () => {
     const r = await dailyRun({ scanLog: allRedditBlocked, scanExit: 1 });
     expect(r.message).toBe("BRIEFING\n\n⚠️ 降级说明：公开信号采集部分失败或超时；Reddit 9/9 个板块 403；Toolify 不可达");
@@ -216,6 +237,7 @@ describe("daily-scan.sh degradation notice", () => {
     try {
       const r = await dailyRun({ scanLog: allHealthy, proxy: p.url, preflightUrl: "http://hn.example.invalid/api/probe" });
       expect(r.message).toBe("BRIEFING");
+      expect(p.hits.filter((h) => h.url.includes("hn.example.invalid"))).toHaveLength(1);
       expect(p.hits.every((h) => !h.url.includes("toolify"))).toBe(true);
     } finally { p.server.stop(true); }
   });
