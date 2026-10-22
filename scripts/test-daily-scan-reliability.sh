@@ -58,4 +58,8 @@ grep -q 'timeout 30 env CODEX_NOTIFY_DISABLE=0' "$REPO_ROOT/daily-scan.sh"
 grep -q 'send_webhook || fail' "$REPO_ROOT/daily-scan.sh"
 grep -q 'DEGRADED_REASON' "$REPO_ROOT/scripts/notify-feishu.ts"
 
+# 进程锁(内核守卫/陈旧锁年龄/EPERM/所有权)与 notify.ts 注入边界的回归测试
+BUN_BIN="${BUN_BIN:-$(command -v bun 2>/dev/null || echo "$HOME/.bun/bin/bun")}"
+(cd "$REPO_ROOT" && "$BUN_BIN" test tests/)
+
 echo "daily-scan reliability smoke tests passed"

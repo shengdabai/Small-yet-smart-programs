@@ -126,10 +126,14 @@ const upsertStmt = db.query(`
     last_seen = datetime('now'),
     signal_score = excluded.signal_score,
     raw_payload = excluded.raw_payload
-  RETURNING id, (CASE WHEN first_seen = last_seen THEN 1 ELSE 0 END) AS is_new
+  RETURNING id
 `);
 
-export function upsertCandidate(c: CandidateInput): { id: number; is_new: boolean } {
+// 是否新增看插入前是否已存在;旧写法比较 first_seen = last_seen,同一秒内重复出现会被误算成新增
+const existsStmt = db.query(`SELECT 1 FROM candidates WHERE source = $source AND external_id = $external_id`);
+
+export const upsertCandidate = db.transaction((c: CandidateInput): { id: number; is_new: boolean } => {
+  const existed = existsStmt.get({ $source: c.source, $external_id: c.external_id }) != null;
   const row = upsertStmt.get({
     $source: c.source,
     $external_id: c.external_id,
@@ -139,9 +143,9 @@ export function upsertCandidate(c: CandidateInput): { id: number; is_new: boolea
     $description: c.description ?? null,
     $signal_score: c.signal_score ?? null,
     $raw_payload: c.raw_payload ? JSON.stringify(c.raw_payload) : null,
-  }) as { id: number; is_new: number };
-  return { id: row.id, is_new: row.is_new === 1 };
-}
+  }) as { id: number };
+  return { id: row.id, is_new: !existed };
+});
 
 export function listRecentCandidates(opts: { days?: number; source?: string; limit?: number } = {}) {
   const days = opts.days ?? 7;
