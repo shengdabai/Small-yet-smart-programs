@@ -214,7 +214,7 @@ fi
 
 # 6) 同步到上海云(国内可访问)
 if [ -d site ]; then
-  rsync -az --delete site/ "$SHANGHAI_DEST/" >>"$LOG" 2>&1 || log "rsync to shanghai failed"
+  rsync -az --delete --exclude=podcast/ site/ "$SHANGHAI_DEST/" >>"$LOG" 2>&1 || log "rsync to shanghai failed"
 fi
 
 # 7) 飞书推送:优先 webhook(post 富文本,链接可点),否则 hermes(纯文本)
