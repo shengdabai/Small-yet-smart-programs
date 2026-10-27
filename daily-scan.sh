@@ -28,7 +28,9 @@ LOGDIR="${LOGDIR:-$REPO/.logs}"; mkdir -p "$LOGDIR"
 LOG="$LOGDIR/smart-programs-daily.log"
 DATE="$(date +%F)"
 DONE="$LOGDIR/.smart-programs-done-$DATE"
-LOCKD="$LOGDIR/.smart-programs.lockd"   # mkdir 原子锁(macOS 无 flock)
+LOCKD="$LOGDIR/.smart-programs.lockd"   # 进程锁目录(内核 fcntl 守卫 + pid/started 元数据;archive_briefings.py 也会 mkdir 它)
+LOCK_STALE_SECONDS="${SMART_PROGRAMS_LOCK_STALE_SECONDS:-900}"   # 持锁进程已死且锁龄 ≥ 此值才回收
+LOCK_HELD_PID=""
 FAILURE_MARK="$LOGDIR/.smart-programs-failure-notified-$DATE"
 PHASE="startup"
 DEGRADED_REASON=""
@@ -63,6 +65,225 @@ process_age_seconds() {
       else if (NF == 2) print ($1 * 60) + $2
     }
   '
+}
+
+# ---- 进程锁 ----
+# 锁目录创建、pid/started 写入、陈旧锁回收全部在同一个内核 fcntl.lockf 守卫下完成,
+# 因此不会出现「有锁目录但还没写 pid」被别人当成陈旧锁抢走的窗口。
+#   退出码:0 = 已持锁;75 = 锁被占用/太新/正被别人获取(跳过本次);其他 = 错误。
+#   存活持有者会在 stdout 打印「HELD <pid>」,供 watchdog 计算占锁时长。
+# 回收规则:持有者已死 **且** 锁龄 ≥ LOCK_STALE_SECONDS;kill -0 返回 EPERM 视为存活;
+# 回收时先 rename 旧锁目录再新建,只删除已知元数据(pid/started/identity/.reclaim),不 rm -rf。
+# identity = "v2 " + 持有进程启动时间(ps lstart,固定 LC_ALL=C、TZ=UTC);同 pid 进程的 v2 身份不符即视为 pid 被复用;
+# 无版本前缀、读不到或 ps 失败时一律保守视为仍存活。
+IFS= read -r -d '' LOCK_PY <<'PY'
+from __future__ import annotations
+
+import fcntl
+import os
+import subprocess
+import sys
+import time
+
+BUSY = 75
+lock_dir, stale_after, owner_pid = sys.argv[1], int(sys.argv[2]), int(sys.argv[3])
+guard = os.open(f"{lock_dir}.recovery.lock", os.O_CREAT | os.O_RDWR, 0o600)
+
+
+def positive_integer(value: str) -> bool:
+    return value.isascii() and value.isdecimal() and not value.startswith("0")
+
+
+def read_pid(directory: str) -> int | None:
+    try:
+        with open(os.path.join(directory, "pid"), encoding="ascii") as file:
+            pid = file.read().strip()
+    except (OSError, UnicodeDecodeError):
+        return None
+    return int(pid) if positive_integer(pid) else None
+
+
+def read_metadata(directory: str) -> tuple[int, int] | None:
+    try:
+        with open(os.path.join(directory, "pid"), encoding="ascii") as file:
+            pid = file.read().strip()
+        with open(os.path.join(directory, "started"), encoding="ascii") as file:
+            started = file.read().strip()
+    except OSError:
+        return None
+    if not positive_integer(pid) or not positive_integer(started):
+        return None
+    return int(pid), int(started)
+
+
+def owner_is_alive(pid: int) -> bool:
+    try:
+        os.kill(pid, 0)
+    except ProcessLookupError:
+        return False
+    except PermissionError:
+        return True
+    return True
+
+
+IDENTITY_VERSION = "v2"
+
+
+def process_identity(pid: int) -> str | None:
+    """Versioned process start time ("v2 <lstart>"); None when it cannot be read reliably."""
+    try:
+        # LC_ALL=C and TZ=UTC: the lstart text must not depend on the caller's locale or
+        # time zone (launchd vs. interactive shell), or a live owner would look "reused".
+        result = subprocess.run(["/bin/ps", "-o", "lstart=", "-p", str(pid)],
+                                env={**os.environ, "LC_ALL": "C", "TZ": "UTC"},
+                                capture_output=True, text=True, timeout=5, check=False)
+    except (OSError, subprocess.SubprocessError):
+        return None
+    out = result.stdout.strip()
+    if result.returncode != 0 or not out:
+        return None
+    return f"{IDENTITY_VERSION} {out}"
+
+
+def lock_owner_alive(directory: str, pid: int) -> bool:
+    """Alive and still the same process: a recorded identity that no longer matches means the pid was reused."""
+    if not owner_is_alive(pid):
+        return False
+    try:
+        with open(os.path.join(directory, "identity"), encoding="ascii") as file:
+            recorded = file.read().strip()
+    except (OSError, UnicodeDecodeError):
+        return True  # older locks carry no identity: keep the conservative alive answer
+    if not recorded.startswith(IDENTITY_VERSION + " "):
+        return True  # unversioned identity cannot be compared safely: keep the conservative alive answer
+    current = process_identity(pid)
+    return current is None or current == recorded
+
+
+def create_owned_lock(directory: str) -> None:
+    os.mkdir(directory, 0o700)
+    with open(os.path.join(directory, "pid"), "x", encoding="ascii") as file:
+        file.write(f"{owner_pid}\n")
+    with open(os.path.join(directory, "started"), "x", encoding="ascii") as file:
+        file.write(f"{int(time.time())}\n")
+    identity = process_identity(owner_pid)
+    if identity:
+        with open(os.path.join(directory, "identity"), "x", encoding="ascii") as file:
+            file.write(f"{identity}\n")
+
+
+def remove_stale_directory(directory: str) -> None:
+    reclaim = os.path.join(directory, ".reclaim")
+    try:
+        if os.path.isdir(reclaim):
+            for name in ("pid", "started", "identity"):
+                try:
+                    os.unlink(os.path.join(reclaim, name))
+                except FileNotFoundError:
+                    pass
+            os.rmdir(reclaim)
+        else:
+            os.unlink(reclaim)
+    except FileNotFoundError:
+        pass
+    for name in ("pid", "started", "identity"):
+        try:
+            os.unlink(os.path.join(directory, name))
+        except FileNotFoundError:
+            pass
+    os.rmdir(directory)
+
+
+try:
+    try:
+        fcntl.lockf(guard, fcntl.LOCK_EX | fcntl.LOCK_NB)
+    except BlockingIOError:
+        sys.exit(BUSY)
+
+    if not os.path.exists(lock_dir):
+        create_owned_lock(lock_dir)
+        sys.exit(0)
+
+    metadata = read_metadata(lock_dir)
+    if metadata is None:
+        # Incomplete metadata belongs to a crashed or legacy (pid-only) creator that may
+        # not hold the guard. A readable pid that is still alive keeps the lock whatever
+        # its age; only without a live owner do we fall back to the directory age.
+        legacy_pid = read_pid(lock_dir)
+        if legacy_pid is not None and owner_is_alive(legacy_pid):
+            print(f"HELD {legacy_pid}")
+            sys.exit(BUSY)
+        try:
+            started = int(os.stat(lock_dir).st_mtime)
+        except OSError:
+            sys.exit(BUSY)
+    else:
+        pid, started = metadata
+        if lock_owner_alive(lock_dir, pid):
+            print(f"HELD {pid}")
+            sys.exit(BUSY)
+    if time.time() - started < stale_after:
+        sys.exit(BUSY)
+
+    stale_dir = f"{lock_dir}.stale.{os.getpid()}.{time.time_ns()}"
+    os.rename(lock_dir, stale_dir)
+    try:
+        create_owned_lock(lock_dir)
+    except FileExistsError:
+        # A normal contender took the now-free pathname first; it owns the lock.
+        sys.exit(BUSY)
+    try:
+        remove_stale_directory(stale_dir)
+    except OSError:
+        # The new lock is valid; leave unexpected contents for manual inspection.
+        pass
+    sys.exit(0)
+finally:
+    os.close(guard)
+PY
+
+find_lock_python() {
+  local candidate
+  if [ -n "${SMART_PROGRAMS_PYTHON_BIN:-}" ]; then
+    "$SMART_PROGRAMS_PYTHON_BIN" -c 'import fcntl' >/dev/null 2>&1 || return 1
+    printf '%s' "$SMART_PROGRAMS_PYTHON_BIN"
+    return 0
+  fi
+  for candidate in "$(command -v python3 2>/dev/null || true)" /usr/local/bin/python3 /opt/homebrew/bin/python3 /usr/bin/python3; do
+    [ -n "$candidate" ] && [ -x "$candidate" ] || continue
+    "$candidate" -c 'import fcntl' >/dev/null 2>&1 || continue
+    printf '%s' "$candidate"
+    return 0
+  done
+  return 1
+}
+
+acquire_lock() {
+  local py out rc
+  LOCK_HELD_PID=""
+  py="$(find_lock_python)" || { log "no usable python3 (needs fcntl) — cannot take the process lock"; return 2; }
+  out="$("$py" -c "$LOCK_PY" "$LOCKD" "$LOCK_STALE_SECONDS" "$$" 2>>"$LOG")"
+  rc=$?
+  case "$rc" in
+    0) return 0 ;;
+    75)
+      case "$out" in HELD\ *) LOCK_HELD_PID="${out#HELD }" ;; esac
+      return 75
+      ;;
+    *)
+      log "lock helper failed (rc=$rc)"
+      return "$rc"
+      ;;
+  esac
+}
+
+# 只释放自己持有的锁,绝不动别人的锁目录。
+release_lock() {
+  local owner
+  owner="$(cat "$LOCKD/pid" 2>/dev/null || true)"
+  [ "$owner" = "$$" ] || return 0
+  rm -f "$LOCKD/pid" "$LOCKD/started" "$LOCKD/identity"
+  rmdir "$LOCKD" 2>/dev/null || true
 }
 
 send_hermes() {
@@ -129,7 +350,7 @@ fail() {
 
 on_exit() {
   local rc=$?
-  rm -rf "$LOCKD" 2>/dev/null || true
+  release_lock
   if [ "$rc" -ne 0 ] && [ ! -f "$DONE" ]; then
     notify_failure_once "任务异常退出（rc=${rc}）" || true
   fi
@@ -180,22 +401,25 @@ fi
 
 [ -f "$DONE" ] && { log "already done $DATE — skip"; exit 0; }
 
-# mkdir 原子锁(macOS 无 flock(1))。持锁进程已死则抢锁,防卡死永久占用。
-if ! mkdir "$LOCKD" 2>/dev/null; then
-  OLDPID="$(cat "$LOCKD/pid" 2>/dev/null || true)"
-  if [ -n "$OLDPID" ] && kill -0 "$OLDPID" 2>/dev/null; then
-    LOCK_AGE="$(process_age_seconds "$OLDPID" || true)"
-    log "another run (pid $OLDPID) holds the lock — skip"
+# 进程锁(见上方 acquire_lock):持锁进程存活 / 锁太新 / 正被别人获取 → 跳过本次。
+PHASE="lock"
+acquire_lock
+LOCK_RC=$?
+if [ "$LOCK_RC" -eq 75 ]; then
+  if [ -n "$LOCK_HELD_PID" ]; then
+    LOCK_AGE="$(process_age_seconds "$LOCK_HELD_PID" || true)"
+    log "another run (pid $LOCK_HELD_PID) holds the lock — skip"
     if [ -n "$LOCK_AGE" ] && [ "$LOCK_AGE" -ge 2400 ] 2>/dev/null; then
       PHASE="lock-watchdog"
-      notify_failure_once "运行中任务 PID ${OLDPID} 已占锁 ${LOCK_AGE} 秒，超过 40 分钟" || true
+      notify_failure_once "运行中任务 PID ${LOCK_HELD_PID} 已占锁 ${LOCK_AGE} 秒，超过 40 分钟" || true
     fi
-    exit 0
+  else
+    log "lock is recent or being acquired by another run — skip"
   fi
-  log "stale lock (pid ${OLDPID:-?} dead) — taking over"
-  rm -rf "$LOCKD"; mkdir "$LOCKD" 2>/dev/null || { log "lock race — skip"; exit 0; }
+  exit 0
+elif [ "$LOCK_RC" -ne 0 ]; then
+  fail "无法获取进程锁（rc=${LOCK_RC}）"
 fi
-echo "$$" > "$LOCKD/pid"
 trap on_exit EXIT
 
 cd "$REPO" 2>/dev/null || { log "FATAL: repo not found at $REPO"; exit 1; }
@@ -206,7 +430,7 @@ PHASE="dependencies"
 [ -d node_modules ] || timeout "$STEP_TIMEOUT_SECONDS" bun install >>"$LOG" 2>&1 || fail "bun install 失败或超时"
 
 PHASE="repository-sync"
-timeout "$STEP_TIMEOUT_SECONDS" "$GIT_BIN" pull --rebase >>"$LOG" 2>&1 || fail "git pull --rebase 失败或超时"
+timeout "$STEP_TIMEOUT_SECONDS" "$GIT_BIN" pull --ff-only >>"$LOG" 2>&1 || fail "git pull --ff-only 失败或超时"
 
 # 1) 采集增量公开信号
 PHASE="source-scan"
@@ -253,7 +477,7 @@ fi
 # 6) 同步到上海云(国内可访问)
 if [ -d site ]; then
   PHASE="site-deploy"
-  timeout "$STEP_TIMEOUT_SECONDS" rsync -az --delete site/ "$SHANGHAI_DEST/" >>"$LOG" 2>&1 || fail "rsync 上海云失败或超时"
+  timeout "$STEP_TIMEOUT_SECONDS" rsync -az --delete --exclude=podcast/ site/ "$SHANGHAI_DEST/" >>"$LOG" 2>&1 || fail "rsync 上海云失败或超时"
 fi
 
 # 7) 飞书推送:优先 webhook(post 富文本,链接可点),否则 hermes(纯文本)
