@@ -357,6 +357,30 @@ on_exit() {
   return "$rc"
 }
 
+require_runtime_branch() {
+  local branch upstream
+  branch="$("$GIT_BIN" symbolic-ref --quiet --short HEAD 2>/dev/null || true)"
+  upstream="$("$GIT_BIN" rev-parse --abbrev-ref --symbolic-full-name '@{upstream}' 2>/dev/null || true)"
+  if [ "$branch" != main ] || [ "$upstream" != origin/main ]; then
+    log "runtime branch refused: branch=${branch:-detached}, upstream=${upstream:-none}; expected main -> origin/main; preserve changes and repair the runtime checkout"
+    return 1
+  fi
+}
+
+publish_briefing() {
+  # Check again after scoring: never publish an accidentally selected task branch.
+  require_runtime_branch || fail "运行目录必须使用 main 并跟踪 origin/main；请保留改动后恢复运行分支"
+  "$GIT_BIN" add daily/ README.md >>"$LOG" 2>&1 || fail "git add 失败"
+  if ! "$GIT_BIN" diff --cached --quiet; then
+    "$GIT_BIN" commit -m "daily briefing $DATE" >>"$LOG" 2>&1 || fail "git commit 失败"
+  else
+    log "no daily/ changes to commit"
+  fi
+  # A previous attempt may have committed successfully but failed to push.
+  # Retry the push even when there are no new staged changes.
+  timeout "$STEP_TIMEOUT_SECONDS" "$GIT_BIN" push origin main >>"$LOG" 2>&1 || fail "git push 失败或超时"
+}
+
 # Allows the reliability helpers to be sourced by smoke tests without running
 # the daily pipeline or touching the repository.
 if [ "${SMART_PROGRAMS_LIBRARY_ONLY:-0}" = "1" ]; then
@@ -430,6 +454,7 @@ PHASE="dependencies"
 [ -d node_modules ] || timeout "$STEP_TIMEOUT_SECONDS" bun install >>"$LOG" 2>&1 || fail "bun install 失败或超时"
 
 PHASE="repository-sync"
+require_runtime_branch || fail "运行目录必须使用 main 并跟踪 origin/main；请保留改动后恢复运行分支"
 timeout "$STEP_TIMEOUT_SECONDS" "$GIT_BIN" pull --ff-only >>"$LOG" 2>&1 || fail "git pull --ff-only 失败或超时"
 
 # 1) 采集增量公开信号
@@ -466,13 +491,7 @@ timeout "$STEP_TIMEOUT_SECONDS" bun run scripts/gen-readme-index.ts >>"$LOG" 2>&
 
 # 5) git 留档(add daily/ + README 索引,运行时数据已被 .gitignore 挡住)
 PHASE="git-publish"
-"$GIT_BIN" add daily/ README.md >>"$LOG" 2>&1 || fail "git add 失败"
-if ! "$GIT_BIN" diff --cached --quiet; then
-  "$GIT_BIN" commit -m "daily briefing $DATE" >>"$LOG" 2>&1 || fail "git commit 失败"
-  timeout "$STEP_TIMEOUT_SECONDS" "$GIT_BIN" push >>"$LOG" 2>&1 || fail "git push 失败或超时"
-else
-  log "no daily/ changes to commit"
-fi
+publish_briefing
 
 # 6) 同步到上海云(国内可访问)
 if [ -d site ]; then
