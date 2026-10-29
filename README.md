@@ -202,14 +202,37 @@ This repository supports the front of the product pipeline: discovering, scoring
 Use the commands that match the current project state:
 
 ```bash
-bun install
+bun install --frozen-lockfile
 bun run init
 ```
 
 | Command | Purpose |
 |---|---|
-| `bun install` | Install project dependencies. |
+| `bun install --frozen-lockfile` | Install the versions recorded in `bun.lock`. |
 | `bun run init` | bun run scripts/db.ts --init |
+
+## Local Verification
+
+Run these checks from the repository root after installing dependencies:
+
+```bash
+bun x --no-install tsc --noEmit
+bun test tests/data-pipeline.test.ts tests/report-rendering.test.ts
+bun test tests/daily-scan-lock.test.ts
+bash -n daily-scan.sh scripts/test-daily-scan-reliability.sh
+```
+
+The data and report tests use synthetic SQLite databases in temporary directories.
+They mock source requests and suppress the report's browser-opening command; they
+do not scan real sources or send notifications. Report tests cover HTTP(S)-only
+links, HTML escaping, non-object JSON payloads, and ISO week-year boundaries.
+Process-lock tests need permission to query process start times with `/bin/ps`;
+a restrictive sandbox can prevent those checks from passing.
+
+`bun test tests/daily-scan-git.test.ts` separately tests publication retries in
+temporary local Git repositories. It performs Git writes there; skip this file
+when Git writes are prohibited. The full suite is `bun test tests/` when those
+operations are allowed. There is no configured lint or build command.
 
 ## Operating Notes
 
@@ -224,7 +247,7 @@ bun run init
 - [ ] Setup or preview commands are current and do not rely on private machine state.
 - [ ] No real secrets, private user data, or machine-local state are tracked.
 - [ ] Screenshots, demos, or sample outputs are safe to share publicly when the repository is public.
-- [ ] Product-specific tests or smoke checks are documented before production use.
+- [x] Product-specific tests or smoke checks are documented before production use.
 
 ## Roadmap
 

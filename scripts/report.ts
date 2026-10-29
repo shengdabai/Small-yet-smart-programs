@@ -19,11 +19,12 @@ function isoWeek(d: Date): string {
   const target = new Date(d.valueOf());
   const dayNr = (d.getUTCDay() + 6) % 7;
   target.setUTCDate(target.getUTCDate() - dayNr + 3);
+  const weekYear = target.getUTCFullYear();
   const firstThursday = target.valueOf();
   target.setUTCMonth(0, 1);
   if (target.getUTCDay() !== 4) target.setUTCMonth(0, 1 + ((4 - target.getUTCDay()) + 7) % 7);
   const week = 1 + Math.ceil((firstThursday - target.valueOf()) / 604800000);
-  return `${d.getUTCFullYear()}-W${week.toString().padStart(2, "0")}`;
+  return `${weekYear}-W${week.toString().padStart(2, "0")}`;
 }
 
 type Cand = {

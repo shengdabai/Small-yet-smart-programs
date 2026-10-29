@@ -14,6 +14,7 @@
  * 用法: bun run scripts/daily-digest.ts [--date YYYY-MM-DD] [--days 30]
  */
 import { db, init } from "./db.ts";
+import { candidateHref } from "./report-links.ts";
 import { writeFileSync, mkdirSync, existsSync } from "node:fs";
 
 init();
@@ -113,12 +114,12 @@ function card(r: Row): string {
   const diff = r.replication_difficulty ? `<span class="pill">复刻 ${esc(r.replication_difficulty)}</span>` : "";
   return `<article class="card">
     <div class="card-head">
-      <a class="name" href="${esc(r.url)}" target="_blank" rel="noopener"><span class="zh">${esc(zhName(r))}</span><span class="en">${esc(r.name)}</span></a>${badge}
+      <a class="name" href="${esc(candidateHref(r.url))}" target="_blank" rel="noopener"><span class="zh">${esc(zhName(r))}</span><span class="en">${esc(r.name)}</span></a>${badge}
     </div>
     <div class="src">${esc(r.source)}</div>
     <p class="desc"><span class="zh">${short(zhDesc(r))}</span><span class="en">${short(r.description)}</span></p>
     <div class="pills">${win}${diff}</div>
-    <a class="src-link" href="${esc(r.url)}" target="_blank" rel="noopener">🔗 <span class="zh">查看原项目</span><span class="en">View source</span> ↗</a>
+    <a class="src-link" href="${esc(candidateHref(r.url))}" target="_blank" rel="noopener">🔗 <span class="zh">查看原项目</span><span class="en">View source</span> ↗</a>
   </article>`;
 }
 function htmlSection(rows: Row[], emptyZh: string, emptyEn: string): string {
