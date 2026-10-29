@@ -127,6 +127,26 @@ describe("report rendering of untrusted candidate data", () => {
     }
     expect(f.report()).toContain("Fixture tool");
   }, 60_000);
+
+  test("decision matrix shows a dash for invalid totals and preserves valid scores", async () => {
+    const f = await fixture();
+    writeFileSync(join(f.dir, "config", "profile.example.json"), JSON.stringify({
+      owner: "Fixture", assets: [], currentProjects: [{ name: "Fixture project", stage: "test", est: 20, fit: "fixture" }],
+    }));
+    const totals = ["not-a-number", '<img src=x onerror="alert(1)">', null, Infinity, -Infinity, 7, 28, 35];
+    for (const [i, total] of totals.entries()) {
+      const id = f.seed(`https://example.invalid/total-${i}`);
+      f.db.query("UPDATE scored SET total = ? WHERE candidate_id = ?").run(total, id);
+    }
+    const matrix = f.report().match(/<table class="matrix">([\s\S]*?)<\/table>/)?.[1];
+    expect(matrix).toBeDefined();
+    const rows = [...matrix!.matchAll(/<tr>[\s\S]*?<\/tr>/g)].map((match) => match[0]);
+    for (const [i, total] of totals.entries()) {
+      const row = rows.find((row) => row.includes(`href="https://example.invalid/total-${i}"`));
+      const expected = typeof total === "number" && Number.isFinite(total) ? String(total) : "-";
+      expect(row?.match(/<td class="center">([^<]*)<\/td>/)?.[1]).toBe(expected);
+    }
+  }, 60_000);
 });
 
 test("weekly report uses the ISO week-year at both calendar-year boundaries", async () => {

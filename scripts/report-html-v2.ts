@@ -220,7 +220,7 @@ function decisionMatrix(): string {
     const advice = maxDiff >= 5 ? "严肃考虑 pivot" : maxDiff >= 2 ? "观察 3 月" : "继续手头";
     html += `<tr>
       <td class="cand-name"><a href="${esc(candidateHref(c.url))}" target="_blank" rel="noopener">${esc(c.name).slice(0, 40)}</a></td>
-      <td class="center">${c.total}</td><td class="center">${esc(c.window_estimate ?? "-")}</td>
+      <td class="center">${esc(String(c.total ?? "-"))}</td><td class="center">${esc(c.window_estimate ?? "-")}</td>
       ${diffs}
       <td class="advice">${advice}</td>
     </tr>`;
