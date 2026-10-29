@@ -17,6 +17,7 @@ import { writeFileSync, mkdirSync, existsSync, readFileSync } from "node:fs";
 import { execSync } from "node:child_process";
 import { loadProfile } from "./profile.ts";
 import { candidateHref } from "./report-links.ts";
+import { reportDays, reportNumber } from "./report-values.ts";
 
 init();
 const profile = loadProfile();
@@ -25,7 +26,7 @@ const REPORTS_DIR = decodeURIComponent(new URL("../reports/", import.meta.url).p
 if (!existsSync(REPORTS_DIR)) mkdirSync(REPORTS_DIR, { recursive: true });
 
 const args = process.argv.slice(2);
-const days = parseInt(args[args.indexOf("--days") + 1] ?? "60", 10);
+const days = reportDays(args, 60);
 
 type Cand = {
   id: number;
@@ -63,6 +64,14 @@ const rows = db
      LIMIT 500`,
   )
   .all() as Cand[];
+
+for (const row of rows) {
+  row.total = reportNumber(row.total, 7, 35);
+  row.signal_score = reportNumber(row.signal_score);
+  for (const key of ["d1_market", "d2_pain", "d3_paying", "d4_replicable", "d5_window", "d6_assets_fit", "d7_moat"] as const) {
+    row[key] = reportNumber(row[key], 1, 5);
+  }
+}
 
 const triple = rows.filter((r) => r.tier === "⭐⭐⭐");
 const double = rows.filter((r) => r.tier === "⭐⭐");

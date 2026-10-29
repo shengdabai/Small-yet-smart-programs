@@ -75,29 +75,17 @@ await enrichBuiltWith({ limit: 1 });
 - trend_6m / traffic_source(来自 SimilarWeb)
 - builtwith_tech / replication_difficulty(来自 step 4)
 
-按 prompt 严格输出 JSON,然后:
+按 `prompts/coarse-filter.md` 完成四问，并将该候选作为单元素数组写到
+`/tmp/smart-programs-scores.json`。字段与 smart-programs Skill 的 Step 4 相同：
+`cid`、`passed_a` 至 `passed_d`、`reason_if_dropped`、七个维度、`total`、`tier`、
+`why_them`、`window_estimate` 和 `summary`。未过粗筛的候选仍填写保守七维分数，等级为 ✗。
 
 ```bash
-bun -e '
-import { db } from "./scripts/db.ts";
-const s = { /* 评分 JSON */ };
-db.query(`INSERT INTO scored (candidate_id, d1_market, d2_pain, d3_paying, d4_replicable, d5_window, d6_assets_fit, d7_moat, total, tier, why_them, window_estimate)
-VALUES ($cid, $d1, $d2, $d3, $d4, $d5, $d6, $d7, $total, $tier, $why, $win)
-ON CONFLICT(candidate_id) DO UPDATE SET
-  d1_market=excluded.d1_market, d2_pain=excluded.d2_pain, d3_paying=excluded.d3_paying,
-  d4_replicable=excluded.d4_replicable, d5_window=excluded.d5_window,
-  d6_assets_fit=excluded.d6_assets_fit, d7_moat=excluded.d7_moat,
-  total=excluded.total, tier=excluded.tier, why_them=excluded.why_them,
-  window_estimate=excluded.window_estimate, scored_at=datetime("now")
-`).run({
-  $cid: <candidate_id>,
-  $d1: s.d1_market, $d2: s.d2_pain, $d3: s.d3_paying, $d4: s.d4_replicable,
-  $d5: s.d5_window, $d6: s.d6_assets_fit, $d7: s.d7_moat,
-  $total: s.total, $tier: s.tier,
-  $why: JSON.stringify(s.why_them), $win: s.window_estimate,
-});
-'
+bun run score:import
 ```
+
+导入失败则停止，不直接写评分表。已有不同分数或粗筛结果时报告冲突，不覆盖。
+该入口仅接收本月首次发现、signal_score ≥ 50 的候选；旧候选需要另行决定复评流程。
 
 ### 6. 若 ⭐⭐⭐,生成 pivot 备忘
 
@@ -121,7 +109,7 @@ ON CONFLICT(candidate_id) DO UPDATE SET
 每步失败的兜底策略,按优先级:
 
 - **URL 不合法 / 为空**: step 1 已拦截退出,不进数据库。
-- **`upsertCandidate` 失败 (DB lock / schema 错误)**: 报错 `DB write failed: <err>`,提示用户跑 `bun run db:migrate` 后重试,本次中止。
+- **`upsertCandidate` 失败 (DB lock / schema 错误)**: 报错 `DB write failed: <err>`,保留错误并检查 `scripts/db.ts`；项目没有 `db:migrate` 命令，不自动重建数据库,本次中止。
 - **Firecrawl MCP scrape 失败 / 超时**: 记录 `firecrawl_error=<reason>` 到 candidate.raw_payload,跳过 step 2-3,直接用 URL + domain 进入 step 4 (BuiltWith 仍可独立跑)。
 - **SimilarWeb 页面 404 / 抓不到流量**: trend_6m 置 `unknown`,traffic_source 置 `[]`,继续评分但在输出里标注 `traffic data: missing`。
 - **`enrichBuiltWith` 失败**: replication_difficulty 置 `unknown`,继续评分,在输出里标注 `tech stack: unknown`。

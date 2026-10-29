@@ -15,6 +15,7 @@
  */
 import { db, init } from "./db.ts";
 import { candidateHref } from "./report-links.ts";
+import { reportDays, reportNumber } from "./report-values.ts";
 import { writeFileSync, mkdirSync, existsSync } from "node:fs";
 
 init();
@@ -25,7 +26,14 @@ function arg(name: string, def: string): string {
   return i >= 0 && args[i + 1] ? args[i + 1] : def;
 }
 const today = arg("--date", new Date().toISOString().slice(0, 10));
-const lookbackDays = parseInt(arg("--days", "30"), 10);
+if (!/^\d{4}-\d{2}-\d{2}$/.test(today) ||
+    !Number.isFinite(Date.parse(today)) || new Date(today).toISOString().slice(0, 10) !== today) {
+  throw new Error("--date must be a real YYYY-MM-DD date");
+}
+if (args.includes("--date") && (!args[args.indexOf("--date") + 1] || args[args.indexOf("--date") + 1].startsWith("--"))) {
+  throw new Error("--date must be a real YYYY-MM-DD date");
+}
+const lookbackDays = reportDays(args, 30);
 
 const ROOT = decodeURIComponent(new URL("../", import.meta.url).pathname);
 const DAILY_DIR = ROOT + "daily/";
@@ -59,10 +67,15 @@ const fresh = db.query(`
          NULL as replication_difficulty, NULL as why_them,
          c.first_seen, NULL as scored_at
   FROM candidates c
-  WHERE date(c.first_seen) = date('${today}')
+  WHERE date(c.first_seen) = date(?)
   ORDER BY c.signal_score DESC NULLS LAST
   LIMIT 15
-`).all() as Row[];
+`).all(today) as Row[];
+
+for (const row of [...longTerm, ...fresh]) {
+  row.total = reportNumber(row.total, 7, 35);
+  row.signal_score = reportNumber(row.signal_score);
+}
 
 const triple = longTerm.filter((r) => r.tier === "⭐⭐⭐");
 const double = longTerm.filter((r) => r.tier === "⭐⭐");

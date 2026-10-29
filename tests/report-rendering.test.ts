@@ -154,3 +154,55 @@ test("static build preserves the rendered digest and links its archive entry", a
   expect(index).toContain(`href="${date}.html"`);
   expect(index).toContain('href="latest.html"');
 }, 60_000);
+
+test("legacy SQLite text in numeric columns cannot inject report markup", async () => {
+  const f = await fixture();
+  const attack = '<img src=x onerror="alert(1)">';
+  for (const column of ["total", "d1_market", "d7_moat", "signal_score"]) {
+    const id = f.seed(`https://example.invalid/legacy-${column}`);
+    const table = column === "signal_score" ? "candidates" : "scored";
+    const key = table === "candidates" ? "id" : "candidate_id";
+    f.db.query(`UPDATE ${table} SET ${column} = ? WHERE ${key} = ?`).run(attack, id);
+  }
+  const negative = f.seed("https://example.invalid/negative");
+  f.db.query("UPDATE candidates SET signal_score = -100 WHERE id = ?").run(negative);
+  for (const html of [f.report(), f.digest()]) {
+    expect(html).not.toContain(attack);
+    expect(html).not.toContain("NaN");
+  }
+}, 60_000);
+
+test("monthly report supports a scored candidate with a NULL name", async () => {
+  const f = await fixture();
+  const id = f.seed("https://example.invalid/unnamed");
+  f.db.query("UPDATE candidates SET name = NULL WHERE id = ?").run(id);
+  const result = f.run("report.ts", ["--mode", "monthly"]);
+  expect(result.code).toBe(0);
+  const month = new Date().toISOString().slice(0, 7);
+  const md = readFileSync(join(f.dir, "reports", `${month}-monthly.md`), "utf8");
+  expect(md).toContain(`reports/${month}-candidate-${id}-pivot.md`);
+}, 60_000);
+
+test("report CLIs reject malformed lookback windows instead of producing an empty report", async () => {
+  const f = await fixture();
+  for (const script of ["report-html-v2.ts", "daily-digest.ts"]) {
+    for (const args of [["--days"], ["--days", "abc"], ["--days", "-1"], ["--days", "0"], ["--days", "1.5"], ["--days", "3651"]]) {
+      const result = f.run(script, args);
+      expect(result.code).not.toBe(0);
+      expect(result.err).toContain("--days must be an integer from 1 to 3650");
+    }
+    expect(f.run(script, ["--days", "1"]).code).toBe(0);
+    expect(f.run(script, ["--days", "3650"]).code).toBe(0);
+  }
+}, 60_000);
+
+test("digest rejects invalid dates before SQL or output path construction", async () => {
+  const f = await fixture();
+  for (const date of ["2026-02-30", "2026-13-01", "../escape", "2026-10-29') OR 1=1 --"]) {
+    const result = f.run("daily-digest.ts", ["--date", date]);
+    expect(result.code).not.toBe(0);
+    expect(result.err).toContain("--date must be a real YYYY-MM-DD date");
+  }
+  expect(f.run("daily-digest.ts", ["--date"]).code).not.toBe(0);
+  expect(f.run("daily-digest.ts", ["--date", "2024-02-29"]).code).toBe(0);
+}, 60_000);

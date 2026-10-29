@@ -12,7 +12,7 @@ description: 每日轻量扫描 - HN + Reddit + Toolify + GoogleTrends 增量入
 
 ```bash
 cd "${SMART_PROGRAMS_DIR:-$HOME/.local/share/smart-programs}"
-[ -d node_modules ] || bun install
+[ -d node_modules ] || bun install --frozen-lockfile
 ```
 
 ### 2. 跑增量
@@ -62,7 +62,7 @@ top 10 by signal:
 
 ## Error handling
 
-- **`bun install` 失败 (网络 / lockfile 冲突)**: 报错并提示 `rm -rf node_modules bun.lock && bun install`,本次中止。
+- **`bun install --frozen-lockfile` 失败 (网络 / lockfile 冲突)**: 保留 `bun.lock` 和已有依赖，记录错误并中止。网络恢复后重试同一命令；锁文件冲突交由维护者处理，不删除锁文件或自动升级。
 - **`bun run scan:daily` 失败 (退出码 ≠ 0)**: 检查 stderr 哪个源挂掉 (HN/Reddit/Toolify/GoogleTrends 任一),失败源记录到 `data/scan-errors-<date>.log`,其余源已成功的增量已落库 (db 写入是 per-source 事务),报告 `partial success: X/4 sources` 后继续 step 3。
 - **单源 timeout (>30s)**: scan:daily 内部已有 per-source timeout,挂掉的源跳过,不阻断整体。
 - **HN/Reddit API 限流 (429)**: 该源本次返回 0 候选 + warning,下次跑自动恢复 (轻量源天然容错)。

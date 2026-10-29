@@ -30,7 +30,7 @@ function isoWeek(d: Date): string {
 type Cand = {
   id: number;
   source: string;
-  name: string;
+  name: string | null;
   url: string;
   description: string;
   signal_score: number | null;
@@ -140,7 +140,8 @@ function writeMonthly() {
     md += `## ⭐⭐⭐ 候选列表\n\n`;
     for (const c of triple) {
       md += fmtCandidate(c) + "\n\n";
-      md += `  - **pivot memo**: \`reports/${ym}-${c.name.toLowerCase().replace(/\W+/g, "-")}-pivot.md\` (若已生成)\n\n`;
+      const slug = c.name?.toLowerCase().replace(/\W+/g, "-").replace(/^-+|-+$/g, "") || `candidate-${c.id}`;
+      md += `  - **pivot memo**: \`reports/${ym}-${slug}-pivot.md\` (若已生成)\n\n`;
     }
   }
 

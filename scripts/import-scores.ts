@@ -43,9 +43,11 @@ init();
 const candidate = db.query(`
   SELECT c.id, c.first_seen, c.signal_score,
          s.d1_market, s.d2_pain, s.d3_paying, s.d4_replicable,
-         s.d5_window, s.d6_assets_fit, s.d7_moat, s.total, s.tier
+         s.d5_window, s.d6_assets_fit, s.d7_moat, s.total, s.tier,
+         f.passed_a, f.passed_b, f.passed_c, f.passed_d
   FROM candidates c
   LEFT JOIN scored s ON s.candidate_id = c.id
+  LEFT JOIN filtered f ON f.candidate_id = c.id
   WHERE c.id = $cid
     AND c.first_seen >= datetime('now', 'start of month')
     AND c.signal_score >= 50
@@ -110,6 +112,10 @@ const scores = (parsed as Score[]).map((raw, index) => {
     if (Number(existing.total) !== total || existing.tier !== tier ||
         current.some((value, dimension) => value !== dimensions[dimension])) {
       throw new Error(`${prefix}.cid already has a different score`);
+    }
+    const flags = [existing.passed_a, existing.passed_b, existing.passed_c, existing.passed_d];
+    if (flags.some((value, question) => value != null && value !== passes[question])) {
+      throw new Error(`${prefix}.cid already has a different coarse filter`);
     }
   }
 

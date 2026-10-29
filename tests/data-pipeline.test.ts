@@ -206,6 +206,18 @@ describe("import-scores.ts (LLM score validation gate)", () => {
     expect(importer([good(fine)]).code).toBe(0);
   });
 
+  test("replaying a score cannot replace a different coarse-filter decision", async () => {
+    const { ids, importer, db } = await setup(1);
+    const dropped = good(ids[0], { passed_a: 0, tier: "✗", reason_if_dropped: "No evidence" });
+    expect(importer([dropped]).code).toBe(0);
+    // Same dimensions, total and tier; a different failing question is still a conflict.
+    const result = importer([{ ...dropped, passed_a: 1, passed_b: 0 }]);
+    expect(result.code).not.toBe(0);
+    expect(result.err).toContain("already has a different coarse filter");
+    expect(db.query("SELECT passed_a, passed_b FROM filtered WHERE candidate_id = ?").get(ids[0]))
+      .toEqual({ passed_a: 0, passed_b: 1 });
+  });
+
   test("re-importing the identical score is idempotent, a conflicting score is refused and leaves the old one intact", async () => {
     const { ids, importer, db, count_ } = await setup(1);
     expect(importer([good(ids[0])]).code).toBe(0);
