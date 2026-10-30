@@ -155,7 +155,13 @@ case "$*" in
   "run scripts/notify-feishu.ts") printf 'BRIEFING' ;;
 esac
 exit 0`);
-  stub(join(root, "bin", "git"), "exit 0");
+  // main's require_runtime_branch asks git for the branch and its upstream; answer as a healthy runtime checkout.
+  stub(join(root, "bin", "git"), `
+case "$1" in
+  symbolic-ref) echo main ;;
+  rev-parse) echo origin/main ;;
+esac
+exit 0`);
   stub(join(root, "bin", "codex"), "exit 0");
   stub(join(root, "bin", "hermes"), `printf '%s' "$4" > "${sent}"`);
   const python = Bun.which("python3");

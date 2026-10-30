@@ -107,6 +107,15 @@ describe("db.ts upsert / dedupe", () => {
     expect((db.query("SELECT signal_score FROM candidates WHERE id = ?").get(first.id) as { signal_score: number }).signal_score).toBe(20);
   }, SLOW_TEST_MS);
 
+  test("a repeat sighting within the same second is not counted as new", async () => {
+    const { db, upsertCandidate } = await loadDb(project());
+    const first = upsertCandidate({ source: "hackernews", external_id: "dup", name: "Dup", signal_score: 10 });
+    const again = upsertCandidate({ source: "hackernews", external_id: "dup", name: "Dup", signal_score: 20 });
+    expect(first.is_new).toBe(true);
+    expect(again).toEqual({ id: first.id, is_new: false });
+    expect((db.query("SELECT signal_score FROM candidates WHERE id = ?").get(first.id) as { signal_score: number }).signal_score).toBe(20);
+  });
+
   test("the same external id from another source is a different candidate", async () => {
     const { db, upsertCandidate } = await loadDb(project());
     const a = upsertCandidate({ source: "hackernews", external_id: "7" });
