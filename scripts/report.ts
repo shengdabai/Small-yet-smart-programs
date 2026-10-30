@@ -19,17 +19,18 @@ function isoWeek(d: Date): string {
   const target = new Date(d.valueOf());
   const dayNr = (d.getUTCDay() + 6) % 7;
   target.setUTCDate(target.getUTCDate() - dayNr + 3);
+  const weekYear = target.getUTCFullYear();
   const firstThursday = target.valueOf();
   target.setUTCMonth(0, 1);
   if (target.getUTCDay() !== 4) target.setUTCMonth(0, 1 + ((4 - target.getUTCDay()) + 7) % 7);
   const week = 1 + Math.ceil((firstThursday - target.valueOf()) / 604800000);
-  return `${d.getUTCFullYear()}-W${week.toString().padStart(2, "0")}`;
+  return `${weekYear}-W${week.toString().padStart(2, "0")}`;
 }
 
 type Cand = {
   id: number;
   source: string;
-  name: string;
+  name: string | null;
   url: string;
   description: string;
   signal_score: number | null;
@@ -139,7 +140,8 @@ function writeMonthly() {
     md += `## ⭐⭐⭐ 候选列表\n\n`;
     for (const c of triple) {
       md += fmtCandidate(c) + "\n\n";
-      md += `  - **pivot memo**: \`reports/${ym}-${c.name.toLowerCase().replace(/\W+/g, "-")}-pivot.md\` (若已生成)\n\n`;
+      const slug = c.name?.toLowerCase().replace(/\W+/g, "-").replace(/^-+|-+$/g, "") || `candidate-${c.id}`;
+      md += `  - **pivot memo**: \`reports/${ym}-${slug}-pivot.md\` (若已生成)\n\n`;
     }
   }
 
