@@ -21,6 +21,7 @@ SMART_PROGRAMS_PROXY_URL="${SMART_PROGRAMS_PROXY_URL:-}"              # 可选�
 CODEX_TIMEOUT_SECONDS="${CODEX_TIMEOUT_SECONDS:-360}"
 SCAN_TIMEOUT_SECONDS="${SCAN_TIMEOUT_SECONDS:-480}"
 STEP_TIMEOUT_SECONDS="${STEP_TIMEOUT_SECONDS:-180}"
+PREFLIGHT_URL="${SMART_PROGRAMS_PREFLIGHT_URL:-https://hn.algolia.com/api/v1/search_by_date?tags=show_hn&hitsPerPage=1}"   # 代理预检探测点:HN 是日报真实依赖且稳定可达的源
 # ----------------
 
 LOGDIR="${LOGDIR:-$REPO/.logs}"; mkdir -p "$LOGDIR"
@@ -350,6 +351,7 @@ fail() {
 
 on_exit() {
   local rc=$?
+  [ -n "${SCAN_OUT:-}" ] && rm -f "$SCAN_OUT"
   release_lock
   if [ "$rc" -ne 0 ] && [ ! -f "$DONE" ]; then
     notify_failure_once "任务异常退出（rc=${rc}）" || true
@@ -379,6 +381,34 @@ publish_briefing() {
   # A previous attempt may have committed successfully but failed to push.
   # Retry the push even when there are no new staged changes.
   timeout "$STEP_TIMEOUT_SECONDS" "$GIT_BIN" push origin main >>"$LOG" 2>&1 || fail "git push 失败或超时"
+}
+
+# 代理预检:经本机代理探测 HN 公开接口。不要再探测 toolify.ai —— 它对 curl 恒返回 Cloudflare 403,会让预检每天误报。
+public_signal_preflight() {
+  [ -n "$SMART_PROGRAMS_PROXY_URL" ] || return 0
+  timeout 20 curl -x "$SMART_PROGRAMS_PROXY_URL" -fsSI "$PREFLIGHT_URL" >/dev/null 2>>"$LOG"
+}
+
+# 读本次采集输出(stdin),只按 reddit.ts / toolify.ts 固定的日志行统计真实的单源失败,例如
+# 「Reddit 9/9 个板块 403；Toolify 不可达」;没有失败时输出为空。
+# 行首锚定,避免日志里别处(如 Codex 输出)出现同样的字样被误计。
+summarize_source_failures() {
+  awk '
+    /^\[reddit\] \/r\/[^ ]+ fetched=/ { total++ }
+    /^\[reddit\] \/r\/[^ ]+ skip:/ {
+      total++; failed++
+      code = $NF
+      if (code !~ /^[0-9][0-9][0-9]$/) code = "失败"
+      if (!(code in seen)) { seen[code] = 1; codes = codes (codes == "" ? "" : "/") code }
+    }
+    /^\[toolify\] unreachable/ { toolify = 1 }
+    END {
+      out = ""
+      if (failed > 0) out = "Reddit " failed "/" total " 个板块 " codes
+      if (toolify) out = out (out == "" ? "" : "；") "Toolify 不可达"
+      printf "%s", out
+    }
+  '
 }
 
 # Allows the reliability helpers to be sourced by smoke tests without running
@@ -459,16 +489,33 @@ timeout "$STEP_TIMEOUT_SECONDS" "$GIT_BIN" pull --ff-only >>"$LOG" 2>&1 || fail 
 
 # 1) 采集增量公开信号
 PHASE="source-scan"
-if [ -n "$SMART_PROGRAMS_PROXY_URL" ]; then
-  timeout 20 curl -x "$SMART_PROGRAMS_PROXY_URL" -fsSI https://www.toolify.ai/ >/dev/null 2>>"$LOG" || {
-    DEGRADED_REASON="公开信号代理预检未通过"
-    log "$DEGRADED_REASON，继续采集并保留单源错误"
-  }
-fi
-timeout "$SCAN_TIMEOUT_SECONDS" bun run scan:daily >>"$LOG" 2>&1 || {
-  DEGRADED_REASON="公开信号采集部分失败或超时"
-  log "$DEGRADED_REASON，使用已采集数据继续"
+public_signal_preflight || {
+  DEGRADED_REASON="公开信号代理预检未通过"
+  log "${DEGRADED_REASON}，继续采集并保留单源错误"
 }
+# 本次采集输出先写独立文件,再并入总日志。单源失败只从这份输出统计,总日志轮转、截断或历史内容都不影响。
+SCAN_OUT="$(mktemp "$LOGDIR/.scan-daily.XXXXXX" 2>/dev/null)" || SCAN_OUT=""
+SCAN_RC=0
+timeout "$SCAN_TIMEOUT_SECONDS" bun run scan:daily >>"${SCAN_OUT:-$LOG}" 2>&1 || SCAN_RC=$?
+# 单源失败(Reddit 403、Toolify 不可达)不会让 scan:daily 退出非 0,只能从本次输出里读出来
+SOURCE_FAILURES=""
+if [ -n "$SCAN_OUT" ]; then
+  cat "$SCAN_OUT" >> "$LOG" 2>/dev/null || true
+  SOURCE_FAILURES="$(summarize_source_failures < "$SCAN_OUT")"
+  rm -f "$SCAN_OUT"
+  SCAN_OUT=""
+else
+  log "无法创建本次采集的独立输出文件，本期不统计单源失败"
+fi
+if [ "$SCAN_RC" -ne 0 ]; then
+  # 追加而不是覆盖:预检失败与采集失败同时发生时两条都要保留
+  DEGRADED_REASON="${DEGRADED_REASON:+${DEGRADED_REASON}；}公开信号采集部分失败或超时"
+  log "公开信号采集部分失败或超时（rc=${SCAN_RC}），使用已采集数据继续"
+fi
+if [ -n "$SOURCE_FAILURES" ]; then
+  DEGRADED_REASON="${DEGRADED_REASON:+${DEGRADED_REASON}；}${SOURCE_FAILURES}"
+  log "单源采集失败：${SOURCE_FAILURES}"
+fi
 
 # 2) LLM 评分:用 Codex 跑评分专用 skill(不重复采集、不出 HTML)
 PHASE="llm-scoring"
