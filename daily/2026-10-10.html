@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>机会简报 2026-10-10 · Opportunity Briefing</title>
+<style>
+:root{--bg:#0f1115;--card:#171a21;--line:#262b36;--ink:#e8eaed;--mut:#9aa3b2;--gold:#d4a72c;--p3:#b06cd4;--acc:#4a9eff}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--ink);font-family:-apple-system,"PingFang SC","Segoe UI",system-ui,sans-serif;line-height:1.6}
+.wrap{max-width:1100px;margin:0 auto;padding:32px 20px 80px}
+header{border-bottom:1px solid var(--line);padding-bottom:20px;margin-bottom:28px;display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:12px}
+h1{font-size:1.7rem;letter-spacing:-.01em}
+.date{color:var(--mut);font-family:ui-monospace,monospace;font-size:.85rem}
+.toggle{display:flex;gap:6px}
+.toggle button{background:var(--card);color:var(--mut);border:1px solid var(--line);padding:6px 14px;border-radius:6px;cursor:pointer;font-size:.85rem}
+.toggle button.on{background:var(--acc);color:#fff;border-color:var(--acc)}
+.summary{display:flex;gap:18px;margin-bottom:28px;flex-wrap:wrap}
+.stat{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px 20px;min-width:120px}
+.stat .n{font-size:2rem;font-weight:700}
+.stat.t3 .n{color:var(--p3)} .stat.t2 .n{color:var(--gold)}
+.stat .l{color:var(--mut);font-size:.78rem;text-transform:uppercase;letter-spacing:.05em}
+h2{font-size:1.15rem;margin:32px 0 14px;padding-left:10px;border-left:3px solid var(--acc)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:14px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:16px}
+.card-head{display:flex;justify-content:space-between;align-items:start;gap:8px;margin-bottom:4px}
+.name{color:var(--ink);font-weight:600;text-decoration:none;font-size:1.02rem}
+.name:hover{color:var(--acc)}
+.badge{font-size:.72rem;font-family:ui-monospace,monospace;padding:2px 8px;border-radius:20px;white-space:nowrap;background:#222}
+.badge.t3{background:rgba(176,108,212,.2);color:var(--p3)} .badge.t2{background:rgba(212,167,44,.2);color:var(--gold)} .badge.sig{color:var(--mut)}
+.src{color:var(--mut);font-size:.72rem;font-family:ui-monospace,monospace;margin-bottom:8px}
+.desc{color:#c4cad6;font-size:.9rem;margin-bottom:10px}
+.pills{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
+.src-link{display:inline-block;font-size:.82rem;color:var(--acc);text-decoration:none;border:1px solid var(--acc);border-radius:6px;padding:5px 12px;transition:.15s}
+.src-link:hover{background:var(--acc);color:#fff}
+.pill{font-size:.7rem;color:var(--mut);border:1px solid var(--line);padding:2px 8px;border-radius:20px}
+.muted{color:var(--mut);font-style:italic;padding:8px 0}
+.disclaimer{margin-top:40px;padding:16px 20px;background:rgba(212,167,44,.08);border:1px solid rgba(212,167,44,.3);border-radius:10px;color:var(--mut);font-size:.86rem}
+footer{margin-top:40px;color:var(--mut);font-size:.78rem;text-align:center;font-family:ui-monospace,monospace}
+.en{display:none}
+body.lang-en .zh{display:none} body.lang-en .en{display:inline}
+</style>
+</head>
+<body class="lang-zh">
+<div class="wrap">
+<header>
+  <div>
+    <h1><span class="zh">机会简报</span><span class="en">Opportunity Briefing</span></h1>
+    <div class="date">2026-10-10 · smart-programs</div>
+  </div>
+  <div class="toggle">
+    <button id="b-zh" class="on" onclick="setLang('zh')">中文</button>
+    <button id="b-en" onclick="setLang('en')">EN</button>
+  </div>
+</header>
+
+<div class="summary">
+  <div class="stat t3"><div class="n">0</div><div class="l">⭐⭐⭐</div></div>
+  <div class="stat t2"><div class="n">0</div><div class="l">⭐⭐</div></div>
+  <div class="stat"><div class="n">8</div><div class="l"><span class="zh">今日新信号</span><span class="en">fresh today</span></div></div>
+</div>
+
+<h2><span class="zh">值得长期推进</span><span class="en">Worth pursuing — top picks</span></h2>
+<p class="muted"><span class="zh">本期暂无 ⭐⭐⭐(诚实结果,继续手头项目)</span><span class="en">No ⭐⭐⭐ this round (an honest result — keep building).</span></p>
+
+<h2><span class="zh">备选(3 个月后回访)</span><span class="en">Shortlist (revisit in 3 months)</span></h2>
+<p class="muted"><span class="zh">暂无 ⭐⭐ 备选</span><span class="en">No ⭐⭐ shortlist yet.</span></p>
+
+<h2><span class="zh">最新产品信号</span><span class="en">Fresh signals today</span></h2>
+<div class="grid"><article class="card">
+    <div class="card-head">
+      <a class="name" href="https://github.com/franzenzenhofer/big-arrow-on-the-screen" target="_blank" rel="noopener"><span class="zh">Let your AI agents paint big arrows, boxes and text on your screen</span><span class="en">Let your AI agents paint big arrows, boxes and text on your screen</span></a><span class="badge sig"><span class="zh">热度 386</span><span class="en">signal 386</span></span>
+    </div>
+    <div class="src">hackernews</div>
+    <p class="desc"><span class="zh"></span><span class="en"></span></p>
+    <div class="pills"></div>
+    <a class="src-link" href="https://github.com/franzenzenhofer/big-arrow-on-the-screen" target="_blank" rel="noopener">🔗 <span class="zh">查看原项目</span><span class="en">View source</span> ↗</a>
+  </article><article class="card">
+    <div class="card-head">
+      <a class="name" href="https://carrierexplode.com/" target="_blank" rel="noopener"><span class="zh">Carrier-Explode: iPhone, Pixel and Galaxy carrier settings decoded</span><span class="en">Carrier-Explode: iPhone, Pixel and Galaxy carrier settings decoded</span></a><span class="badge sig"><span class="zh">热度 237</span><span class="en">signal 237</span></span>
+    </div>
+    <div class="src">hackernews</div>
+    <p class="desc"><span class="zh">Showing off carrier-explode, one of my side projects that continuously archives carrier settings for all major phone brands.carrier-explode also contains decoders and explanations for all the common b…</span><span class="en">Showing off carrier-explode, one of my side projects that continuously archives carrier settings for all major phone brands.carrier-explode also contains decoders and explanations for all the common b…</span></p>
+    <div class="pills"></div>
+    <a class="src-link" href="https://carrierexplode.com/" target="_blank" rel="noopener">🔗 <span class="zh">查看原项目</span><span class="en">View source</span> ↗</a>
+  </article><article class="card">
+    <div class="card-head">
+      <a class="name" href="https://quake-srp.pages.dev/" target="_blank" rel="noopener"><span class="zh">Quake ported to safe Rust, playable in browser</span><span class="en">Quake ported to safe Rust, playable in browser</span></a><span class="badge sig"><span class="zh">热度 225</span><span class="en">signal 225</span></span>
+    </div>
+    <div class="src">hackernews</div>
+    <p class="desc"><span class="zh"></span><span class="en"></span></p>
+    <div class="pills"></div>
+    <a class="src-link" href="https://quake-srp.pages.dev/" target="_blank" rel="noopener">🔗 <span class="zh">查看原项目</span><span class="en">View source</span> ↗</a>
+  </article><article class="card">
+    <div class="card-head">
+      <a class="name" href="https://readrare.com/" target="_blank" rel="noopener"><span class="zh">The rarest tech books and docs you've probably never read</span><span class="en">The rarest tech books and docs you've probably never read</span></a><span class="badge sig"><span class="zh">热度 87</span><span class="en">signal 87</span></span>
+    </div>
+    <div class="src">hackernews</div>
+    <p class="desc"><span class="zh"></span><span class="en"></span></p>
+    <div class="pills"></div>
+    <a class="src-link" href="https://readrare.com/" target="_blank" rel="noopener">🔗 <span class="zh">查看原项目</span><span class="en">View source</span> ↗</a>
+  </article><article class="card">
+    <div class="card-head">
+      <a class="name" href="https://opper.ai/jevman-benchmark/" target="_blank" rel="noopener"><span class="zh">Jevman – AI decision models play Pac-Man</span><span class="en">Jevman – AI decision models play Pac-Man</span></a><span class="badge sig"><span class="zh">热度 72</span><span class="en">signal 72</span></span>
+    </div>
+    <div class="src">hackernews</div>
+    <p class="desc"><span class="zh">Openai just launched their decisions endpoint, cloudflare launched clef the other week, and many more jev alternatives are out there.We wanted to put the popular ones to the test and thought Pac-Man i…</span><span class="en">Openai just launched their decisions endpoint, cloudflare launched clef the other week, and many more jev alternatives are out there.We wanted to put the popular ones to the test and thought Pac-Man i…</span></p>
+    <div class="pills"></div>
+    <a class="src-link" href="https://opper.ai/jevman-benchmark/" target="_blank" rel="noopener">🔗 <span class="zh">查看原项目</span><span class="en">View source</span> ↗</a>
+  </article><article class="card">
+    <div class="card-head">
+      <a class="name" href="https://github.com/darshi1337/apogee" target="_blank" rel="noopener"><span class="zh">Apogee: Rebuilding Mozilla's Orbit, fully local and private</span><span class="en">Apogee: Rebuilding Mozilla's Orbit, fully local and private</span></a><span class="badge sig"><span class="zh">热度 64</span><span class="en">signal 64</span></span>
+    </div>
+    <div class="src">hackernews</div>
+    <p class="desc"><span class="zh">Hey everyone!Last year, Mozilla released Orbit, an AI-powered browser summarizer hosted on a GCP server. After people started digging into the extension, they discovered things like backend endpoints …</span><span class="en">Hey everyone!Last year, Mozilla released Orbit, an AI-powered browser summarizer hosted on a GCP server. After people started digging into the extension, they discovered things like backend endpoints …</span></p>
+    <div class="pills"></div>
+    <a class="src-link" href="https://github.com/darshi1337/apogee" target="_blank" rel="noopener">🔗 <span class="zh">查看原项目</span><span class="en">View source</span> ↗</a>
+  </article><article class="card">
+    <div class="card-head">
+      <a class="name" href="https://github.com/ymcrcat/rgpu" target="_blank" rel="noopener"><span class="zh">Rgpu – a PyTorch device whose tensors live on a remote GPU</span><span class="en">Rgpu – a PyTorch device whose tensors live on a remote GPU</span></a><span class="badge sig"><span class="zh">热度 55</span><span class="en">signal 55</span></span>
+    </div>
+    <div class="src">hackernews</div>
+    <p class="desc"><span class="zh">rGPU runs GPU work on a remote NVIDIA machine while the application stays on the client.</span><span class="en">rGPU runs GPU work on a remote NVIDIA machine while the application stays on the client.</span></p>
+    <div class="pills"></div>
+    <a class="src-link" href="https://github.com/ymcrcat/rgpu" target="_blank" rel="noopener">🔗 <span class="zh">查看原项目</span><span class="en">View source</span> ↗</a>
+  </article><article class="card">
+    <div class="card-head">
+      <a class="name" href="https://github.com/TerseAI/durable-actors" target="_blank" rel="noopener"><span class="zh">Durable Actors – OSS Durable Objects with configurable compute</span><span class="en">Durable Actors – OSS Durable Objects with configurable compute</span></a><span class="badge sig"><span class="zh">热度 51</span><span class="en">signal 51</span></span>
+    </div>
+    <div class="src">hackernews</div>
+    <p class="desc"><span class="zh">Hi HN, we&amp;#x27;re Thomas and Olivier from Terse (https:&amp;#x2F;&amp;#x2F;www.useterse.ai&amp;#x2F;) We&amp;#x27;ve built Durable Actors, an open-source alternative to Cloudflare&amp;#x27;s Durable Objects.A Durable Obj…</span><span class="en">Hi HN, we&amp;#x27;re Thomas and Olivier from Terse (https:&amp;#x2F;&amp;#x2F;www.useterse.ai&amp;#x2F;) We&amp;#x27;ve built Durable Actors, an open-source alternative to Cloudflare&amp;#x27;s Durable Objects.A Durable Obj…</span></p>
+    <div class="pills"></div>
+    <a class="src-link" href="https://github.com/TerseAI/durable-actors" target="_blank" rel="noopener">🔗 <span class="zh">查看原项目</span><span class="en">View source</span> ↗</a>
+  </article></div>
+
+<div class="disclaimer">
+  <span class="zh">机器初筛 + LLM 初评。⭐⭐⭐ 仅代表"值得人工 review",不是"立刻 pivot"。pivot 前必须和手头项目比较,差 +5 分才动(见 METHODOLOGY.md 反陷阱 5)。</span>
+  <span class="en">Machine pre-filter + LLM first-pass scoring. ⭐⭐⭐ means "worth a human review", not "pivot now". Only switch if it beats your current project by +5 points (see METHODOLOGY.md, anti-trap 5).</span>
+</div>
+
+<footer>smart-programs · 7-dimension rubric (v5 SOP) · 2026-10-10</footer>
+</div>
+<script>
+function setLang(l){
+  document.body.className = 'lang-' + l;
+  document.getElementById('b-zh').classList.toggle('on', l==='zh');
+  document.getElementById('b-en').classList.toggle('on', l==='en');
+  try{ localStorage.setItem('sp-lang', l); }catch(e){}
+}
+try{ const s = localStorage.getItem('sp-lang'); if(s) setLang(s); }catch(e){}
+</script>
+</body>
+</html>

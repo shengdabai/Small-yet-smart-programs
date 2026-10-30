@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>机会简报 2026-08-20 · Opportunity Briefing</title>
+<style>
+:root{--bg:#0f1115;--card:#171a21;--line:#262b36;--ink:#e8eaed;--mut:#9aa3b2;--gold:#d4a72c;--p3:#b06cd4;--acc:#4a9eff}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--ink);font-family:-apple-system,"PingFang SC","Segoe UI",system-ui,sans-serif;line-height:1.6}
+.wrap{max-width:1100px;margin:0 auto;padding:32px 20px 80px}
+header{border-bottom:1px solid var(--line);padding-bottom:20px;margin-bottom:28px;display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:12px}
+h1{font-size:1.7rem;letter-spacing:-.01em}
+.date{color:var(--mut);font-family:ui-monospace,monospace;font-size:.85rem}
+.toggle{display:flex;gap:6px}
+.toggle button{background:var(--card);color:var(--mut);border:1px solid var(--line);padding:6px 14px;border-radius:6px;cursor:pointer;font-size:.85rem}
+.toggle button.on{background:var(--acc);color:#fff;border-color:var(--acc)}
+.summary{display:flex;gap:18px;margin-bottom:28px;flex-wrap:wrap}
+.stat{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px 20px;min-width:120px}
+.stat .n{font-size:2rem;font-weight:700}
+.stat.t3 .n{color:var(--p3)} .stat.t2 .n{color:var(--gold)}
+.stat .l{color:var(--mut);font-size:.78rem;text-transform:uppercase;letter-spacing:.05em}
+h2{font-size:1.15rem;margin:32px 0 14px;padding-left:10px;border-left:3px solid var(--acc)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:14px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:16px}
+.card-head{display:flex;justify-content:space-between;align-items:start;gap:8px;margin-bottom:4px}
+.name{color:var(--ink);font-weight:600;text-decoration:none;font-size:1.02rem}
+.name:hover{color:var(--acc)}
+.badge{font-size:.72rem;font-family:ui-monospace,monospace;padding:2px 8px;border-radius:20px;white-space:nowrap;background:#222}
+.badge.t3{background:rgba(176,108,212,.2);color:var(--p3)} .badge.t2{background:rgba(212,167,44,.2);color:var(--gold)} .badge.sig{color:var(--mut)}
+.src{color:var(--mut);font-size:.72rem;font-family:ui-monospace,monospace;margin-bottom:8px}
+.desc{color:#c4cad6;font-size:.9rem;margin-bottom:10px}
+.pills{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
+.src-link{display:inline-block;font-size:.82rem;color:var(--acc);text-decoration:none;border:1px solid var(--acc);border-radius:6px;padding:5px 12px;transition:.15s}
+.src-link:hover{background:var(--acc);color:#fff}
+.pill{font-size:.7rem;color:var(--mut);border:1px solid var(--line);padding:2px 8px;border-radius:20px}
+.muted{color:var(--mut);font-style:italic;padding:8px 0}
+.disclaimer{margin-top:40px;padding:16px 20px;background:rgba(212,167,44,.08);border:1px solid rgba(212,167,44,.3);border-radius:10px;color:var(--mut);font-size:.86rem}
+footer{margin-top:40px;color:var(--mut);font-size:.78rem;text-align:center;font-family:ui-monospace,monospace}
+.en{display:none}
+body.lang-en .zh{display:none} body.lang-en .en{display:inline}
+</style>
+</head>
+<body class="lang-zh">
+<div class="wrap">
+<header>
+  <div>
+    <h1><span class="zh">机会简报</span><span class="en">Opportunity Briefing</span></h1>
+    <div class="date">2026-08-20 · smart-programs</div>
+  </div>
+  <div class="toggle">
+    <button id="b-zh" class="on" onclick="setLang('zh')">中文</button>
+    <button id="b-en" onclick="setLang('en')">EN</button>
+  </div>
+</header>
+
+<div class="summary">
+  <div class="stat t3"><div class="n">0</div><div class="l">⭐⭐⭐</div></div>
+  <div class="stat t2"><div class="n">1</div><div class="l">⭐⭐</div></div>
+  <div class="stat"><div class="n">15</div><div class="l"><span class="zh">今日新信号</span><span class="en">fresh today</span></div></div>
+</div>
+
+<h2><span class="zh">值得长期推进</span><span class="en">Worth pursuing — top picks</span></h2>
+<p class="muted"><span class="zh">本期暂无 ⭐⭐⭐(诚实结果,继续手头项目)</span><span class="en">No ⭐⭐⭐ this round (an honest result — keep building).</span></p>
+
+<h2><span class="zh">备选(3 个月后回访)</span><span class="en">Shortlist (revisit in 3 months)</span></h2>
+<div class="grid"><article class="card">
+    <div class="card-head">
+      <a class="name" href="https://deepsql.ai/" target="_blank" rel="noopener"><span class="zh">DeepSQL – A self-hostable DBA agent for Postgres and MySQL</span><span class="en">DeepSQL – A self-hostable DBA agent for Postgres and MySQL</span></a><span class="badge t2">⭐⭐ 22</span>
+    </div>
+    <div class="src">hackernews</div>
+    <p class="desc"><span class="zh">Hi HN - I&amp;#x27;m Venkat, founder of Stayflexi (YC), CMU CS grad and Ex-Oracle Query Engine team (patents in core databases)DeepSQL started as an internal tool to stop our own databases from becoming t…</span><span class="en">Hi HN - I&amp;#x27;m Venkat, founder of Stayflexi (YC), CMU CS grad and Ex-Oracle Query Engine team (patents in core databases)DeepSQL started as an internal tool to stop our own databases from becoming t…</span></p>
+    <div class="pills"><span class="pill">6-12月</span></div>
+    <a class="src-link" href="https://deepsql.ai/" target="_blank" rel="noopener">🔗 <span class="zh">查看原项目</span><span class="en">View source</span> ↗</a>
+  </article></div>
+
+<h2><span class="zh">最新产品信号</span><span class="en">Fresh signals today</span></h2>
+<div class="grid"><article class="card">
+    <div class="card-head">
+      <a class="name" href="https://github.com/katiahayati/lucasartsifier/" target="_blank" rel="noopener"><span class="zh">Automatically detect and patch walking-dead states in Sierra games</span><span class="en">Automatically detect and patch walking-dead states in Sierra games</span></a><span class="badge sig"><span class="zh">热度 144</span><span class="en">signal 144</span></span>
+    </div>
+    <div class="src">hackernews</div>
+    <p class="desc"><span class="zh">Hi HN, I&amp;#x27;ve become lazier in my old age and struggle to replay my favorite Sierra games from the 80s and 90s because I keep getting into those situations where I need an item from 3 acts ago, I h…</span><span class="en">Hi HN, I&amp;#x27;ve become lazier in my old age and struggle to replay my favorite Sierra games from the 80s and 90s because I keep getting into those situations where I need an item from 3 acts ago, I h…</span></p>
+    <div class="pills"></div>
+    <a class="src-link" href="https://github.com/katiahayati/lucasartsifier/" target="_blank" rel="noopener">🔗 <span class="zh">查看原项目</span><span class="en">View source</span> ↗</a>
+  </article><article class="card">
+    <div class="card-head">
+      <a class="name" href="https://www.toolify.ai/tool/nymos" target="_blank" rel="noopener"><span class="zh">nymos</span><span class="en">nymos</span></a><span class="badge sig"><span class="zh">热度 5</span><span class="en">signal 5</span></span>
+    </div>
+    <div class="src">toolify</div>
+    <p class="desc"><span class="zh"></span><span class="en"></span></p>
+    <div class="pills"></div>
+    <a class="src-link" href="https://www.toolify.ai/tool/nymos" target="_blank" rel="noopener">🔗 <span class="zh">查看原项目</span><span class="en">View source</span> ↗</a>
+  </article><article class="card">
+    <div class="card-head">
+      <a class="name" href="https://www.toolify.ai/tool/ai-toolkit-pro" target="_blank" rel="noopener"><span class="zh">ai toolkit pro</span><span class="en">ai toolkit pro</span></a><span class="badge sig"><span class="zh">热度 5</span><span class="en">signal 5</span></span>
+    </div>
+    <div class="src">toolify</div>
+    <p class="desc"><span class="zh"></span><span class="en"></span></p>
+    <div class="pills"></div>
+    <a class="src-link" href="https://www.toolify.ai/tool/ai-toolkit-pro" target="_blank" rel="noopener">🔗 <span class="zh">查看原项目</span><span class="en">View source</span> ↗</a>
+  </article><article class="card">
+    <div class="card-head">
+      <a class="name" href="https://www.toolify.ai/tool/astrochart" target="_blank" rel="noopener"><span class="zh">astrochart</span><span class="en">astrochart</span></a><span class="badge sig"><span class="zh">热度 5</span><span class="en">signal 5</span></span>
+    </div>
+    <div class="src">toolify</div>
+    <p class="desc"><span class="zh"></span><span class="en"></span></p>
+    <div class="pills"></div>
+    <a class="src-link" href="https://www.toolify.ai/tool/astrochart" target="_blank" rel="noopener">🔗 <span class="zh">查看原项目</span><span class="en">View source</span> ↗</a>
+  </article><article class="card">
+    <div class="card-head">
+      <a class="name" href="https://www.toolify.ai/tool/vosko-ai" target="_blank" rel="noopener"><span class="zh">vosko ai</span><span class="en">vosko ai</span></a><span class="badge sig"><span class="zh">热度 5</span><span class="en">signal 5</span></span>
+    </div>
+    <div class="src">toolify</div>
+    <p class="desc"><span class="zh"></span><span class="en"></span></p>
+    <div class="pills"></div>
+    <a class="src-link" href="https://www.toolify.ai/tool/vosko-ai" target="_blank" rel="noopener">🔗 <span class="zh">查看原项目</span><span class="en">View source</span> ↗</a>
+  </article><article class="card">
+    <div class="card-head">
+      <a class="name" href="https://www.toolify.ai/tool/video-to-transcript" target="_blank" rel="noopener"><span class="zh">video to transcript</span><span class="en">video to transcript</span></a><span class="badge sig"><span class="zh">热度 5</span><span class="en">signal 5</span></span>
+    </div>
+    <div class="src">toolify</div>
+    <p class="desc"><span class="zh"></span><span class="en"></span></p>
+    <div class="pills"></div>
+    <a class="src-link" href="https://www.toolify.ai/tool/video-to-transcript" target="_blank" rel="noopener">🔗 <span class="zh">查看原项目</span><span class="en">View source</span> ↗</a>
+  </article><article class="card">
+    <div class="card-head">
+      <a class="name" href="https://www.toolify.ai/tool/imaginemyhouse" target="_blank" rel="noopener"><span class="zh">imaginemyhouse</span><span class="en">imaginemyhouse</span></a><span class="badge sig"><span class="zh">热度 5</span><span class="en">signal 5</span></span>
+    </div>
+    <div class="src">toolify</div>
+    <p class="desc"><span class="zh"></span><span class="en"></span></p>
+    <div class="pills"></div>
+    <a class="src-link" href="https://www.toolify.ai/tool/imaginemyhouse" target="_blank" rel="noopener">🔗 <span class="zh">查看原项目</span><span class="en">View source</span> ↗</a>
+  </article><article class="card">
+    <div class="card-head">
+      <a class="name" href="https://www.toolify.ai/tool/heyo" target="_blank" rel="noopener"><span class="zh">heyo</span><span class="en">heyo</span></a><span class="badge sig"><span class="zh">热度 5</span><span class="en">signal 5</span></span>
+    </div>
+    <div class="src">toolify</div>
+    <p class="desc"><span class="zh"></span><span class="en"></span></p>
+    <div class="pills"></div>
+    <a class="src-link" href="https://www.toolify.ai/tool/heyo" target="_blank" rel="noopener">🔗 <span class="zh">查看原项目</span><span class="en">View source</span> ↗</a>
+  </article><article class="card">
+    <div class="card-head">
+      <a class="name" href="https://www.toolify.ai/tool/muse-ai" target="_blank" rel="noopener"><span class="zh">muse ai</span><span class="en">muse ai</span></a><span class="badge sig"><span class="zh">热度 5</span><span class="en">signal 5</span></span>
+    </div>
+    <div class="src">toolify</div>
+    <p class="desc"><span class="zh"></span><span class="en"></span></p>
+    <div class="pills"></div>
+    <a class="src-link" href="https://www.toolify.ai/tool/muse-ai" target="_blank" rel="noopener">🔗 <span class="zh">查看原项目</span><span class="en">View source</span> ↗</a>
+  </article><article class="card">
+    <div class="card-head">
+      <a class="name" href="https://www.toolify.ai/tool/ai-video-enhancer-uniconverter" target="_blank" rel="noopener"><span class="zh">ai video enhancer uniconverter</span><span class="en">ai video enhancer uniconverter</span></a><span class="badge sig"><span class="zh">热度 5</span><span class="en">signal 5</span></span>
+    </div>
+    <div class="src">toolify</div>
+    <p class="desc"><span class="zh"></span><span class="en"></span></p>
+    <div class="pills"></div>
+    <a class="src-link" href="https://www.toolify.ai/tool/ai-video-enhancer-uniconverter" target="_blank" rel="noopener">🔗 <span class="zh">查看原项目</span><span class="en">View source</span> ↗</a>
+  </article><article class="card">
+    <div class="card-head">
+      <a class="name" href="https://www.toolify.ai/tool/eduviz" target="_blank" rel="noopener"><span class="zh">eduviz</span><span class="en">eduviz</span></a><span class="badge sig"><span class="zh">热度 5</span><span class="en">signal 5</span></span>
+    </div>
+    <div class="src">toolify</div>
+    <p class="desc"><span class="zh"></span><span class="en"></span></p>
+    <div class="pills"></div>
+    <a class="src-link" href="https://www.toolify.ai/tool/eduviz" target="_blank" rel="noopener">🔗 <span class="zh">查看原项目</span><span class="en">View source</span> ↗</a>
+  </article><article class="card">
+    <div class="card-head">
+      <a class="name" href="https://www.toolify.ai/tool/tinyfish" target="_blank" rel="noopener"><span class="zh">tinyfish</span><span class="en">tinyfish</span></a><span class="badge sig"><span class="zh">热度 5</span><span class="en">signal 5</span></span>
+    </div>
+    <div class="src">toolify</div>
+    <p class="desc"><span class="zh"></span><span class="en"></span></p>
+    <div class="pills"></div>
+    <a class="src-link" href="https://www.toolify.ai/tool/tinyfish" target="_blank" rel="noopener">🔗 <span class="zh">查看原项目</span><span class="en">View source</span> ↗</a>
+  </article><article class="card">
+    <div class="card-head">
+      <a class="name" href="https://www.toolify.ai/tool/playyy-ai" target="_blank" rel="noopener"><span class="zh">playyy ai</span><span class="en">playyy ai</span></a><span class="badge sig"><span class="zh">热度 5</span><span class="en">signal 5</span></span>
+    </div>
+    <div class="src">toolify</div>
+    <p class="desc"><span class="zh"></span><span class="en"></span></p>
+    <div class="pills"></div>
+    <a class="src-link" href="https://www.toolify.ai/tool/playyy-ai" target="_blank" rel="noopener">🔗 <span class="zh">查看原项目</span><span class="en">View source</span> ↗</a>
+  </article><article class="card">
+    <div class="card-head">
+      <a class="name" href="https://www.toolify.ai/tool/adkit" target="_blank" rel="noopener"><span class="zh">adkit</span><span class="en">adkit</span></a><span class="badge sig"><span class="zh">热度 5</span><span class="en">signal 5</span></span>
+    </div>
+    <div class="src">toolify</div>
+    <p class="desc"><span class="zh"></span><span class="en"></span></p>
+    <div class="pills"></div>
+    <a class="src-link" href="https://www.toolify.ai/tool/adkit" target="_blank" rel="noopener">🔗 <span class="zh">查看原项目</span><span class="en">View source</span> ↗</a>
+  </article><article class="card">
+    <div class="card-head">
+      <a class="name" href="https://www.toolify.ai/tool/happy-shrimp" target="_blank" rel="noopener"><span class="zh">happy shrimp</span><span class="en">happy shrimp</span></a><span class="badge sig"><span class="zh">热度 5</span><span class="en">signal 5</span></span>
+    </div>
+    <div class="src">toolify</div>
+    <p class="desc"><span class="zh"></span><span class="en"></span></p>
+    <div class="pills"></div>
+    <a class="src-link" href="https://www.toolify.ai/tool/happy-shrimp" target="_blank" rel="noopener">🔗 <span class="zh">查看原项目</span><span class="en">View source</span> ↗</a>
+  </article></div>
+
+<div class="disclaimer">
+  <span class="zh">机器初筛 + LLM 初评。⭐⭐⭐ 仅代表"值得人工 review",不是"立刻 pivot"。pivot 前必须和手头项目比较,差 +5 分才动(见 METHODOLOGY.md 反陷阱 5)。</span>
+  <span class="en">Machine pre-filter + LLM first-pass scoring. ⭐⭐⭐ means "worth a human review", not "pivot now". Only switch if it beats your current project by +5 points (see METHODOLOGY.md, anti-trap 5).</span>
+</div>
+
+<footer>smart-programs · 7-dimension rubric (v5 SOP) · 2026-08-20</footer>
+</div>
+<script>
+function setLang(l){
+  document.body.className = 'lang-' + l;
+  document.getElementById('b-zh').classList.toggle('on', l==='zh');
+  document.getElementById('b-en').classList.toggle('on', l==='en');
+  try{ localStorage.setItem('sp-lang', l); }catch(e){}
+}
+try{ const s = localStorage.getItem('sp-lang'); if(s) setLang(s); }catch(e){}
+</script>
+</body>
+</html>

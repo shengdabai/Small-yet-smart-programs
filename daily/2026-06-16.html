@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>机会简报 2026-06-16 · Opportunity Briefing</title>
+<style>
+:root{--bg:#0f1115;--card:#171a21;--line:#262b36;--ink:#e8eaed;--mut:#9aa3b2;--gold:#d4a72c;--p3:#b06cd4;--acc:#4a9eff}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--ink);font-family:-apple-system,"PingFang SC","Segoe UI",system-ui,sans-serif;line-height:1.6}
+.wrap{max-width:1100px;margin:0 auto;padding:32px 20px 80px}
+header{border-bottom:1px solid var(--line);padding-bottom:20px;margin-bottom:28px;display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:12px}
+h1{font-size:1.7rem;letter-spacing:-.01em}
+.date{color:var(--mut);font-family:ui-monospace,monospace;font-size:.85rem}
+.toggle{display:flex;gap:6px}
+.toggle button{background:var(--card);color:var(--mut);border:1px solid var(--line);padding:6px 14px;border-radius:6px;cursor:pointer;font-size:.85rem}
+.toggle button.on{background:var(--acc);color:#fff;border-color:var(--acc)}
+.summary{display:flex;gap:18px;margin-bottom:28px;flex-wrap:wrap}
+.stat{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px 20px;min-width:120px}
+.stat .n{font-size:2rem;font-weight:700}
+.stat.t3 .n{color:var(--p3)} .stat.t2 .n{color:var(--gold)}
+.stat .l{color:var(--mut);font-size:.78rem;text-transform:uppercase;letter-spacing:.05em}
+h2{font-size:1.15rem;margin:32px 0 14px;padding-left:10px;border-left:3px solid var(--acc)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:14px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:16px}
+.card-head{display:flex;justify-content:space-between;align-items:start;gap:8px;margin-bottom:4px}
+.name{color:var(--ink);font-weight:600;text-decoration:none;font-size:1.02rem}
+.name:hover{color:var(--acc)}
+.badge{font-size:.72rem;font-family:ui-monospace,monospace;padding:2px 8px;border-radius:20px;white-space:nowrap;background:#222}
+.badge.t3{background:rgba(176,108,212,.2);color:var(--p3)} .badge.t2{background:rgba(212,167,44,.2);color:var(--gold)} .badge.sig{color:var(--mut)}
+.src{color:var(--mut);font-size:.72rem;font-family:ui-monospace,monospace;margin-bottom:8px}
+.desc{color:#c4cad6;font-size:.9rem;margin-bottom:10px}
+.pills{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
+.src-link{display:inline-block;font-size:.82rem;color:var(--acc);text-decoration:none;border:1px solid var(--acc);border-radius:6px;padding:5px 12px;transition:.15s}
+.src-link:hover{background:var(--acc);color:#fff}
+.pill{font-size:.7rem;color:var(--mut);border:1px solid var(--line);padding:2px 8px;border-radius:20px}
+.muted{color:var(--mut);font-style:italic;padding:8px 0}
+.disclaimer{margin-top:40px;padding:16px 20px;background:rgba(212,167,44,.08);border:1px solid rgba(212,167,44,.3);border-radius:10px;color:var(--mut);font-size:.86rem}
+footer{margin-top:40px;color:var(--mut);font-size:.78rem;text-align:center;font-family:ui-monospace,monospace}
+.en{display:none}
+body.lang-en .zh{display:none} body.lang-en .en{display:inline}
+</style>
+</head>
+<body class="lang-zh">
+<div class="wrap">
+<header>
+  <div>
+    <h1><span class="zh">机会简报</span><span class="en">Opportunity Briefing</span></h1>
+    <div class="date">2026-06-16 · smart-programs</div>
+  </div>
+  <div class="toggle">
+    <button id="b-zh" class="on" onclick="setLang('zh')">中文</button>
+    <button id="b-en" onclick="setLang('en')">EN</button>
+  </div>
+</header>
+
+<div class="summary">
+  <div class="stat t3"><div class="n">0</div><div class="l">⭐⭐⭐</div></div>
+  <div class="stat t2"><div class="n">3</div><div class="l">⭐⭐</div></div>
+  <div class="stat"><div class="n">15</div><div class="l"><span class="zh">今日新信号</span><span class="en">fresh today</span></div></div>
+</div>
+
+<h2><span class="zh">值得长期推进</span><span class="en">Worth pursuing — top picks</span></h2>
+<p class="muted"><span class="zh">本期暂无 ⭐⭐⭐(诚实结果,继续手头项目)</span><span class="en">No ⭐⭐⭐ this round (an honest result — keep building).</span></p>
+
+<h2><span class="zh">备选(3 个月后回访)</span><span class="en">Shortlist (revisit in 3 months)</span></h2>
+<div class="grid"><article class="card">
+    <div class="card-head">
+      <a class="name" href="https://github.com/zdk/lowfat" target="_blank" rel="noopener"><span class="zh">Lowfat – pluggable CLI filter that saved 91.8% of my LLM tokens</span><span class="en">Lowfat – pluggable CLI filter that saved 91.8% of my LLM tokens</span></a><span class="badge t2">⭐⭐ 24</span>
+    </div>
+    <div class="src">hackernews</div>
+    <p class="desc"><span class="zh">Hi HN, not sure if anyone would be interested, but just wanted to share that I&amp;#x27;ve been maintaining my small tool called &amp;#x27;lowfat&amp;#x27; that helps me filters some of my verbose CLI output. It&amp;…</span><span class="en">Hi HN, not sure if anyone would be interested, but just wanted to share that I&amp;#x27;ve been maintaining my small tool called &amp;#x27;lowfat&amp;#x27; that helps me filters some of my verbose CLI output. It&amp;…</span></p>
+    <div class="pills"><span class="pill">6-12月</span></div>
+    <a class="src-link" href="https://github.com/zdk/lowfat" target="_blank" rel="noopener">🔗 <span class="zh">查看原项目</span><span class="en">View source</span> ↗</a>
+  </article><article class="card">
+    <div class="card-head">
+      <a class="name" href="https://github.com/MinishLab/semble" target="_blank" rel="noopener"><span class="zh">Semble:给 AI agent 的代码搜索,省 98% token</span><span class="en">Semble – Code search for agents that uses 98% fewer tokens than grep</span></a><span class="badge t2">⭐⭐ 22</span>
+    </div>
+    <div class="src">hackernews</div>
+    <p class="desc"><span class="zh">命中你的 Claude Code / MCP 生态资产,值得观察(⭐⭐)。</span><span class="en">Hey HN! We (Stephan and Thomas) recently open-sourced Semble. We kept running into the same problem while using Claude Code on large codebases: when the agent can&amp;#x27;t find something directly, it fa…</span></p>
+    <div class="pills"><span class="pill">6-12月</span></div>
+    <a class="src-link" href="https://github.com/MinishLab/semble" target="_blank" rel="noopener">🔗 <span class="zh">查看原项目</span><span class="en">View source</span> ↗</a>
+  </article><article class="card">
+    <div class="card-head">
+      <a class="name" href="https://play.templatical.com" target="_blank" rel="noopener"><span class="zh">I built an open-source email builder, alternative to Beefree/Unlayer</span><span class="en">I built an open-source email builder, alternative to Beefree/Unlayer</span></a><span class="badge t2">⭐⭐ 22</span>
+    </div>
+    <div class="src">hackernews</div>
+    <p class="desc"><span class="zh"></span><span class="en"></span></p>
+    <div class="pills"><span class="pill">6-12月</span></div>
+    <a class="src-link" href="https://play.templatical.com" target="_blank" rel="noopener">🔗 <span class="zh">查看原项目</span><span class="en">View source</span> ↗</a>
+  </article></div>
+
+<h2><span class="zh">最新产品信号</span><span class="en">Fresh signals today</span></h2>
+<div class="grid"><article class="card">
+    <div class="card-head">
+      <a class="name" href="https://github.com/tamnd/kage" target="_blank" rel="noopener"><span class="zh">Kage – Shadow any website to a single binary for offline viewing</span><span class="en">Kage – Shadow any website to a single binary for offline viewing</span></a><span class="badge sig"><span class="zh">热度 684</span><span class="en">signal 684</span></span>
+    </div>
+    <div class="src">hackernews</div>
+    <p class="desc"><span class="zh"></span><span class="en"></span></p>
+    <div class="pills"></div>
+    <a class="src-link" href="https://github.com/tamnd/kage" target="_blank" rel="noopener">🔗 <span class="zh">查看原项目</span><span class="en">View source</span> ↗</a>
+  </article><article class="card">
+    <div class="card-head">
+      <a class="name" href="https://traceapp.info" target="_blank" rel="noopener"><span class="zh">Trace – Offline Mac meeting transcripts you can flag mid-call</span><span class="en">Trace – Offline Mac meeting transcripts you can flag mid-call</span></a><span class="badge sig"><span class="zh">热度 200</span><span class="en">signal 200</span></span>
+    </div>
+    <div class="src">hackernews</div>
+    <p class="desc"><span class="zh">I&amp;#x27;m the developer of Trace, a non-intrusive, shortcut-driven Mac app that records and transcribes your meetings on-device. I know, another meeting transcription app. Please bear with me though, I…</span><span class="en">I&amp;#x27;m the developer of Trace, a non-intrusive, shortcut-driven Mac app that records and transcribes your meetings on-device. I know, another meeting transcription app. Please bear with me though, I…</span></p>
+    <div class="pills"></div>
+    <a class="src-link" href="https://traceapp.info" target="_blank" rel="noopener">🔗 <span class="zh">查看原项目</span><span class="en">View source</span> ↗</a>
+  </article><article class="card">
+    <div class="card-head">
+      <a class="name" href="https://github.com/themartiano/luz" target="_blank" rel="noopener"><span class="zh">I wrote a C++ ray tracer from scratch without AI</span><span class="en">I wrote a C++ ray tracer from scratch without AI</span></a><span class="badge sig"><span class="zh">热度 145</span><span class="en">signal 145</span></span>
+    </div>
+    <div class="src">hackernews</div>
+    <p class="desc"><span class="zh"></span><span class="en"></span></p>
+    <div class="pills"></div>
+    <a class="src-link" href="https://github.com/themartiano/luz" target="_blank" rel="noopener">🔗 <span class="zh">查看原项目</span><span class="en">View source</span> ↗</a>
+  </article><article class="card">
+    <div class="card-head">
+      <a class="name" href="https://www.orangecrumbs.com/" target="_blank" rel="noopener"><span class="zh">Discover Wikipedia articles popular on Hacker News</span><span class="en">Discover Wikipedia articles popular on Hacker News</span></a><span class="badge sig"><span class="zh">热度 133</span><span class="en">signal 133</span></span>
+    </div>
+    <div class="src">hackernews</div>
+    <p class="desc"><span class="zh"></span><span class="en"></span></p>
+    <div class="pills"></div>
+    <a class="src-link" href="https://www.orangecrumbs.com/" target="_blank" rel="noopener">🔗 <span class="zh">查看原项目</span><span class="en">View source</span> ↗</a>
+  </article><article class="card">
+    <div class="card-head">
+      <a class="name" href="https://fata.dev" target="_blank" rel="noopener"><span class="zh">Fata – Spaced repetition to fight skill rot from AI coding</span><span class="en">Fata – Spaced repetition to fight skill rot from AI coding</span></a><span class="badge sig"><span class="zh">热度 88</span><span class="en">signal 88</span></span>
+    </div>
+    <div class="src">hackernews</div>
+    <p class="desc"><span class="zh">Hi HN, I&amp;#x27;m Djoumé. I&amp;#x27;ve been a developer for over 20 years, and like a lot of you I&amp;#x27;ve been coding almost exclusively through an agent in the past few months.It&amp;#x27;s been amazing to v…</span><span class="en">Hi HN, I&amp;#x27;m Djoumé. I&amp;#x27;ve been a developer for over 20 years, and like a lot of you I&amp;#x27;ve been coding almost exclusively through an agent in the past few months.It&amp;#x27;s been amazing to v…</span></p>
+    <div class="pills"></div>
+    <a class="src-link" href="https://fata.dev" target="_blank" rel="noopener">🔗 <span class="zh">查看原项目</span><span class="en">View source</span> ↗</a>
+  </article><article class="card">
+    <div class="card-head">
+      <a class="name" href="https://machine0.io" target="_blank" rel="noopener"><span class="zh">machine0 – Persistent NixOS VMs You Control from the CLI</span><span class="en">machine0 – Persistent NixOS VMs You Control from the CLI</span></a><span class="badge sig"><span class="zh">热度 78</span><span class="en">signal 78</span></span>
+    </div>
+    <div class="src">hackernews</div>
+    <p class="desc"><span class="zh">Hi HN! Excited to launch machine0, a CLI that makes it easy to create, provision and snapshot persistent NixOS (&amp;amp; Ubuntu) VMs.You can think of machine0 as a modern VPS provider. VMs stay on unless…</span><span class="en">Hi HN! Excited to launch machine0, a CLI that makes it easy to create, provision and snapshot persistent NixOS (&amp;amp; Ubuntu) VMs.You can think of machine0 as a modern VPS provider. VMs stay on unless…</span></p>
+    <div class="pills"></div>
+    <a class="src-link" href="https://machine0.io" target="_blank" rel="noopener">🔗 <span class="zh">查看原项目</span><span class="en">View source</span> ↗</a>
+  </article><article class="card">
+    <div class="card-head">
+      <a class="name" href="https://github.com/alebal123bal/khadas_yolov8n_multithread" target="_blank" rel="noopener"><span class="zh">Dual YOLOv8n UAV Detection on RK3588S at 42 FPS Using NPU</span><span class="en">Dual YOLOv8n UAV Detection on RK3588S at 42 FPS Using NPU</span></a><span class="badge sig"><span class="zh">热度 71</span><span class="en">signal 71</span></span>
+    </div>
+    <div class="src">hackernews</div>
+    <p class="desc"><span class="zh"></span><span class="en"></span></p>
+    <div class="pills"></div>
+    <a class="src-link" href="https://github.com/alebal123bal/khadas_yolov8n_multithread" target="_blank" rel="noopener">🔗 <span class="zh">查看原项目</span><span class="en">View source</span> ↗</a>
+  </article><article class="card">
+    <div class="card-head">
+      <a class="name" href="https://mgunlogson.github.io/magma/" target="_blank" rel="noopener"><span class="zh">3D print Z reinforcement via injected loops</span><span class="en">3D print Z reinforcement via injected loops</span></a><span class="badge sig"><span class="zh">热度 65</span><span class="en">signal 65</span></span>
+    </div>
+    <div class="src">hackernews</div>
+    <p class="desc"><span class="zh">Commodity FDM print strength is limited by poor Z-axis layer bonding. Parts crack along Z under stress. MAGMA tries to fix this in software that works on any FDM 3D printer.It&amp;#x27;s a fork of OrcaSli…</span><span class="en">Commodity FDM print strength is limited by poor Z-axis layer bonding. Parts crack along Z under stress. MAGMA tries to fix this in software that works on any FDM 3D printer.It&amp;#x27;s a fork of OrcaSli…</span></p>
+    <div class="pills"></div>
+    <a class="src-link" href="https://mgunlogson.github.io/magma/" target="_blank" rel="noopener">🔗 <span class="zh">查看原项目</span><span class="en">View source</span> ↗</a>
+  </article><article class="card">
+    <div class="card-head">
+      <a class="name" href="https://minigames.world/en" target="_blank" rel="noopener"><span class="zh">I built 80 mini-games using Fable before it was shut down</span><span class="en">I built 80 mini-games using Fable before it was shut down</span></a><span class="badge sig"><span class="zh">热度 53</span><span class="en">signal 53</span></span>
+    </div>
+    <div class="src">hackernews</div>
+    <p class="desc"><span class="zh">Dear Hacker News,I&amp;#x27;m kindly asking for your participation in the open beta for my AI-managed mini-games website. Thank you in advance!For a limited time window, I&amp;#x27;m setting the all-free feat…</span><span class="en">Dear Hacker News,I&amp;#x27;m kindly asking for your participation in the open beta for my AI-managed mini-games website. Thank you in advance!For a limited time window, I&amp;#x27;m setting the all-free feat…</span></p>
+    <div class="pills"></div>
+    <a class="src-link" href="https://minigames.world/en" target="_blank" rel="noopener">🔗 <span class="zh">查看原项目</span><span class="en">View source</span> ↗</a>
+  </article><article class="card">
+    <div class="card-head">
+      <a class="name" href="https://www.toolify.ai/tool/ez-img-editor" target="_blank" rel="noopener"><span class="zh">ez img editor</span><span class="en">ez img editor</span></a><span class="badge sig"><span class="zh">热度 5</span><span class="en">signal 5</span></span>
+    </div>
+    <div class="src">toolify</div>
+    <p class="desc"><span class="zh"></span><span class="en"></span></p>
+    <div class="pills"></div>
+    <a class="src-link" href="https://www.toolify.ai/tool/ez-img-editor" target="_blank" rel="noopener">🔗 <span class="zh">查看原项目</span><span class="en">View source</span> ↗</a>
+  </article><article class="card">
+    <div class="card-head">
+      <a class="name" href="https://www.toolify.ai/tool/vnovels" target="_blank" rel="noopener"><span class="zh">vnovels</span><span class="en">vnovels</span></a><span class="badge sig"><span class="zh">热度 5</span><span class="en">signal 5</span></span>
+    </div>
+    <div class="src">toolify</div>
+    <p class="desc"><span class="zh"></span><span class="en"></span></p>
+    <div class="pills"></div>
+    <a class="src-link" href="https://www.toolify.ai/tool/vnovels" target="_blank" rel="noopener">🔗 <span class="zh">查看原项目</span><span class="en">View source</span> ↗</a>
+  </article><article class="card">
+    <div class="card-head">
+      <a class="name" href="https://www.toolify.ai/tool/flowmusic" target="_blank" rel="noopener"><span class="zh">flowmusic</span><span class="en">flowmusic</span></a><span class="badge sig"><span class="zh">热度 5</span><span class="en">signal 5</span></span>
+    </div>
+    <div class="src">toolify</div>
+    <p class="desc"><span class="zh"></span><span class="en"></span></p>
+    <div class="pills"></div>
+    <a class="src-link" href="https://www.toolify.ai/tool/flowmusic" target="_blank" rel="noopener">🔗 <span class="zh">查看原项目</span><span class="en">View source</span> ↗</a>
+  </article><article class="card">
+    <div class="card-head">
+      <a class="name" href="https://www.toolify.ai/tool/talk-to-type" target="_blank" rel="noopener"><span class="zh">talk to type</span><span class="en">talk to type</span></a><span class="badge sig"><span class="zh">热度 5</span><span class="en">signal 5</span></span>
+    </div>
+    <div class="src">toolify</div>
+    <p class="desc"><span class="zh"></span><span class="en"></span></p>
+    <div class="pills"></div>
+    <a class="src-link" href="https://www.toolify.ai/tool/talk-to-type" target="_blank" rel="noopener">🔗 <span class="zh">查看原项目</span><span class="en">View source</span> ↗</a>
+  </article><article class="card">
+    <div class="card-head">
+      <a class="name" href="https://www.toolify.ai/tool/apimaster" target="_blank" rel="noopener"><span class="zh">apimaster</span><span class="en">apimaster</span></a><span class="badge sig"><span class="zh">热度 5</span><span class="en">signal 5</span></span>
+    </div>
+    <div class="src">toolify</div>
+    <p class="desc"><span class="zh"></span><span class="en"></span></p>
+    <div class="pills"></div>
+    <a class="src-link" href="https://www.toolify.ai/tool/apimaster" target="_blank" rel="noopener">🔗 <span class="zh">查看原项目</span><span class="en">View source</span> ↗</a>
+  </article><article class="card">
+    <div class="card-head">
+      <a class="name" href="https://www.toolify.ai/tool/raomusic" target="_blank" rel="noopener"><span class="zh">raomusic</span><span class="en">raomusic</span></a><span class="badge sig"><span class="zh">热度 5</span><span class="en">signal 5</span></span>
+    </div>
+    <div class="src">toolify</div>
+    <p class="desc"><span class="zh"></span><span class="en"></span></p>
+    <div class="pills"></div>
+    <a class="src-link" href="https://www.toolify.ai/tool/raomusic" target="_blank" rel="noopener">🔗 <span class="zh">查看原项目</span><span class="en">View source</span> ↗</a>
+  </article></div>
+
+<div class="disclaimer">
+  <span class="zh">机器初筛 + LLM 初评。⭐⭐⭐ 仅代表"值得人工 review",不是"立刻 pivot"。pivot 前必须和手头项目比较,差 +5 分才动(见 METHODOLOGY.md 反陷阱 5)。</span>
+  <span class="en">Machine pre-filter + LLM first-pass scoring. ⭐⭐⭐ means "worth a human review", not "pivot now". Only switch if it beats your current project by +5 points (see METHODOLOGY.md, anti-trap 5).</span>
+</div>
+
+<footer>smart-programs · 7-dimension rubric (v5 SOP) · 2026-06-16</footer>
+</div>
+<script>
+function setLang(l){
+  document.body.className = 'lang-' + l;
+  document.getElementById('b-zh').classList.toggle('on', l==='zh');
+  document.getElementById('b-en').classList.toggle('on', l==='en');
+  try{ localStorage.setItem('sp-lang', l); }catch(e){}
+}
+try{ const s = localStorage.getItem('sp-lang'); if(s) setLang(s); }catch(e){}
+</script>
+</body>
+</html>

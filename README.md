@@ -1,170 +1,240 @@
-<div align="center">
+<!-- BRIEFINGS:START -->
 
-# 🔭 Small Yet Smart Programs
+### 📅 每日简报 · Daily Briefings
 
-**每天帮你在全网找到「小而美、能赚钱、抄得动」的软件机会**
-**A daily scout for small, profitable, replicable software to build**
+- **[2026-10-30](daily/2026-10-30.md)** · ⭐⭐⭐ 0 · ⭐⭐ 0
+- **[2026-10-29](daily/2026-10-29.md)** · ⭐⭐⭐ 0 · ⭐⭐ 0
+- **[2026-10-28](daily/2026-10-28.md)** · ⭐⭐⭐ 0 · ⭐⭐ 0
+- **[2026-10-27](daily/2026-10-27.md)** · ⭐⭐⭐ 0 · ⭐⭐ 0
+- **[2026-10-26](daily/2026-10-26.md)** · ⭐⭐⭐ 0 · ⭐⭐ 0
+- **[2026-10-25](daily/2026-10-25.md)** · ⭐⭐⭐ 0 · ⭐⭐ 0
+- **[2026-10-24](daily/2026-10-24.md)** · ⭐⭐⭐ 0 · ⭐⭐ 0
+- **[2026-10-23](daily/2026-10-23.md)** · ⭐⭐⭐ 0 · ⭐⭐ 0
+- **[2026-10-22](daily/2026-10-22.md)** · ⭐⭐⭐ 0 · ⭐⭐ 0
+- **[2026-10-21](daily/2026-10-21.md)** · ⭐⭐⭐ 0 · ⭐⭐ 0
+- **[2026-10-20](daily/2026-10-20.md)** · ⭐⭐⭐ 0 · ⭐⭐ 0
+- **[2026-10-19](daily/2026-10-19.md)** · ⭐⭐⭐ 0 · ⭐⭐ 0
+- **[2026-10-18](daily/2026-10-18.md)** · ⭐⭐⭐ 0 · ⭐⭐ 0
+- **[2026-10-17](daily/2026-10-17.md)** · ⭐⭐⭐ 0 · ⭐⭐ 0
+- **[2026-10-16](daily/2026-10-16.md)** · ⭐⭐⭐ 0 · ⭐⭐ 0
+- **[2026-10-15](daily/2026-10-15.md)** · ⭐⭐⭐ 0 · ⭐⭐ 0
+- **[2026-10-14](daily/2026-10-14.md)** · ⭐⭐⭐ 0 · ⭐⭐ 0
+- **[2026-10-13](daily/2026-10-13.md)** · ⭐⭐⭐ 0 · ⭐⭐ 0
+- **[2026-10-12](daily/2026-10-12.md)** · ⭐⭐⭐ 0 · ⭐⭐ 0
+- **[2026-10-11](daily/2026-10-11.md)** · ⭐⭐⭐ 0 · ⭐⭐ 0
+- **[2026-10-10](daily/2026-10-10.md)** · ⭐⭐⭐ 0 · ⭐⭐ 0
+- **[2026-10-09](daily/2026-10-09.md)** · ⭐⭐⭐ 0 · ⭐⭐ 0
+- **[2026-10-08](daily/2026-10-08.md)** · ⭐⭐⭐ 0 · ⭐⭐ 0
+- **[2026-10-07](daily/2026-10-07.md)** · ⭐⭐⭐ 0 · ⭐⭐ 0
+- **[2026-10-06](daily/2026-10-06.md)** · ⭐⭐⭐ 0 · ⭐⭐ 0
+- **[2026-10-05](daily/2026-10-05.md)** · ⭐⭐⭐ 0 · ⭐⭐ 0
+- **[2026-10-04](daily/2026-10-04.md)** · ⭐⭐⭐ 0 · ⭐⭐ 0
+- **[2026-10-03](daily/2026-10-03.md)** · ⭐⭐⭐ 0 · ⭐⭐ 0
+- **[2026-10-02](daily/2026-10-02.md)** · ⭐⭐⭐ 0 · ⭐⭐ 0
+- **[2026-10-01](daily/2026-10-01.md)** · ⭐⭐⭐ 0 · ⭐⭐ 0
+- **[2026-09-30](daily/2026-09-30.md)** · ⭐⭐⭐ 0 · ⭐⭐ 0
+- **[2026-09-29](daily/2026-09-29.md)** · ⭐⭐⭐ 0 · ⭐⭐ 0
+- **[2026-09-28](daily/2026-09-28.md)** · ⭐⭐⭐ 0 · ⭐⭐ 0
+- **[2026-09-27](daily/2026-09-27.md)** · ⭐⭐⭐ 0 · ⭐⭐ 0
+- **[2026-09-26](daily/2026-09-26.md)** · ⭐⭐⭐ 0 · ⭐⭐ 0
+- **[2026-09-25](daily/2026-09-25.md)** · ⭐⭐⭐ 0 · ⭐⭐ 0
+- **[2026-09-24](daily/2026-09-24.md)** · ⭐⭐⭐ 0 · ⭐⭐ 0
+- **[2026-09-23](daily/2026-09-23.md)** · ⭐⭐⭐ 0 · ⭐⭐ 0
+- **[2026-09-22](daily/2026-09-22.md)** · ⭐⭐⭐ 0 · ⭐⭐ 0
+- **[2026-09-21](daily/2026-09-21.md)** · ⭐⭐⭐ 0 · ⭐⭐ 0
+- **[2026-09-20](daily/2026-09-20.md)** · ⭐⭐⭐ 0 · ⭐⭐ 2 — Check if any of the $656M in unclaimed royalties at The MLC is yours、Open-source Stripe Connect alternative
+- **[2026-09-19](daily/2026-09-19.md)** · ⭐⭐⭐ 0 · ⭐⭐ 2 — Check if any of the $656M in unclaimed royalties at The MLC is yours、Open-source Stripe Connect alternative
+- **[2026-09-18](daily/2026-09-18.md)** · ⭐⭐⭐ 0 · ⭐⭐ 2 — Check if any of the $656M in unclaimed royalties at The MLC is yours、Open-source Stripe Connect alternative
+- **[2026-09-17](daily/2026-09-17.md)** · ⭐⭐⭐ 0 · ⭐⭐ 2 — Check if any of the $656M in unclaimed royalties at The MLC is yours、Open-source Stripe Connect alternative
+- **[2026-09-16](daily/2026-09-16.md)** · ⭐⭐⭐ 0 · ⭐⭐ 2 — Check if any of the $656M in unclaimed royalties at The MLC is yours、Open-source Stripe Connect alternative
+- **[2026-09-15](daily/2026-09-15.md)** · ⭐⭐⭐ 0 · ⭐⭐ 2 — Check if any of the $656M in unclaimed royalties at The MLC is yours、Open-source Stripe Connect alternative
+- **[2026-09-14](daily/2026-09-14.md)** · ⭐⭐⭐ 0 · ⭐⭐ 2 — Check if any of the $656M in unclaimed royalties at The MLC is yours、Open-source Stripe Connect alternative
+- **[2026-09-13](daily/2026-09-13.md)** · ⭐⭐⭐ 0 · ⭐⭐ 2 — Check if any of the $656M in unclaimed royalties at The MLC is yours、Open-source Stripe Connect alternative
+- **[2026-09-12](daily/2026-09-12.md)** · ⭐⭐⭐ 0 · ⭐⭐ 2 — Check if any of the $656M in unclaimed royalties at The MLC is yours、Open-source Stripe Connect alternative
+- **[2026-09-11](daily/2026-09-11.md)** · ⭐⭐⭐ 0 · ⭐⭐ 2 — Check if any of the $656M in unclaimed royalties at The MLC is yours、Open-source Stripe Connect alternative
+- **[2026-09-10](daily/2026-09-10.md)** · ⭐⭐⭐ 0 · ⭐⭐ 2 — Check if any of the $656M in unclaimed royalties at The MLC is yours、Open-source Stripe Connect alternative
+- **[2026-09-09](daily/2026-09-09.md)** · ⭐⭐⭐ 0 · ⭐⭐ 2 — Check if any of the $656M in unclaimed royalties at The MLC is yours、Open-source Stripe Connect alternative
+- **[2026-09-08](daily/2026-09-08.md)** · ⭐⭐⭐ 0 · ⭐⭐ 2 — Check if any of the $656M in unclaimed royalties at The MLC is yours、Open-source Stripe Connect alternative
+- **[2026-09-07](daily/2026-09-07.md)** · ⭐⭐⭐ 0 · ⭐⭐ 2 — Check if any of the $656M in unclaimed royalties at The MLC is yours、Open-source Stripe Connect alternative
+- **[2026-09-06](daily/2026-09-06.md)** · ⭐⭐⭐ 0 · ⭐⭐ 2 — Check if any of the $656M in unclaimed royalties at The MLC is yours、Open-source Stripe Connect alternative
+- **[2026-09-05](daily/2026-09-05.md)** · ⭐⭐⭐ 0 · ⭐⭐ 2 — Check if any of the $656M in unclaimed royalties at The MLC is yours、Open-source Stripe Connect alternative
+- **[2026-09-04](daily/2026-09-04.md)** · ⭐⭐⭐ 0 · ⭐⭐ 2 — Check if any of the $656M in unclaimed royalties at The MLC is yours、Open-source Stripe Connect alternative
+- **[2026-09-03](daily/2026-09-03.md)** · ⭐⭐⭐ 0 · ⭐⭐ 2 — Check if any of the $656M in unclaimed royalties at The MLC is yours、Open-source Stripe Connect alternative
+- **[2026-09-02](daily/2026-09-02.md)** · ⭐⭐⭐ 0 · ⭐⭐ 2 — Check if any of the $656M in unclaimed royalties at The MLC is yours、Open-source Stripe Connect alternative
+- **[2026-09-01](daily/2026-09-01.md)** · ⭐⭐⭐ 0 · ⭐⭐ 2 — Check if any of the $656M in unclaimed royalties at The MLC is yours、Open-source Stripe Connect alternative
+- **[2026-08-31](daily/2026-08-31.md)** · ⭐⭐⭐ 0 · ⭐⭐ 2 — Check if any of the $656M in unclaimed royalties at The MLC is yours、Open-source Stripe Connect alternative
+- **[2026-08-30](daily/2026-08-30.md)** · ⭐⭐⭐ 0 · ⭐⭐ 2 — Check if any of the $656M in unclaimed royalties at The MLC is yours、Open-source Stripe Connect alternative
+- **[2026-08-29](daily/2026-08-29.md)** · ⭐⭐⭐ 0 · ⭐⭐ 2 — Check if any of the $656M in unclaimed royalties at The MLC is yours、Open-source Stripe Connect alternative
+- **[2026-08-28](daily/2026-08-28.md)** · ⭐⭐⭐ 0 · ⭐⭐ 2 — Check if any of the $656M in unclaimed royalties at The MLC is yours、Open-source Stripe Connect alternative
+- **[2026-08-27](daily/2026-08-27.md)** · ⭐⭐⭐ 0 · ⭐⭐ 2 — Check if any of the $656M in unclaimed royalties at The MLC is yours、Open-source Stripe Connect alternative
+- **[2026-08-26](daily/2026-08-26.md)** · ⭐⭐⭐ 0 · ⭐⭐ 2 — Check if any of the $656M in unclaimed royalties at The MLC is yours、Open-source Stripe Connect alternative
+- **[2026-08-25](daily/2026-08-25.md)** · ⭐⭐⭐ 0 · ⭐⭐ 2 — Check if any of the $656M in unclaimed royalties at The MLC is yours、Open-source Stripe Connect alternative
+- **[2026-08-24](daily/2026-08-24.md)** · ⭐⭐⭐ 0 · ⭐⭐ 2 — Check if any of the $656M in unclaimed royalties at The MLC is yours、Open-source Stripe Connect alternative
+- **[2026-08-23](daily/2026-08-23.md)** · ⭐⭐⭐ 0 · ⭐⭐ 2 — Check if any of the $656M in unclaimed royalties at The MLC is yours、Open-source Stripe Connect alternative
+- **[2026-08-22](daily/2026-08-22.md)** · ⭐⭐⭐ 0 · ⭐⭐ 3 — Check if any of the $656M in unclaimed royalties at The MLC is yours、Open-source Stripe Connect alternative、DeepSQL – A self-hostable DBA agent for Postgres and MySQL
+- **[2026-08-21](daily/2026-08-21.md)** · ⭐⭐⭐ 0 · ⭐⭐ 3 — Check if any of the $656M in unclaimed royalties at The MLC is yours、Open-source Stripe Connect alternative、DeepSQL – A self-hostable DBA agent for Postgres and MySQL
+- **[2026-08-20](daily/2026-08-20.md)** · ⭐⭐⭐ 0 · ⭐⭐ 1 — DeepSQL – A self-hostable DBA agent for Postgres and MySQL
+- **[2026-08-19](daily/2026-08-19.md)** · ⭐⭐⭐ 0 · ⭐⭐ 1 — DeepSQL – A self-hostable DBA agent for Postgres and MySQL
+- **[2026-08-18](daily/2026-08-18.md)** · ⭐⭐⭐ 0 · ⭐⭐ 1 — DeepSQL – A self-hostable DBA agent for Postgres and MySQL
+- **[2026-08-17](daily/2026-08-17.md)** · ⭐⭐⭐ 0 · ⭐⭐ 1 — DeepSQL – A self-hostable DBA agent for Postgres and MySQL
+- **[2026-08-16](daily/2026-08-16.md)** · ⭐⭐⭐ 0 · ⭐⭐ 1 — DeepSQL – A self-hostable DBA agent for Postgres and MySQL
+- **[2026-08-15](daily/2026-08-15.md)** · ⭐⭐⭐ 0 · ⭐⭐ 1 — DeepSQL – A self-hostable DBA agent for Postgres and MySQL
+- **[2026-08-14](daily/2026-08-14.md)** · ⭐⭐⭐ 0 · ⭐⭐ 1 — DeepSQL – A self-hostable DBA agent for Postgres and MySQL
+- **[2026-08-13](daily/2026-08-13.md)** · ⭐⭐⭐ 0 · ⭐⭐ 1 — DeepSQL – A self-hostable DBA agent for Postgres and MySQL
+- **[2026-08-12](daily/2026-08-12.md)** · ⭐⭐⭐ 0 · ⭐⭐ 1 — DeepSQL – A self-hostable DBA agent for Postgres and MySQL
+- **[2026-08-11](daily/2026-08-11.md)** · ⭐⭐⭐ 0 · ⭐⭐ 1 — DeepSQL – A self-hostable DBA agent for Postgres and MySQL
+- **[2026-08-10](daily/2026-08-10.md)** · ⭐⭐⭐ 0 · ⭐⭐ 3 — Frugon – Find which LLM calls a cheaper model could handle (local, MIT)、Wyrm – Solve algebra by touch, built on an open-source soundness engine、DeepSQL – A self-hostable DBA agent for Postgres and MySQL
+- **[2026-08-09](daily/2026-08-09.md)** · ⭐⭐⭐ 0 · ⭐⭐ 3 — Frugon – Find which LLM calls a cheaper model could handle (local, MIT)、Wyrm – Solve algebra by touch, built on an open-source soundness engine、DeepSQL – A self-hostable DBA agent for Postgres and MySQL
+- **[2026-08-08](daily/2026-08-08.md)** · ⭐⭐⭐ 0 · ⭐⭐ 3 — Frugon – Find which LLM calls a cheaper model could handle (local, MIT)、Wyrm – Solve algebra by touch, built on an open-source soundness engine、DeepSQL – A self-hostable DBA agent for Postgres and MySQL
+- **[2026-08-07](daily/2026-08-07.md)** · ⭐⭐⭐ 0 · ⭐⭐ 3 — Frugon – Find which LLM calls a cheaper model could handle (local, MIT)、Wyrm – Solve algebra by touch, built on an open-source soundness engine、DeepSQL – A self-hostable DBA agent for Postgres and MySQL
+- **[2026-08-06](daily/2026-08-06.md)** · ⭐⭐⭐ 0 · ⭐⭐ 3 — Frugon – Find which LLM calls a cheaper model could handle (local, MIT)、Wyrm – Solve algebra by touch, built on an open-source soundness engine、DeepSQL – A self-hostable DBA agent for Postgres and MySQL
+- **[2026-08-05](daily/2026-08-05.md)** · ⭐⭐⭐ 0 · ⭐⭐ 3 — Frugon – Find which LLM calls a cheaper model could handle (local, MIT)、Wyrm – Solve algebra by touch, built on an open-source soundness engine、DeepSQL – A self-hostable DBA agent for Postgres and MySQL
+- **[2026-08-04](daily/2026-08-04.md)** · ⭐⭐⭐ 0 · ⭐⭐ 3 — Frugon – Find which LLM calls a cheaper model could handle (local, MIT)、Wyrm – Solve algebra by touch, built on an open-source soundness engine、DeepSQL – A self-hostable DBA agent for Postgres and MySQL
+- **[2026-08-03](daily/2026-08-03.md)** · ⭐⭐⭐ 0 · ⭐⭐ 3 — Frugon – Find which LLM calls a cheaper model could handle (local, MIT)、Wyrm – Solve algebra by touch, built on an open-source soundness engine、DeepSQL – A self-hostable DBA agent for Postgres and MySQL
+- **[2026-08-02](daily/2026-08-02.md)** · ⭐⭐⭐ 0 · ⭐⭐ 3 — Frugon – Find which LLM calls a cheaper model could handle (local, MIT)、Wyrm – Solve algebra by touch, built on an open-source soundness engine、DeepSQL – A self-hostable DBA agent for Postgres and MySQL
+- **[2026-08-01](daily/2026-08-01.md)** · ⭐⭐⭐ 0 · ⭐⭐ 3 — Frugon – Find which LLM calls a cheaper model could handle (local, MIT)、Wyrm – Solve algebra by touch, built on an open-source soundness engine、DeepSQL – A self-hostable DBA agent for Postgres and MySQL
+- **[2026-07-31](daily/2026-07-31.md)** · ⭐⭐⭐ 0 · ⭐⭐ 3 — Frugon – Find which LLM calls a cheaper model could handle (local, MIT)、Wyrm – Solve algebra by touch, built on an open-source soundness engine、DeepSQL – A self-hostable DBA agent for Postgres and MySQL
+- **[2026-07-30](daily/2026-07-30.md)** · ⭐⭐⭐ 0 · ⭐⭐ 3 — Frugon – Find which LLM calls a cheaper model could handle (local, MIT)、Wyrm – Solve algebra by touch, built on an open-source soundness engine、DeepSQL – A self-hostable DBA agent for Postgres and MySQL
+- **[2026-07-29](daily/2026-07-29.md)** · ⭐⭐⭐ 0 · ⭐⭐ 3 — Frugon – Find which LLM calls a cheaper model could handle (local, MIT)、Wyrm – Solve algebra by touch, built on an open-source soundness engine、DeepSQL – A self-hostable DBA agent for Postgres and MySQL
+- **[2026-07-28](daily/2026-07-28.md)** · ⭐⭐⭐ 0 · ⭐⭐ 3 — Frugon – Find which LLM calls a cheaper model could handle (local, MIT)、Wyrm – Solve algebra by touch, built on an open-source soundness engine、DeepSQL – A self-hostable DBA agent for Postgres and MySQL
+- **[2026-07-27](daily/2026-07-27.md)** · ⭐⭐⭐ 0 · ⭐⭐ 3 — Frugon – Find which LLM calls a cheaper model could handle (local, MIT)、Wyrm – Solve algebra by touch, built on an open-source soundness engine、DeepSQL – A self-hostable DBA agent for Postgres and MySQL
+- **[2026-07-26](daily/2026-07-26.md)** · ⭐⭐⭐ 0 · ⭐⭐ 3 — Frugon – Find which LLM calls a cheaper model could handle (local, MIT)、Wyrm – Solve algebra by touch, built on an open-source soundness engine、DeepSQL – A self-hostable DBA agent for Postgres and MySQL
+- **[2026-07-25](daily/2026-07-25.md)** · ⭐⭐⭐ 0 · ⭐⭐ 3 — Frugon – Find which LLM calls a cheaper model could handle (local, MIT)、Wyrm – Solve algebra by touch, built on an open-source soundness engine、DeepSQL – A self-hostable DBA agent for Postgres and MySQL
+- **[2026-07-24](daily/2026-07-24.md)** · ⭐⭐⭐ 0 · ⭐⭐ 3 — Frugon – Find which LLM calls a cheaper model could handle (local, MIT)、Wyrm – Solve algebra by touch, built on an open-source soundness engine、DeepSQL – A self-hostable DBA agent for Postgres and MySQL
+- **[2026-07-23](daily/2026-07-23.md)** · ⭐⭐⭐ 0 · ⭐⭐ 2 — Frugon – Find which LLM calls a cheaper model could handle (local, MIT)、Wyrm – Solve algebra by touch, built on an open-source soundness engine
+- **[2026-07-22](daily/2026-07-22.md)** · ⭐⭐⭐ 0 · ⭐⭐ 2 — Frugon – Find which LLM calls a cheaper model could handle (local, MIT)、Wyrm – Solve algebra by touch, built on an open-source soundness engine
+- **[2026-07-21](daily/2026-07-21.md)** · ⭐⭐⭐ 0 · ⭐⭐ 2 — Frugon – Find which LLM calls a cheaper model could handle (local, MIT)、Wyrm – Solve algebra by touch, built on an open-source soundness engine
+- **[2026-07-20](daily/2026-07-20.md)** · ⭐⭐⭐ 0 · ⭐⭐ 2 — Frugon – Find which LLM calls a cheaper model could handle (local, MIT)、Wyrm – Solve algebra by touch, built on an open-source soundness engine
+- **[2026-07-19](daily/2026-07-19.md)** · ⭐⭐⭐ 0 · ⭐⭐ 2 — Frugon – Find which LLM calls a cheaper model could handle (local, MIT)、Wyrm – Solve algebra by touch, built on an open-source soundness engine
+- **[2026-07-18](daily/2026-07-18.md)** · ⭐⭐⭐ 0 · ⭐⭐ 2 — Frugon – Find which LLM calls a cheaper model could handle (local, MIT)、Wyrm – Solve algebra by touch, built on an open-source soundness engine
+- **[2026-07-17](daily/2026-07-17.md)** · ⭐⭐⭐ 0 · ⭐⭐ 2 — Frugon – Find which LLM calls a cheaper model could handle (local, MIT)、Wyrm – Solve algebra by touch, built on an open-source soundness engine
+- **[2026-07-16](daily/2026-07-16.md)** · ⭐⭐⭐ 0 · ⭐⭐ 2 — Frugon – Find which LLM calls a cheaper model could handle (local, MIT)、Wyrm – Solve algebra by touch, built on an open-source soundness engine
+- **[2026-07-15](daily/2026-07-15.md)** · ⭐⭐⭐ 0 · ⭐⭐ 2 — Frugon – Find which LLM calls a cheaper model could handle (local, MIT)、Wyrm – Solve algebra by touch, built on an open-source soundness engine
+- **[2026-07-14](daily/2026-07-14.md)** · ⭐⭐⭐ 0 · ⭐⭐ 2 — Frugon – Find which LLM calls a cheaper model could handle (local, MIT)、Wyrm – Solve algebra by touch, built on an open-source soundness engine
+- **[2026-07-13](daily/2026-07-13.md)** · ⭐⭐⭐ 0 · ⭐⭐ 2 — Frugon – Find which LLM calls a cheaper model could handle (local, MIT)、Wyrm – Solve algebra by touch, built on an open-source soundness engine
+- **[2026-07-12](daily/2026-07-12.md)** · ⭐⭐⭐ 0 · ⭐⭐ 2 — Frugon – Find which LLM calls a cheaper model could handle (local, MIT)、Wyrm – Solve algebra by touch, built on an open-source soundness engine
+- **[2026-07-11](daily/2026-07-11.md)** · ⭐⭐⭐ 0 · ⭐⭐ 2 — Frugon – Find which LLM calls a cheaper model could handle (local, MIT)、Wyrm – Solve algebra by touch, built on an open-source soundness engine
+- **[2026-07-10](daily/2026-07-10.md)** · ⭐⭐⭐ 0 · ⭐⭐ 2 — Lowfat – pluggable CLI filter that saved 91.8% of my LLM tokens、I built an open-source email builder, alternative to Beefree/Unlayer
+- **[2026-07-09](daily/2026-07-09.md)** · ⭐⭐⭐ 0 · ⭐⭐ 2 — Lowfat – pluggable CLI filter that saved 91.8% of my LLM tokens、I built an open-source email builder, alternative to Beefree/Unlayer
+- **[2026-07-08](daily/2026-07-08.md)** · ⭐⭐⭐ 0 · ⭐⭐ 2 — Lowfat – pluggable CLI filter that saved 91.8% of my LLM tokens、I built an open-source email builder, alternative to Beefree/Unlayer
+- **[2026-07-07](daily/2026-07-07.md)** · ⭐⭐⭐ 0 · ⭐⭐ 2 — Lowfat – pluggable CLI filter that saved 91.8% of my LLM tokens、I built an open-source email builder, alternative to Beefree/Unlayer
+- **[2026-07-06](daily/2026-07-06.md)** · ⭐⭐⭐ 0 · ⭐⭐ 2 — Lowfat – pluggable CLI filter that saved 91.8% of my LLM tokens、I built an open-source email builder, alternative to Beefree/Unlayer
+- **[2026-07-05](daily/2026-07-05.md)** · ⭐⭐⭐ 0 · ⭐⭐ 3 — Lowfat – pluggable CLI filter that saved 91.8% of my LLM tokens、Semble:给 AI agent 的代码搜索,省 98% token、I built an open-source email builder, alternative to Beefree/Unlayer
+- **[2026-07-04](daily/2026-07-04.md)** · ⭐⭐⭐ 0 · ⭐⭐ 3 — Lowfat – pluggable CLI filter that saved 91.8% of my LLM tokens、Semble:给 AI agent 的代码搜索,省 98% token、I built an open-source email builder, alternative to Beefree/Unlayer
+- **[2026-07-03](daily/2026-07-03.md)** · ⭐⭐⭐ 0 · ⭐⭐ 3 — Lowfat – pluggable CLI filter that saved 91.8% of my LLM tokens、Semble:给 AI agent 的代码搜索,省 98% token、I built an open-source email builder, alternative to Beefree/Unlayer
+- **[2026-07-02](daily/2026-07-02.md)** · ⭐⭐⭐ 0 · ⭐⭐ 3 — Lowfat – pluggable CLI filter that saved 91.8% of my LLM tokens、Semble:给 AI agent 的代码搜索,省 98% token、I built an open-source email builder, alternative to Beefree/Unlayer
+- **[2026-07-01](daily/2026-07-01.md)** · ⭐⭐⭐ 0 · ⭐⭐ 3 — Lowfat – pluggable CLI filter that saved 91.8% of my LLM tokens、Semble:给 AI agent 的代码搜索,省 98% token、I built an open-source email builder, alternative to Beefree/Unlayer
+- **[2026-06-30](daily/2026-06-30.md)** · ⭐⭐⭐ 0 · ⭐⭐ 3 — Lowfat – pluggable CLI filter that saved 91.8% of my LLM tokens、Semble:给 AI agent 的代码搜索,省 98% token、I built an open-source email builder, alternative to Beefree/Unlayer
+- **[2026-06-29](daily/2026-06-29.md)** · ⭐⭐⭐ 0 · ⭐⭐ 3 — Lowfat – pluggable CLI filter that saved 91.8% of my LLM tokens、Semble:给 AI agent 的代码搜索,省 98% token、I built an open-source email builder, alternative to Beefree/Unlayer
+- **[2026-06-28](daily/2026-06-28.md)** · ⭐⭐⭐ 0 · ⭐⭐ 3 — Lowfat – pluggable CLI filter that saved 91.8% of my LLM tokens、Semble:给 AI agent 的代码搜索,省 98% token、I built an open-source email builder, alternative to Beefree/Unlayer
+- **[2026-06-27](daily/2026-06-27.md)** · ⭐⭐⭐ 0 · ⭐⭐ 3 — Lowfat – pluggable CLI filter that saved 91.8% of my LLM tokens、Semble:给 AI agent 的代码搜索,省 98% token、I built an open-source email builder, alternative to Beefree/Unlayer
+- **[2026-06-26](daily/2026-06-26.md)** · ⭐⭐⭐ 0 · ⭐⭐ 3 — Lowfat – pluggable CLI filter that saved 91.8% of my LLM tokens、Semble:给 AI agent 的代码搜索,省 98% token、I built an open-source email builder, alternative to Beefree/Unlayer
+- **[2026-06-25](daily/2026-06-25.md)** · ⭐⭐⭐ 0 · ⭐⭐ 3 — Lowfat – pluggable CLI filter that saved 91.8% of my LLM tokens、Semble:给 AI agent 的代码搜索,省 98% token、I built an open-source email builder, alternative to Beefree/Unlayer
+- **[2026-06-24](daily/2026-06-24.md)** · ⭐⭐⭐ 0 · ⭐⭐ 3 — Lowfat – pluggable CLI filter that saved 91.8% of my LLM tokens、Semble:给 AI agent 的代码搜索,省 98% token、I built an open-source email builder, alternative to Beefree/Unlayer
+- **[2026-06-23](daily/2026-06-23.md)** · ⭐⭐⭐ 0 · ⭐⭐ 3 — Lowfat – pluggable CLI filter that saved 91.8% of my LLM tokens、Semble:给 AI agent 的代码搜索,省 98% token、I built an open-source email builder, alternative to Beefree/Unlayer
+- **[2026-06-22](daily/2026-06-22.md)** · ⭐⭐⭐ 0 · ⭐⭐ 3 — Lowfat – pluggable CLI filter that saved 91.8% of my LLM tokens、Semble:给 AI agent 的代码搜索,省 98% token、I built an open-source email builder, alternative to Beefree/Unlayer
+- **[2026-06-21](daily/2026-06-21.md)** · ⭐⭐⭐ 0 · ⭐⭐ 3 — Lowfat – pluggable CLI filter that saved 91.8% of my LLM tokens、Semble:给 AI agent 的代码搜索,省 98% token、I built an open-source email builder, alternative to Beefree/Unlayer
+- **[2026-06-20](daily/2026-06-20.md)** · ⭐⭐⭐ 0 · ⭐⭐ 3 — Lowfat – pluggable CLI filter that saved 91.8% of my LLM tokens、Semble:给 AI agent 的代码搜索,省 98% token、I built an open-source email builder, alternative to Beefree/Unlayer
+- **[2026-06-19](daily/2026-06-19.md)** · ⭐⭐⭐ 0 · ⭐⭐ 3 — Lowfat – pluggable CLI filter that saved 91.8% of my LLM tokens、Semble:给 AI agent 的代码搜索,省 98% token、I built an open-source email builder, alternative to Beefree/Unlayer
+- **[2026-06-18](daily/2026-06-18.md)** · ⭐⭐⭐ 0 · ⭐⭐ 3 — Lowfat – pluggable CLI filter that saved 91.8% of my LLM tokens、Semble:给 AI agent 的代码搜索,省 98% token、I built an open-source email builder, alternative to Beefree/Unlayer
+- **[2026-06-17](daily/2026-06-17.md)** · ⭐⭐⭐ 0 · ⭐⭐ 3 — Lowfat – pluggable CLI filter that saved 91.8% of my LLM tokens、Semble:给 AI agent 的代码搜索,省 98% token、I built an open-source email builder, alternative to Beefree/Unlayer
+- **[2026-06-16](daily/2026-06-16.md)** · ⭐⭐⭐ 0 · ⭐⭐ 3 — Lowfat – pluggable CLI filter that saved 91.8% of my LLM tokens、Semble:给 AI agent 的代码搜索,省 98% token、I built an open-source email builder, alternative to Beefree/Unlayer
+- **[2026-06-15](daily/2026-06-15.md)** · ⭐⭐⭐ 0 · ⭐⭐ 3 — Lowfat – pluggable CLI filter that saved 91.8% of my LLM tokens、Semble:给 AI agent 的代码搜索,省 98% token、I built an open-source email builder, alternative to Beefree/Unlayer
+- **[2026-06-14](daily/2026-06-14.md)** · ⭐⭐⭐ 0 · ⭐⭐ 3 — Lowfat – pluggable CLI filter that saved 91.8% of my LLM tokens、Semble:给 AI agent 的代码搜索,省 98% token、I built an open-source email builder, alternative to Beefree/Unlayer
+- **[2026-06-13](daily/2026-06-13.md)** · ⭐⭐⭐ 0 · ⭐⭐ 3 — Lowfat – pluggable CLI filter that saved 91.8% of my LLM tokens、Semble:给 AI agent 的代码搜索,省 98% token、I built an open-source email builder, alternative to Beefree/Unlayer
+- **[2026-06-12](daily/2026-06-12.md)** · ⭐⭐⭐ 0 · ⭐⭐ 3 — Lowfat – pluggable CLI filter that saved 91.8% of my LLM tokens、Semble:给 AI agent 的代码搜索,省 98% token、I built an open-source email builder, alternative to Beefree/Unlayer
+- **[2026-06-11](daily/2026-06-11.md)** · ⭐⭐⭐ 0 · ⭐⭐ 3 — Lowfat – pluggable CLI filter that saved 91.8% of my LLM tokens、Semble:给 AI agent 的代码搜索,省 98% token、I built an open-source email builder, alternative to Beefree/Unlayer
+- **[2026-06-10](daily/2026-06-10.md)** · ⭐⭐⭐ 0 · ⭐⭐ 1 — Semble:给 AI agent 的代码搜索,省 98% token
+- **[2026-06-09](daily/2026-06-09.md)** · ⭐⭐⭐ 0 · ⭐⭐ 1 — Semble:给 AI agent 的代码搜索,省 98% token
+- **[2026-06-08](daily/2026-06-08.md)** · ⭐⭐⭐ 0 · ⭐⭐ 1 — Semble:给 AI agent 的代码搜索,省 98% token
+- **[2026-06-07](daily/2026-06-07.md)** · ⭐⭐⭐ 0 · ⭐⭐ 1 — Semble:给 AI agent 的代码搜索,省 98% token
+- **[2026-06-06](daily/2026-06-06.md)** · ⭐⭐⭐ 0 · ⭐⭐ 1 — Semble:给 AI agent 的代码搜索,省 98% token
+- **[2026-06-05](daily/2026-06-05.md)** · ⭐⭐⭐ 0 · ⭐⭐ 1 — Semble:给 AI agent 的代码搜索,省 98% token
 
-[![每日更新 / Daily](https://img.shields.io/badge/扫描-每日中午%2012%3A30-brightgreen?style=flat-square)](#-怎么运作)
-[![中英双语 / Bilingual](https://img.shields.io/badge/语言-中文%20%2F%20English-blue?style=flat-square)](#-english)
-[![7 维评分 / Rubric](https://img.shields.io/badge/评分-7%20维%20OPC-orange?style=flat-square)](METHODOLOGY.md)
-[![反炒作 / Anti-hype](https://img.shields.io/badge/原则-反炒作%20·%205%20条反陷阱-red?style=flat-square)](METHODOLOGY.md)
-[![Bun + SQLite](https://img.shields.io/badge/stack-Bun%20%2B%20SQLite-black?style=flat-square)](#-自己跑起来)
+> 每天中午 12:30 自动更新 · Auto-updated daily at 12:30 · [全部简报 →](daily/)
 
-**[🇨🇳 中文](#-中文)** ｜ **[🇬🇧 English](#-english)** ｜ **[📊 方法论 Methodology](METHODOLOGY.md)** ｜ **[🗂 每日简报 Briefings](daily/)** ｜ **[⚙️ 部署 Deploy](docs/AUTOMATION.md)**
+<!-- BRIEFINGS:END -->
 
-</div>
+# Small-yet-smart-programs
 
----
+Daily scout for small, profitable, replicable software opportunities — scores them on a 7-dim anti-hype rubric, ships a bilingual briefing.
 
-## 🇨🇳 中文
+## Business Context
 
-### 这是什么
+- **Category:** opportunity research workflow
+- **Audience:** indie builders and creators looking for small, testable software opportunities without hype.
+- **Repository status:** Public repository. Keep examples, docs, and issues free of credentials, private data, and machine-specific paths.
+- **Topics:** ai, bilingual, bun, indie-hacking, indiehackers, opportunity-scanner, side-project, sqlite, typescript, web-scraping
 
-你有没有过这种感觉——
+## What This Project Is For
 
-> 想做个副业产品,于是去刷 Product Hunt、Hacker News、各种榜单……
-> 越刷越焦虑,收藏夹塞满了「看起来很火」的点子,却没有一个真的动手;
-> 好不容易选了一个,做到一半发现窗口早就关了,或者那是巨头的菜、根本轮不到你。
+- Daily scout for small, profitable, replicable software opportunities — scores them on a 7-dim anti-hype rubric, ships a bilingual briefing.
+- Turn scattered market signals into a repeatable opportunity-scanning process.
+- Score ideas against explicit criteria before investing build time.
 
-**这个项目就是来终结这种焦虑的。**
+## Where It Fits
 
-它每天自动扫遍 8 大公开信号源(Hacker News、Reddit、Product Hunt、IndieHackers、Toolify、Google Trends、X、SimilarWeb),
-把成百上千条噪音,用一套**克制、反炒作的 7 维评分法**筛成一份**诚实的机会简报**——
-中英双语,每天中午推到你手机,5 分钟看完。
+This repository supports the front of the product pipeline: discovering, scoring, and packaging small software opportunities before committing build time.
 
-它最特别的地方,不是告诉你「这个很火」,而是敢告诉你:**「这个对你不值得做」**。
+## Technical Overview
 
-### 为什么做这件事
+- **Primary language:** HTML
+- **Detected stack:** HTML, Node.js, TypeScript
+- **Default branch:** `main`
+- **Visibility:** `PUBLIC`
+- **License:** Other
 
-市面上的「选品工具」都在制造 FOMO(怕错过)。这个不一样,它信奉几条相反的原则:
+## Repository Map
 
-- **诚实胜过热闹** —— 大多数月份的正确答案是「没有值得做的」。这个系统会坦白地告诉你 `⭐⭐⭐ = 0`,而不是硬凑几个让你兴奋。
-- **对你好,才是真的好** —— 一个机会对别人是金矿,对你可能是火坑。评分里有一维专门问:**「成功靠的资产,你有几样?」** 没有就扣分。
-- **看到 ≠ 抄到** —— 从发现到上线要 8–12 周,窗口可能早关。系统强制评估「你做完还来得及吗」。
-- **工具是放大镜,不是替身** —— 它只负责把信号收拢、初筛、可视化;**最终判断永远是你的**,⭐⭐⭐ 也只是「值得你亲自看一眼」,绝不是「立刻 all in」。
+- `docs`
+- `scripts`
+- `.claude`
+- `LICENSE`
+- `METHODOLOGY.md`
+- `README.md`
+- `SECURITY.md`
+- `bun.lock`
+- `config`
+- `daily-scan.sh`
+- `daily`
+- `deploy`
 
-如果你也厌倦了被榜单牵着走,想用一套纪律化的方法安静地找项目,这个仓库是为你准备的。
+## Quick Start
 
-### 怎么运作
-
-一份简报,从全网噪音到你手机,经过 5 步:
-
-**① 采集 · Gather** —— 每天自动从 8 大公开信号源拉取最新候选,零付费 API。
-
-**② 粗筛 · Filter** —— 用 4 个问题(清晰客户?真实痛点?有人付费?还没火?)淘汰掉一眼就不行的。
-
-**③ 评分 · Score** —— 过筛的逐个做 **7 维评分**,由 AI 对照**你自己的能力画像**打分,答的是「这对**我**值不值得」。
-
-**④ 呈现 · Surface** —— 生成中英双语简报:每个项目一句话点评 + 评分 + 窗口判断 + 一键直达原项目。
-
-**⑤ 推送 · Deliver** —— 核心摘要 + 重点项目推到飞书,完整简报发布到一个国内秒开的网页,点开即看。
-
-> 全程基于 Bun + SQLite,本地运行,数据归你自己。
-
-### 🎯 7 维评分 + 5 条反陷阱
-
-评分不是拍脑袋。每个候选打 7 个维度(各 1–5 分,总分 7–35):
-
-| 市场 | 痛点 | 付费 | 可复刻 | 窗口 | **资产匹配** | 护城河 |
-|------|------|------|--------|------|------------|--------|
-
-- **≥ 28 分 → ⭐⭐⭐**(值得你人工细看)
-- **22–27 → ⭐⭐**(备选,3 个月后回访)
-- **< 22 → ✗**(淘汰,但留档做趋势基线)
-
-再叠加 5 条**反陷阱硬规则**(陡增蒙蔽、精确度迷信、看到≠抄到、为什么是你、把刷榜当逃避)——
-完整逻辑见 **[METHODOLOGY.md](METHODOLOGY.md)**,这才是这个项目真正的灵魂。
-
-### ⚡ 自己跑起来
+Use the commands that match the current project state:
 
 ```bash
-git clone https://github.com/shengdabai/Small-yet-smart-programs.git
-cd Small-yet-smart-programs
 bun install
-cp config/profile.example.json config/profile.local.json   # 填上你自己的能力画像
 bun run init
-bun run scan:daily        # 30 秒扫一遍
-bun run report:html       # 生成可视化报告
 ```
 
-想全自动每天跑 + 飞书推送 + 国内网页?看 **[部署指南 docs/AUTOMATION.md](docs/AUTOMATION.md)**。
+| Command | Purpose |
+|---|---|
+| `bun install` | Install project dependencies. |
+| `bun run init` | bun run scripts/db.ts --init |
 
----
+## Operating Notes
 
-## 🇬🇧 English
+- Keep real credentials out of the repository. Use local environment files, GitHub repository secrets, or the deployment platform secret manager.
+- If a `.env.example` file exists, treat it as documentation only; never commit filled-in `.env` files.
+- Before publishing screenshots, demos, or client examples, remove private names, internal paths, account IDs, and API endpoints.
+- The `Repository Hygiene` workflow is a lightweight guardrail, not a replacement for product-specific tests.
 
-### What is this
+## Delivery Checklist
 
-Ever felt this?
+- [ ] README describes the user, business outcome, and operating boundary.
+- [ ] Setup or preview commands are current and do not rely on private machine state.
+- [ ] No real secrets, private user data, or machine-local state are tracked.
+- [ ] Screenshots, demos, or sample outputs are safe to share publicly when the repository is public.
+- [ ] Product-specific tests or smoke checks are documented before production use.
 
-> You want to build a side project, so you scroll Product Hunt, Hacker News, endless leaderboards…
-> The more you scroll, the more anxious you get. Your bookmarks fill with "looks hot" ideas, but you ship none of them.
-> You finally pick one — only to find the window already closed, or that it's a giant's game you can't win.
+## Roadmap
 
-**This project exists to end that anxiety.**
+- Tighten the fastest path from clone to useful demo.
+- Add project-specific screenshots, sample outputs, or a short walkthrough where useful.
+- Promote repeated manual steps into scripts, tests, or documented workflows.
+- Keep security, privacy, and licensing boundaries explicit as the project evolves.
 
-Every day it scans 8 public signal sources (Hacker News, Reddit, Product Hunt, IndieHackers, Toolify, Google Trends, X, SimilarWeb),
-runs the hundreds of noisy candidates through a **disciplined, anti-hype 7-dimension rubric**,
-and ships you an **honest briefing** — bilingual, on your phone by noon, readable in 5 minutes.
+## Maintainer Notes
 
-Its rarest feature isn't telling you "this is hot." It's daring to say: **"this isn't worth it — for you."**
-
-### Why it exists
-
-Most "idea finder" tools manufacture FOMO. This one runs on the opposite principles:
-
-- **Honesty over hype** — most months, the right answer is "nothing worth building." It will plainly report `⭐⭐⭐ = 0` instead of inventing excitement.
-- **Good *for you* is the only good** — a goldmine for someone else can be a trap for you. One scoring dimension asks: **"of the assets this success depends on, how many do you have?"** None → penalty.
-- **Seeing ≠ shipping** — discovery to launch is 8–12 weeks; the window may already be gone. The system forces you to ask "will I still make it?"
-- **A tool is a magnifier, not a replacement** — it gathers, filters, and visualizes; **the final call is always yours.** A ⭐⭐⭐ means "worth a personal look," never "go all in now."
-
-If you're tired of being led by leaderboards and want a calm, disciplined way to find what to build, this repo is for you.
-
-### How it works
-
-From web-wide noise to your phone, in 5 steps:
-
-1. **Gather** — pull fresh candidates daily from 8 public sources, no paid API.
-2. **Filter** — 4 yes/no questions drop the obvious no-gos.
-3. **Score** — survivors get a **7-dimension score**, judged by AI against *your own* asset profile — answering "is this worth it *for me*?"
-4. **Surface** — a bilingual briefing: one-line take + score + window + one-click to the source project.
-5. **Deliver** — the gist + top picks pushed to chat; the full briefing published to a fast, always-on page.
-
-Built on Bun + SQLite. Runs locally. Your data stays yours.
-
-### 🎯 The rubric + 5 anti-traps
-
-Seven dimensions, 1–5 each (total 7–35): Market · Pain · Willingness-to-pay · Replicability · Window · **Asset-fit** · Moat.
-
-- **≥ 28 → ⭐⭐⭐** (worth your personal review)
-- **22–27 → ⭐⭐** (shortlist, revisit in 3 months)
-- **< 22 → ✗** (discard, kept for trend baselines)
-
-Plus 5 hard anti-trap rules (spike blindness, number worship, seeing≠shipping, why-you-not-them, scanning-as-procrastination).
-The full logic lives in **[METHODOLOGY.md](METHODOLOGY.md)** — the real soul of this project.
-
-### ⚡ Run it yourself
-
-```bash
-git clone https://github.com/shengdabai/Small-yet-smart-programs.git
-cd Small-yet-smart-programs
-bun install
-cp config/profile.example.json config/profile.local.json   # fill in your own asset profile
-bun run init
-bun run scan:daily
-bun run report:html
-```
-
-Want it fully automated daily + chat push + a live page? See **[docs/AUTOMATION.md](docs/AUTOMATION.md)**.
-
----
-
-<div align="center">
-
-**📊 [读懂方法论 Read the Methodology](METHODOLOGY.md)** ｜ **🗂 [浏览每日简报 Browse daily briefings](daily/)**
-
-每天扫遍全网,只为告诉你一句诚实的话。
-*Scanning the whole web every day — just to tell you one honest thing.*
-
-</div>
+Maintained by [Tony Sheng](https://github.com/shengdabai). This README is written as a business-facing handoff: it should help a future collaborator, client, or reviewer understand why the repository exists, how to inspect it, and what must be true before it is reused or shipped.
