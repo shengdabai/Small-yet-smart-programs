@@ -13,11 +13,16 @@
  * 环境: SITE_URL(国内可访问站点根,默认上海云 8082)
  */
 import { db, init } from "./db.ts";
+import { isIsoDate } from "./lib/html.ts";
 init();
 
 const args = process.argv.slice(2);
 const di = args.indexOf("--date");
 const date = di >= 0 && args[di + 1] ? args[di + 1] : new Date().toISOString().slice(0, 10);
+if (!isIsoDate(date)) {
+  console.error(`[notify-feishu] invalid --date "${date}", expected YYYY-MM-DD`);
+  process.exit(2);
+}
 const useWebhook = args.includes("--webhook");
 const SITE_URL = (process.env.SITE_URL || "http://YOUR_SERVER:8082").replace(/\/+$/, "");
 const LINK = `${SITE_URL}/latest.html`;
@@ -34,7 +39,7 @@ const top = db.query(`
 
 const triple = top.filter((r) => r.tier === "⭐⭐⭐").length;
 const double = top.filter((r) => r.tier === "⭐⭐").length;
-const fresh = (db.query(`SELECT COUNT(*) n FROM candidates WHERE date(first_seen)=date('${date}')`).get() as { n: number }).n;
+const fresh = (db.query("SELECT COUNT(*) n FROM candidates WHERE date(first_seen)=date(?)").get(date) as { n: number }).n;
 
 const pickLines = top.length
   ? top.map((r, i) => `${i + 1}. ${r.name_zh || r.name} ${r.total}/35 ${r.tier}${r.window_estimate ? ` · 窗口 ${r.window_estimate}` : ""}`)

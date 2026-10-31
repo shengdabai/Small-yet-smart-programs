@@ -16,6 +16,7 @@ import { db, init } from "./db.ts";
 import { writeFileSync, mkdirSync, existsSync, readFileSync } from "node:fs";
 import { execSync } from "node:child_process";
 import { loadProfile } from "./profile.ts";
+import { esc, positiveInt, safeHref, short } from "./lib/html.ts";
 
 init();
 const profile = loadProfile();
@@ -24,7 +25,8 @@ const REPORTS_DIR = decodeURIComponent(new URL("../reports/", import.meta.url).p
 if (!existsSync(REPORTS_DIR)) mkdirSync(REPORTS_DIR, { recursive: true });
 
 const args = process.argv.slice(2);
-const days = parseInt(args[args.indexOf("--days") + 1] ?? "60", 10);
+const daysIdx = args.indexOf("--days");
+const days = positiveInt(daysIdx >= 0 ? args[daysIdx + 1] : undefined, 60);
 
 type Cand = {
   id: number;
@@ -79,15 +81,7 @@ const now = new Date();
 const ym = now.toISOString().slice(0, 7);
 const dateStr = now.toISOString().slice(0, 10);
 
-function esc(s: string | null | undefined): string {
-  if (!s) return "";
-  return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
-}
-function shortDesc(s: string | null, n = 220): string {
-  if (!s) return "";
-  const clean = s.replace(/<[^>]+>/g, "").replace(/\s+/g, " ").trim();
-  return esc(clean.length > n ? clean.slice(0, n) + "…" : clean);
-}
+const shortDesc = (s: string | null, n = 220) => short(s, n);
 
 // === SVG 雷达图 ===
 function radar(c: Cand, size = 180): string {
@@ -209,7 +203,7 @@ function decisionMatrix(): string {
     const maxDiff = Math.max(...ownerProjects.map((p) => (c.total ?? 0) - p.est));
     const advice = maxDiff >= 5 ? "严肃考虑 pivot" : maxDiff >= 2 ? "观察 3 月" : "继续手头";
     html += `<tr>
-      <td class="cand-name"><a href="${esc(c.url)}" target="_blank">${esc(c.name).slice(0, 40)}</a></td>
+      <td class="cand-name">${safeHref(c.url) ? `<a href="${safeHref(c.url)}" target="_blank" rel="noopener">${esc(c.name).slice(0, 40)}</a>` : esc(c.name).slice(0, 40)}</td>
       <td class="center">${c.total}</td><td class="center">${esc(c.window_estimate ?? "-")}</td>
       ${diffs}
       <td class="advice">${advice}</td>
@@ -257,7 +251,7 @@ function cardOf(c: Cand): string {
     <div class="card-grid">
       <div class="card-main">
         <h3 class="name">${esc(c.name)}</h3>
-        <div class="url"><a href="${esc(c.url)}" target="_blank" rel="noopener">${esc(c.url)}</a></div>
+        <div class="url">${safeHref(c.url) ? `<a href="${safeHref(c.url)}" target="_blank" rel="noopener">${esc(c.url)}</a>` : esc(c.url)}</div>
         <div class="meta">
           <span class="src-tag">${esc(c.source)}</span>
           <span class="src-tag">signal ${c.signal_score ?? "-"}</span>

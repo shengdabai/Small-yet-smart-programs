@@ -11,10 +11,11 @@
  * 中文字段(name_zh / description_zh / summary_zh)由评分步骤的 LLM 产出;
  * 缺失时优雅回退到英文原文。
  *
- * 用法: bun run scripts/daily-digest.ts [--date YYYY-MM-DD] [--days 30]
+ * 用法: bun run scripts/daily-digest.ts [--date YYYY-MM-DD] [--days 30] [--out <dir>]
  */
 import { db, init } from "./db.ts";
 import { writeFileSync, mkdirSync, existsSync } from "node:fs";
+import { esc, isIsoDate, positiveInt, safeHref, short } from "./lib/html.ts";
 
 init();
 
@@ -24,10 +25,16 @@ function arg(name: string, def: string): string {
   return i >= 0 && args[i + 1] ? args[i + 1] : def;
 }
 const today = arg("--date", new Date().toISOString().slice(0, 10));
-const lookbackDays = parseInt(arg("--days", "30"), 10);
+// `today` reaches both a SQL literal and the output file name, so accept only
+// a plain calendar date (no "../" or quotes can get through).
+if (!isIsoDate(today)) {
+  console.error(`[daily-digest] invalid --date "${today}", expected YYYY-MM-DD`);
+  process.exit(2);
+}
+const lookbackDays = positiveInt(arg("--days", "30"), 30);
 
 const ROOT = decodeURIComponent(new URL("../", import.meta.url).pathname);
-const DAILY_DIR = ROOT + "daily/";
+const DAILY_DIR = arg("--out", ROOT + "daily/").replace(/\/?$/, "/");
 if (!existsSync(DAILY_DIR)) mkdirSync(DAILY_DIR, { recursive: true });
 
 type Row = {
@@ -46,10 +53,10 @@ const longTerm = db.query(`
          c.first_seen, s.scored_at
   FROM scored s JOIN candidates c ON c.id = s.candidate_id
   WHERE s.tier IN ('⭐⭐⭐','⭐⭐')
-    AND s.scored_at >= datetime('now', '-${lookbackDays} days')
+    AND s.scored_at >= datetime('now', ?)
   ORDER BY s.total DESC, c.signal_score DESC NULLS LAST
   LIMIT 20
-`).all() as Row[];
+`).all(`-${lookbackDays} days`) as Row[];
 
 const fresh = db.query(`
   SELECT c.name, c.name_zh, c.url, c.description, c.description_zh, NULL as summary_zh,
@@ -58,23 +65,14 @@ const fresh = db.query(`
          NULL as replication_difficulty, NULL as why_them,
          c.first_seen, NULL as scored_at
   FROM candidates c
-  WHERE date(c.first_seen) = date('${today}')
+  WHERE date(c.first_seen) = date(?)
   ORDER BY c.signal_score DESC NULLS LAST
   LIMIT 15
-`).all() as Row[];
+`).all(today) as Row[];
 
 const triple = longTerm.filter((r) => r.tier === "⭐⭐⭐");
 const double = longTerm.filter((r) => r.tier === "⭐⭐");
 
-function esc(s: string | null | undefined): string {
-  if (!s) return "";
-  return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
-}
-function short(s: string | null, n = 200): string {
-  if (!s) return "";
-  const c = s.replace(/<[^>]+>/g, "").replace(/\s+/g, " ").trim();
-  return esc(c.length > n ? c.slice(0, n) + "…" : c);
-}
 const zhName = (r: Row) => r.name_zh || r.name;
 const zhDesc = (r: Row) => r.summary_zh || r.description_zh || r.description;
 
@@ -111,14 +109,22 @@ function card(r: Row): string {
     : r.signal_score != null ? `<span class="badge sig"><span class="zh">热度 ${Math.round(r.signal_score)}</span><span class="en">signal ${Math.round(r.signal_score)}</span></span>` : "";
   const win = r.window_estimate ? `<span class="pill">${esc(r.window_estimate)}</span>` : "";
   const diff = r.replication_difficulty ? `<span class="pill">复刻 ${esc(r.replication_difficulty)}</span>` : "";
+  const href = safeHref(r.url);
+  const nameInner = `<span class="zh">${esc(zhName(r))}</span><span class="en">${esc(r.name)}</span>`;
+  const nameEl = href
+    ? `<a class="name" href="${href}" target="_blank" rel="noopener">${nameInner}</a>`
+    : `<span class="name">${nameInner}</span>`;
+  const srcLink = href
+    ? `<a class="src-link" href="${href}" target="_blank" rel="noopener">🔗 <span class="zh">查看原项目</span><span class="en">View source</span> ↗</a>`
+    : "";
   return `<article class="card">
     <div class="card-head">
-      <a class="name" href="${esc(r.url)}" target="_blank" rel="noopener"><span class="zh">${esc(zhName(r))}</span><span class="en">${esc(r.name)}</span></a>${badge}
+      ${nameEl}${badge}
     </div>
     <div class="src">${esc(r.source)}</div>
     <p class="desc"><span class="zh">${short(zhDesc(r))}</span><span class="en">${short(r.description)}</span></p>
     <div class="pills">${win}${diff}</div>
-    <a class="src-link" href="${esc(r.url)}" target="_blank" rel="noopener">🔗 <span class="zh">查看原项目</span><span class="en">View source</span> ↗</a>
+    ${srcLink}
   </article>`;
 }
 function htmlSection(rows: Row[], emptyZh: string, emptyEn: string): string {
