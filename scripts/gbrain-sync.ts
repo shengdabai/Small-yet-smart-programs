@@ -8,7 +8,7 @@
  *   bun run scripts/gbrain-sync.ts
  */
 import { db, init } from "./db.ts";
-import { execSync } from "node:child_process";
+import { execFileSync, execSync } from "node:child_process";
 
 init();
 
@@ -35,9 +35,9 @@ const rows = db
   )
   .all() as Array<{
     id: number;
-    name: string;
-    url: string;
-    description: string;
+    name: string | null;
+    url: string | null;
+    description: string | null;
     source: string;
     first_seen: string;
     total: number;
@@ -59,8 +59,10 @@ if (rows.length === 0) {
 
 let synced = 0;
 for (const r of rows) {
-  const title = `LiuxiaopaiMining_${slug(r.name)}`;
-  const content = `# ${r.name}
+  // candidates.name is nullable; never let one unnamed row abort the whole sync.
+  const name = r.name?.trim() || `unnamed-${r.id}`;
+  const title = `LiuxiaopaiMining_${slug(name)}`;
+  const content = `# ${name}
 
 **评分**: ${r.total}/35 (${r.tier}) | **窗口**: ${r.window_estimate} | **复刻**: ${r.replication_difficulty}
 **信号源**: ${r.source} | **首次发现**: ${r.first_seen}
@@ -79,13 +81,15 @@ ${r.why_them}
 `;
 
   try {
-    execSync(`gbrain put --title "${title}" --tag "smart-programs-mining" --tag "${r.tier}"`, {
+    // Arguments are passed as an array: no shell, so a tier or title value can
+    // never be interpreted as shell syntax.
+    execFileSync("gbrain", ["put", "--title", title, "--tag", "smart-programs-mining", "--tag", r.tier], {
       input: content,
       stdio: ["pipe", "ignore", "ignore"],
     });
     synced++;
   } catch (e) {
-    console.warn(`[gbrain-sync] failed for ${r.name}:`, (e as Error).message);
+    console.warn(`[gbrain-sync] failed for ${name}:`, (e as Error).message);
   }
 }
 

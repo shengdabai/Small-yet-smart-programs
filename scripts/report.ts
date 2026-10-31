@@ -3,7 +3,7 @@
  *
  * 用法:
  *   bun run scripts/report.ts --mode weekly
- *   bun run scripts/report.ts --mode monthly
+ *   bun run scripts/report.ts --mode monthly [--out <dir>]
  *
  * 输出: reports/<YYYY>-W<NN>-weekly.md / <YYYY>-<MM>-monthly.md
  */
@@ -12,7 +12,11 @@ import { writeFileSync, mkdirSync, existsSync } from "node:fs";
 
 init();
 
-const REPORTS_DIR = decodeURIComponent(new URL("../reports/", import.meta.url).pathname);
+const args = process.argv.slice(2);
+const outIdx = args.indexOf("--out");
+const REPORTS_DIR = (outIdx >= 0 && args[outIdx + 1]
+  ? args[outIdx + 1]
+  : decodeURIComponent(new URL("../reports/", import.meta.url).pathname)).replace(/\/?$/, "/");
 if (!existsSync(REPORTS_DIR)) mkdirSync(REPORTS_DIR, { recursive: true });
 
 function isoWeek(d: Date): string {
@@ -29,9 +33,9 @@ function isoWeek(d: Date): string {
 type Cand = {
   id: number;
   source: string;
-  name: string;
-  url: string;
-  description: string;
+  name: string | null;
+  url: string | null;
+  description: string | null;
   signal_score: number | null;
   first_seen: string;
   total: number | null;
@@ -64,12 +68,15 @@ function bySource(rows: Cand[]) {
   return map;
 }
 
+// candidates.name is nullable; a source that stored no name must not crash the report.
+const displayName = (c: Cand) => c.name?.trim() || `(unnamed #${c.id})`;
+
 function fmtCandidate(c: Cand): string {
   const score = c.total ? ` **${c.tier ?? ""} ${c.total}/35**` : "";
   const diff = c.replication_difficulty ? ` _[${c.replication_difficulty}]_` : "";
   const win = c.window_estimate ? ` ⏱${c.window_estimate}` : "";
   const desc = (c.description || "").replace(/\n/g, " ").slice(0, 160);
-  return `- **${c.name}**${score}${diff}${win}\n  - 源: \`${c.source}\` · signal=${c.signal_score ?? "-"}\n  - <${c.url}>\n  - ${desc}${desc.length >= 160 ? "..." : ""}`;
+  return `- **${displayName(c)}**${score}${diff}${win}\n  - 源: \`${c.source}\` · signal=${c.signal_score ?? "-"}\n  - <${c.url ?? ""}>\n  - ${desc}${desc.length >= 160 ? "..." : ""}`;
 }
 
 function writeWeekly() {
@@ -139,7 +146,7 @@ function writeMonthly() {
     md += `## ⭐⭐⭐ 候选列表\n\n`;
     for (const c of triple) {
       md += fmtCandidate(c) + "\n\n";
-      md += `  - **pivot memo**: \`reports/${ym}-${c.name.toLowerCase().replace(/\W+/g, "-")}-pivot.md\` (若已生成)\n\n`;
+      md += `  - **pivot memo**: \`reports/${ym}-${displayName(c).toLowerCase().replace(/\W+/g, "-")}-pivot.md\` (若已生成)\n\n`;
     }
   }
 
@@ -147,7 +154,7 @@ function writeMonthly() {
   md += `| 候选 | 评分 | 当前手头项目 | 差距 | 建议 |\n`;
   md += `|------|------|------------|------|------|\n`;
   for (const c of triple) {
-    md += `| ${c.name} | ${c.total} | (你填) | (你算) | (>+5 严肃 pivot / >+2 观察 / ≤ 继续手头) |\n`;
+    md += `| ${displayName(c)} | ${c.total} | (你填) | (你算) | (>+5 严肃 pivot / >+2 观察 / ≤ 继续手头) |\n`;
   }
 
   md += `\n## 反陷阱月度检查\n\n`;
@@ -162,8 +169,8 @@ function writeMonthly() {
   return path;
 }
 
-const args = process.argv.slice(2);
-const mode = args[args.indexOf("--mode") + 1];
+const modeIdx = args.indexOf("--mode");
+const mode = modeIdx >= 0 ? args[modeIdx + 1] : undefined;
 
 if (mode === "monthly") writeMonthly();
 else writeWeekly();

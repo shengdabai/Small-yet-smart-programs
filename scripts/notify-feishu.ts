@@ -27,7 +27,7 @@ const useWebhook = args.includes("--webhook");
 const SITE_URL = (process.env.SITE_URL || "http://YOUR_SERVER:8082").replace(/\/+$/, "");
 const LINK = `${SITE_URL}/latest.html`;
 
-type R = { name: string; name_zh: string | null; total: number; tier: string; window_estimate: string | null };
+type R = { name: string | null; name_zh: string | null; total: number; tier: string; window_estimate: string | null };
 
 const top = db.query(`
   SELECT c.name, c.name_zh, s.total, s.tier, s.window_estimate
@@ -42,7 +42,7 @@ const double = top.filter((r) => r.tier === "⭐⭐").length;
 const fresh = (db.query("SELECT COUNT(*) n FROM candidates WHERE date(first_seen)=date(?)").get(date) as { n: number }).n;
 
 const pickLines = top.length
-  ? top.map((r, i) => `${i + 1}. ${r.name_zh || r.name} ${r.total}/35 ${r.tier}${r.window_estimate ? ` · 窗口 ${r.window_estimate}` : ""}`)
+  ? top.map((r, i) => `${i + 1}. ${r.name_zh || r.name || "(未命名)"} ${r.total}/35 ${r.tier}${r.window_estimate ? ` · 窗口 ${r.window_estimate}` : ""}`)
   : ["本期暂无 ⭐⭐+ 候选 —— 诚实结果,继续手头项目。"];
 
 // ---------- webhook(post 富文本,链接可点)----------
@@ -73,7 +73,7 @@ async function sendWebhook(url: string) {
 
 // ---------- 纯文本(hermes fallback)----------
 function printText() {
-  const focus = top.length ? (top[0].name_zh || top[0].name) : "";
+  const focus = top.length ? (top[0].name_zh || top[0].name || "(未命名)") : "";
   const summary = top.length
     ? `今日扫描 ${fresh} 个新信号,评分后${triple > 0 ? ` ${triple} 个 ⭐⭐⭐ 强候选` : "无 ⭐⭐⭐"}${double > 0 ? `、${double} 个 ⭐⭐ 备选` : ""}。重点关注:${focus}。`
     : `今日扫描 ${fresh} 个新信号,暂无 ⭐⭐+ 候选 —— 诚实结果,继续手头项目。`;
