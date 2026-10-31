@@ -10,6 +10,7 @@
  * 抓不到就空数组,不阻塞 pipeline。
  */
 import { upsertCandidate } from "../db.ts";
+import { fetchWithTimeout } from "../lib/fetch.ts";
 
 const UA = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0 Safari/537.36";
 
@@ -23,7 +24,7 @@ export async function fetchToolify(): Promise<number> {
   let html = "";
   for (const url of urls) {
     try {
-      const res = await fetch(url, { headers: { "User-Agent": UA } });
+      const res = await fetchWithTimeout(url, { headers: { "User-Agent": UA } });
       if (res.ok) {
         html = await res.text();
         if (html.length > 5000) break;

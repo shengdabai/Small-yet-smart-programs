@@ -128,10 +128,15 @@ const upsertStmt = db.query(`
     last_seen = datetime('now'),
     signal_score = excluded.signal_score,
     raw_payload = excluded.raw_payload
-  RETURNING id, (CASE WHEN first_seen = last_seen THEN 1 ELSE 0 END) AS is_new
+  RETURNING id
 `);
+const existsStmt = db.query(`SELECT id FROM candidates WHERE source = $source AND external_id = $external_id`);
 
 export function upsertCandidate(c: CandidateInput): { id: number; is_new: boolean } {
+  // "new" means the row did not exist before this call. Comparing first_seen
+  // with last_seen (second resolution) misreported a re-upsert within the same
+  // second as new, e.g. duplicate ids inside one fetch.
+  const existed = existsStmt.get({ $source: c.source, $external_id: c.external_id }) !== null;
   const row = upsertStmt.get({
     $source: c.source,
     $external_id: c.external_id,
@@ -141,8 +146,8 @@ export function upsertCandidate(c: CandidateInput): { id: number; is_new: boolea
     $description: c.description ?? null,
     $signal_score: c.signal_score ?? null,
     $raw_payload: c.raw_payload ? JSON.stringify(c.raw_payload) : null,
-  }) as { id: number; is_new: number };
-  return { id: row.id, is_new: row.is_new === 1 };
+  }) as { id: number };
+  return { id: row.id, is_new: !existed };
 }
 
 export function listRecentCandidates(opts: { days?: number; source?: string; limit?: number } = {}) {
@@ -152,12 +157,15 @@ export function listRecentCandidates(opts: { days?: number; source?: string; lim
     SELECT c.*, s.total, s.tier
     FROM candidates c
     LEFT JOIN scored s ON s.candidate_id = c.id
-    WHERE c.first_seen >= datetime('now', '-${days} days')
+    WHERE c.first_seen >= datetime('now', ?)
     ${opts.source ? "AND c.source = ?" : ""}
     ORDER BY c.signal_score DESC NULLS LAST, c.first_seen DESC
-    LIMIT ${limit}
+    LIMIT ?
   `;
-  return opts.source ? db.query(sql).all(opts.source) : db.query(sql).all();
+  const params: (string | number)[] = [`-${days} days`];
+  if (opts.source) params.push(opts.source);
+  params.push(limit);
+  return db.query(sql).all(...params);
 }
 
 export function listTopScored(opts: { limit?: number; minTotal?: number } = {}) {

@@ -10,6 +10,7 @@
  * 准确率没 BuiltWith Pro 高,但足够分 Low/Mid/High 三档。
  */
 import { db } from "../db.ts";
+import { fetchWithTimeout } from "../lib/fetch.ts";
 
 const UA = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0 Safari/537.36";
 
@@ -86,7 +87,7 @@ export function classifyStack(html: string, headers: Record<string, string> = {}
 
 async function fetchHtml(url: string): Promise<{ html: string; headers: Record<string, string> } | null> {
   try {
-    const res = await fetch(url, { headers: { "User-Agent": UA, "Accept": "text/html" }, redirect: "follow" });
+    const res = await fetchWithTimeout(url, { headers: { "User-Agent": UA, "Accept": "text/html" }, redirect: "follow" });
     if (!res.ok) return null;
     const html = await res.text();
     const headers: Record<string, string> = {};

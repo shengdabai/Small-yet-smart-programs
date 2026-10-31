@@ -11,6 +11,7 @@
 import { readFileSync, existsSync } from "node:fs";
 import { homedir } from "node:os";
 import { join } from "node:path";
+import { fetchWithTimeout } from "../lib/fetch.ts";
 
 // FIRECRAWL_ENV_FILE points at an alternative key file (tests use a path that
 // does not exist so the real operator key is never touched).
@@ -77,11 +78,12 @@ export async function fcScrape(url: string, opts: ScrapeOpts = {}): Promise<FcRe
     ...(opts.jsonOptions && { jsonOptions: opts.jsonOptions }),
     ...(opts.maxAge !== undefined && { maxAge: opts.maxAge }),
   };
-  const res = await fetch(`${BASE}/scrape`, {
+  // Stealth-proxy scrapes with waitFor can legitimately take a while.
+  const res = await fetchWithTimeout(`${BASE}/scrape`, {
     method: "POST",
     headers: { Authorization: `Bearer ${key}`, "Content-Type": "application/json" },
     body: JSON.stringify(body),
-  });
+  }, 120_000);
   if (!res.ok) {
     const text = await res.text();
     return { success: false, error: `HTTP ${res.status}: ${text.slice(0, 200)}` };

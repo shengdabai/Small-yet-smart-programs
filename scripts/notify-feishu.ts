@@ -14,6 +14,7 @@
  */
 import { db, init } from "./db.ts";
 import { isIsoDate } from "./lib/html.ts";
+import { fetchWithTimeout } from "./lib/fetch.ts";
 init();
 
 const args = process.argv.slice(2);
@@ -61,7 +62,7 @@ async function sendWebhook(url: string) {
     msg_type: "post",
     content: { post: { zh_cn: { title: `📡 机会简报 ${date}`, content: contentRows } } },
   };
-  const res = await fetch(url, {
+  const res = await fetchWithTimeout(url, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(payload),

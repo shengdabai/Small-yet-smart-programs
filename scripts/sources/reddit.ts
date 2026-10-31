@@ -9,6 +9,7 @@
  * 注意 Reddit 对 User-Agent 严格,必须自定义。
  */
 import { upsertCandidate } from "../db.ts";
+import { fetchWithTimeout } from "../lib/fetch.ts";
 
 const UA = "smart-programs-research/0.1 (public data research)";
 
@@ -30,7 +31,7 @@ type RedditPost = {
 
 async function fetchSub(path: string, sort: "top" | "hot" | "new", time: string, min_score: number) {
   const url = `https://www.reddit.com${path}/${sort}.json?t=${time}&limit=100`;
-  const res = await fetch(url, { headers: { "User-Agent": UA } });
+  const res = await fetchWithTimeout(url, { headers: { "User-Agent": UA } });
   if (!res.ok) throw new Error(`Reddit ${url} ${res.status}`);
   const json = (await res.json()) as { data: { children: RedditPost[] } };
 

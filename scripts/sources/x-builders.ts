@@ -13,6 +13,7 @@
  */
 import { upsertCandidate } from "../db.ts";
 import { readFileSync, existsSync, writeFileSync } from "node:fs";
+import { fetchWithTimeout } from "../lib/fetch.ts";
 
 const KOL_PATH = decodeURIComponent(new URL("../../data/kol-list.txt", import.meta.url).pathname);
 
@@ -49,7 +50,7 @@ function loadKols(): string[] {
 async function fetchNitterRss(handle: string): Promise<string | null> {
   for (const host of NITTER_HOSTS) {
     try {
-      const r = await fetch(`https://${host}/${handle}/rss`, {
+      const r = await fetchWithTimeout(`https://${host}/${handle}/rss`, {
         headers: { "User-Agent": "smart-programs/0.1" },
       });
       if (r.ok) {

@@ -12,6 +12,7 @@
  * 这个 source 不"发现"新候选,而是"丰富"已有候选的 traffic 数据。
  */
 import { db } from "../db.ts";
+import { fetchWithTimeout } from "../lib/fetch.ts";
 
 const UA = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0 Safari/537.36";
 const TODAY = new Date().toISOString().slice(0, 10);
@@ -38,7 +39,7 @@ function extractDomain(url: string | null): string | null {
 
 async function fetchSwPage(domain: string): Promise<string | null> {
   try {
-    const res = await fetch(`https://www.similarweb.com/website/${domain}/`, {
+    const res = await fetchWithTimeout(`https://www.similarweb.com/website/${domain}/`, {
       headers: { "User-Agent": UA, "Accept": "text/html" },
       redirect: "follow",
     });

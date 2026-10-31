@@ -13,6 +13,7 @@
  */
 import { upsertCandidate } from "../db.ts";
 import { readFileSync, existsSync, writeFileSync } from "node:fs";
+import { fetchWithTimeout } from "../lib/fetch.ts";
 
 const SEEDS_PATH = decodeURIComponent(
   new URL("../../data/trending-keywords.txt", import.meta.url).pathname,
@@ -50,7 +51,7 @@ export async function fetchGoogleTrends(): Promise<number> {
   // 这里用每日 trending 公开端点作为信号
   let realtime: string[] = [];
   try {
-    const r = await fetch(
+    const r = await fetchWithTimeout(
       "https://trends.google.com/trends/api/dailytrends?hl=en-US&tz=240&geo=US&ns=15",
       { headers: { "User-Agent": "Mozilla/5.0" } },
     );
