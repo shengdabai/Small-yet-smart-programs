@@ -36,6 +36,8 @@ beforeAll(() => {
       first_seen: `${DATE} 10:00:00`,
       scored: { total: 25, tier: "⭐⭐" },
     },
+    // A fresh candidate with no name at all (sources may store NULL).
+    { source: "toolify", external_id: "noname", url: "https://example.com/n", signal_score: 2, first_seen: `${DATE} 11:00:00` },
   ]);
 });
 
@@ -62,9 +64,15 @@ describe("daily-digest.ts", () => {
     expect(html).not.toContain("<script>alert");
     expect(html).toContain("&lt;img src=x onerror=&quot;alert(1)&quot;&gt;");
     expect(html).toContain('href="https://example.com/tool?a=1&amp;b=2"');
-    // the fresh-today section found both seeded rows via the bound date parameter
-    expect(r.out).toContain("fresh=2");
+    // the fresh-today section found all seeded rows via the bound date parameter
+    expect(r.out).toContain("fresh=3");
     expect(r.out).toContain("⭐⭐⭐=1 ⭐⭐=1");
+    // a NULL name is shown as a placeholder in both languages, never as "null"
+    expect(html).toContain('<span class="zh">(未命名)</span><span class="en">(unnamed)</span>');
+    expect(html).not.toContain(">null<");
+    const md = readFileSync(join(outDir, `${DATE}.md`), "utf8");
+    expect(md).toContain("- **(未命名)**");
+    expect(md).not.toContain("**null**");
   });
 });
 
@@ -79,7 +87,7 @@ describe("notify-feishu.ts (text mode)", () => {
     const r = run("notify-feishu.ts", ["--date", DATE]);
     expect(r.code).toBe(0);
     expect(r.out).toContain(`机会简报 ${DATE}`);
-    expect(r.out).toContain("今日新信号 2");
+    expect(r.out).toContain("今日新信号 3");
     expect(r.out).toContain("⭐⭐⭐ 1 · ⭐⭐ 1");
   });
 });

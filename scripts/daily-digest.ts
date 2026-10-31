@@ -38,7 +38,7 @@ const DAILY_DIR = arg("--out", ROOT + "daily/").replace(/\/?$/, "/");
 if (!existsSync(DAILY_DIR)) mkdirSync(DAILY_DIR, { recursive: true });
 
 type Row = {
-  name: string; name_zh: string | null; url: string;
+  name: string | null; name_zh: string | null; url: string | null;
   description: string | null; description_zh: string | null; summary_zh: string | null;
   source: string; signal_score: number | null;
   total: number | null; tier: string | null;
@@ -73,7 +73,9 @@ const fresh = db.query(`
 const triple = longTerm.filter((r) => r.tier === "⭐⭐⭐");
 const double = longTerm.filter((r) => r.tier === "⭐⭐");
 
-const zhName = (r: Row) => r.name_zh || r.name;
+// candidates.name is nullable; never print "null" in the briefing.
+const zhName = (r: Row) => r.name_zh || r.name || "(未命名)";
+const enName = (r: Row) => r.name || "(unnamed)";
 const zhDesc = (r: Row) => r.summary_zh || r.description_zh || r.description;
 
 // ---------- Markdown(中文留档)----------
@@ -83,7 +85,7 @@ function mdSection(title: string, rows: Row[]): string {
   for (const r of rows) {
     const score = r.total ? ` · ${r.total}/35 ${r.tier ?? ""}` : r.signal_score ? ` · 热度 ${Math.round(r.signal_score)}` : "";
     const win = r.window_estimate ? ` · 窗口 ${r.window_estimate}` : "";
-    s += `- **${zhName(r)}**${score}${win}\n  ${short(zhDesc(r), 120)}\n  ${r.url}\n`;
+    s += `- **${zhName(r)}**${score}${win}\n  ${short(zhDesc(r), 120)}\n  ${r.url ?? ""}\n`;
   }
   return s + "\n";
 }
@@ -110,7 +112,7 @@ function card(r: Row): string {
   const win = r.window_estimate ? `<span class="pill">${esc(r.window_estimate)}</span>` : "";
   const diff = r.replication_difficulty ? `<span class="pill">复刻 ${esc(r.replication_difficulty)}</span>` : "";
   const href = safeHref(r.url);
-  const nameInner = `<span class="zh">${esc(zhName(r))}</span><span class="en">${esc(r.name)}</span>`;
+  const nameInner = `<span class="zh">${esc(zhName(r))}</span><span class="en">${esc(enName(r))}</span>`;
   const nameEl = href
     ? `<a class="name" href="${href}" target="_blank" rel="noopener">${nameInner}</a>`
     : `<span class="name">${nameInner}</span>`;
@@ -224,4 +226,4 @@ try{ const s = localStorage.getItem('sp-lang'); if(s) setLang(s); }catch(e){}
 writeFileSync(DAILY_DIR + `${today}.html`, html, "utf8");
 
 console.log(`[daily-digest] ${today}: ⭐⭐⭐=${triple.length} ⭐⭐=${double.length} fresh=${fresh.length}`);
-console.log(`[daily-digest] wrote daily/${today}.html + .md`);
+console.log(`[daily-digest] wrote ${DAILY_DIR}${today}.html + .md`);
