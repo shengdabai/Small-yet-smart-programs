@@ -20,7 +20,9 @@
     "report:html": "bun run scripts/report-html-v2.ts",
     "notify": "bun run scripts/notify.ts",
     "gbrain-sync": "bun run scripts/gbrain-sync.ts",
-    "stats": "bun run scripts/db.ts --stats"
+    "stats": "bun run scripts/db.ts --stats",
+    "test": "bun test",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {},
   "devDependencies": {

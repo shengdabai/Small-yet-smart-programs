@@ -12,9 +12,11 @@ import { readFileSync, existsSync } from "node:fs";
 import { homedir } from "node:os";
 import { join } from "node:path";
 
-const ENV_PATH = join(homedir(), ".config/firecrawl/.env");
+// FIRECRAWL_ENV_FILE points at an alternative key file (tests use a path that
+// does not exist so the real operator key is never touched).
+const ENV_PATH = process.env.FIRECRAWL_ENV_FILE || join(homedir(), ".config/firecrawl/.env");
 
-function loadKey(): string {
+export function loadKey(): string {
   if (process.env.FIRECRAWL_API_KEY) return process.env.FIRECRAWL_API_KEY;
   if (existsSync(ENV_PATH)) {
     const txt = readFileSync(ENV_PATH, "utf8");
@@ -24,7 +26,15 @@ function loadKey(): string {
   throw new Error("FIRECRAWL_API_KEY missing — set env var or ~/.config/firecrawl/.env");
 }
 
-const KEY = loadKey();
+// Resolved lazily on the first request. Resolving at import time made every
+// module that imports a Firecrawl-backed source (pipeline.ts included) crash
+// before the free daily sources ran, for anyone without a Firecrawl key.
+let cachedKey: string | null = null;
+function getKey(): string {
+  if (cachedKey === null) cachedKey = loadKey();
+  return cachedKey;
+}
+
 const BASE = "https://api.firecrawl.dev/v1";
 
 export type ScrapeOpts = {
@@ -52,6 +62,12 @@ type FcResp<T = unknown> = {
 };
 
 export async function fcScrape(url: string, opts: ScrapeOpts = {}): Promise<FcResp> {
+  let key: string;
+  try {
+    key = getKey();
+  } catch (e) {
+    return { success: false, error: (e as Error).message };
+  }
   const body = {
     url,
     formats: opts.formats ?? ["markdown"],
@@ -63,7 +79,7 @@ export async function fcScrape(url: string, opts: ScrapeOpts = {}): Promise<FcRe
   };
   const res = await fetch(`${BASE}/scrape`, {
     method: "POST",
-    headers: { Authorization: `Bearer ${KEY}`, "Content-Type": "application/json" },
+    headers: { Authorization: `Bearer ${key}`, "Content-Type": "application/json" },
     body: JSON.stringify(body),
   });
   if (!res.ok) {
@@ -75,6 +91,7 @@ export async function fcScrape(url: string, opts: ScrapeOpts = {}): Promise<FcRe
 
 export async function fcScrapeMarkdown(url: string, opts: Omit<ScrapeOpts, "formats"> = {}): Promise<string | null> {
   const r = await fcScrape(url, { ...opts, formats: ["markdown"] });
+  if (!r.success) console.warn(`[firecrawl] ${url}: ${r.error ?? "unknown error"}`);
   if (!r.success || !r.data?.markdown) return null;
   return r.data.markdown;
 }
@@ -90,6 +107,7 @@ export async function fcScrapeJson<T = unknown>(
     formats: ["json"],
     jsonOptions: { prompt, schema },
   });
+  if (!r.success) console.warn(`[firecrawl] ${url}: ${r.error ?? "unknown error"}`);
   if (!r.success || !r.data?.json) return null;
   return r.data.json as T;
 }

@@ -14,7 +14,9 @@ import { Database } from "bun:sqlite";
 import { mkdirSync, existsSync } from "node:fs";
 import { dirname } from "node:path";
 
-const DB_PATH = decodeURIComponent(new URL("../data/miner.db", import.meta.url).pathname);
+// SMART_PROGRAMS_DB overrides the database location (tests, or a runtime clone
+// that keeps its data outside the repo). Default: <repo>/data/miner.db.
+const DB_PATH = process.env.SMART_PROGRAMS_DB || decodeURIComponent(new URL("../data/miner.db", import.meta.url).pathname);
 if (!existsSync(dirname(DB_PATH))) mkdirSync(dirname(DB_PATH), { recursive: true });
 
 export const db = new Database(DB_PATH, { create: true });
@@ -180,7 +182,9 @@ if (import.meta.main) {
   } else if (args.includes("--stats")) {
     init();
     const { count } = db.query("SELECT COUNT(*) AS count FROM candidates").get() as { count: number };
-    const { scored } = db.query("SELECT COUNT(*) AS scored FROM scored").get() as { scored: number };
+    // builtwith enrichment pre-creates scored rows with a NULL total; only rows
+    // with a real 7-dimension total count as scored (same rule as pipeline.ts).
+    const { scored } = db.query("SELECT COUNT(*) AS scored FROM scored WHERE total IS NOT NULL").get() as { scored: number };
     const { triple } = db.query("SELECT COUNT(*) AS triple FROM scored WHERE tier = '⭐⭐⭐'").get() as { triple: number };
     console.log(`candidates=${count}  scored=${scored}  ⭐⭐⭐=${triple}`);
   } else {
