@@ -1,7 +1,11 @@
 import { afterAll, afterEach, describe, expect, test } from "bun:test";
-import { cpSync, existsSync, mkdtempSync, readFileSync, rmSync, statSync, writeFileSync } from "node:fs";
+import { chmodSync, existsSync, mkdirSync, mkdtempSync, readdirSync, readFileSync, rmSync, statSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
+
+// bun 1.3.x ignores [test] timeout in bunfig.toml and every test defaults to 5 s, but a test that starts a bun child process or
+// loads a temp project can take 20-70 s when the machine is busy. These tests therefore carry an explicit per-test timeout.
+const SLOW_TEST_MS = 60_000;
 
 // Data-path regression tests for the daily/monthly scan: SQLite upsert/dedupe, LLM score validation and import,
 // the score-export hand-off, the HN/Reddit parsers and the daily digest renderer.
@@ -20,10 +24,27 @@ afterAll(() => {
   for (const dir of dirs) rmSync(dir, { force: true, recursive: true });
 });
 
+// Plain read/write copy instead of cpSync(): on macOS Bun's cpSync() calls clonefile(2), and cloning out of the
+// iCloud-managed Desktop blocks for 20-280 s while fileproviderd is busy (0% CPU in bun, stuck in clonefileat),
+// whereas reading the same 25 files takes a few milliseconds.
+function copyTree(from: string, to: string) {
+  mkdirSync(to, { recursive: true });
+  for (const entry of readdirSync(from, { withFileTypes: true })) {
+    const source = join(from, entry.name);
+    const target = join(to, entry.name);
+    if (entry.isDirectory()) {
+      copyTree(source, target);
+    } else {
+      writeFileSync(target, readFileSync(source));
+      chmodSync(target, statSync(source).mode);
+    }
+  }
+}
+
 function project() {
   const dir = mkdtempSync(join(tmpdir(), "smart-programs-data-"));
   dirs.push(dir);
-  cpSync(join(repo, "scripts"), join(dir, "scripts"), { recursive: true });
+  copyTree(join(repo, "scripts"), join(dir, "scripts"));
   return dir;
 }
 
@@ -58,7 +79,7 @@ describe("db.ts upsert / dedupe", () => {
     const cols = (name: string) => (db.query(`PRAGMA table_info(${name})`).all() as { name: string }[]).map((r) => r.name);
     expect(cols("candidates")).toEqual(expect.arrayContaining(["name_zh", "description_zh"]));
     expect(cols("scored")).toContain("summary_zh");
-  });
+  }, SLOW_TEST_MS);
 
   test("same (source, external_id) is one row: first insert is new, a later sighting is not, identity fields are kept", async () => {
     const { db, upsertCandidate } = await loadDb(project());
@@ -75,7 +96,16 @@ describe("db.ts upsert / dedupe", () => {
     expect(row.first_seen).toBe("2020-01-01 00:00:00");
     expect(row.last_seen > row.first_seen).toBe(true);
     expect((db.query("SELECT COUNT(*) AS n FROM candidates").get() as { n: number }).n).toBe(1);
-  });
+  }, SLOW_TEST_MS);
+
+  test("a repeat sighting within the same second is not counted as new", async () => {
+    const { db, upsertCandidate } = await loadDb(project());
+    const first = upsertCandidate({ source: "hackernews", external_id: "dup", name: "Dup", signal_score: 10 });
+    const again = upsertCandidate({ source: "hackernews", external_id: "dup", name: "Dup", signal_score: 20 });
+    expect(first.is_new).toBe(true);
+    expect(again).toEqual({ id: first.id, is_new: false });
+    expect((db.query("SELECT signal_score FROM candidates WHERE id = ?").get(first.id) as { signal_score: number }).signal_score).toBe(20);
+  }, SLOW_TEST_MS);
 
   test("a repeat sighting within the same second is not counted as new", async () => {
     const { db, upsertCandidate } = await loadDb(project());
@@ -93,14 +123,14 @@ describe("db.ts upsert / dedupe", () => {
     expect(a.id).not.toBe(b.id);
     expect(b.is_new).toBe(true);
     expect((db.query("SELECT COUNT(*) AS n FROM candidates").get() as { n: number }).n).toBe(2);
-  });
+  }, SLOW_TEST_MS);
 
   test("missing optional fields are stored as NULL, payload as JSON", async () => {
     const { db, upsertCandidate } = await loadDb(project());
     const { id } = upsertCandidate({ source: "s", external_id: "1" });
     const row = db.query("SELECT * FROM candidates WHERE id = ?").get(id) as Record<string, any>;
     expect([row.name, row.url, row.title, row.description, row.signal_score, row.raw_payload]).toEqual([null, null, null, null, null, null]);
-  });
+  }, SLOW_TEST_MS);
 
   test("listRecentCandidates filters by age and source and orders by signal; listTopScored honours the minimum total", async () => {
     const { db, upsertCandidate, listRecentCandidates, listTopScored } = await loadDb(project());
@@ -113,7 +143,7 @@ describe("db.ts upsert / dedupe", () => {
     db.query("INSERT INTO scored (candidate_id, total, tier) VALUES (?, 30, '⭐⭐⭐'), (?, 20, '✗')").run(high, low);
     expect((listTopScored() as { name: string }[]).map((r) => r.name)).toEqual(["high"]);
     expect(listTopScored({ minTotal: 10 })).toHaveLength(2);
-  });
+  }, SLOW_TEST_MS);
 });
 
 describe("import-scores.ts (LLM score validation gate)", () => {
@@ -145,7 +175,7 @@ describe("import-scores.ts (LLM score validation gate)", () => {
     expect([scored[0].window_estimate, scored[0].summary_zh]).toEqual(["3-6个月", "中文点评"]);
     const filtered = db.query("SELECT passed_b, dropped_reason FROM filtered WHERE candidate_id = ?").get(ids[2]) as Record<string, any>;
     expect(filtered).toEqual({ passed_b: 0, dropped_reason: "no paying users" });
-  });
+  }, SLOW_TEST_MS);
 
   test("tier thresholds: 28+ is three stars, 22-27 two, below 22 or any failed filter is a cross", async () => {
     const { ids, importer } = await setup(3);
@@ -160,7 +190,7 @@ describe("import-scores.ts (LLM score validation gate)", () => {
     expect(importer([good(ids[0], { ...dims(30), passed_c: 0, tier: "⭐⭐⭐", reason_if_dropped: "x" })]).code).not.toBe(0);
     expect(importer([good(ids[0], { ...dims(21), tier: "✗" })]).code).toBe(0);
     expect(importer([good(ids[1], { ...dims(22), tier: "⭐⭐" })]).code).toBe(0);
-  });
+  }, SLOW_TEST_MS);
 
   test("a single bad row rejects the whole file and writes nothing", async () => {
     const { ids, importer, count_ } = await setup(3);
@@ -169,7 +199,7 @@ describe("import-scores.ts (LLM score validation gate)", () => {
     expect(r.err).toContain("scores[1].total does not equal the seven dimensions");
     expect(count_("scored")).toBe(0);
     expect(count_("filtered")).toBe(0);
-  });
+  }, SLOW_TEST_MS);
 
   test("malformed rows are rejected with a precise message", async () => {
     const { ids, importer, count_ } = await setup(2);
@@ -194,7 +224,7 @@ describe("import-scores.ts (LLM score validation gate)", () => {
     }
     expect(importer("{ not json").code).not.toBe(0);
     expect(count_("scored")).toBe(0);
-  });
+  }, SLOW_TEST_MS);
 
   test("only current-month candidates with signal >= 50 can be scored", async () => {
     const { db, upsertCandidate, importer } = await setup(0);
@@ -204,6 +234,18 @@ describe("import-scores.ts (LLM score validation gate)", () => {
     expect(importer([good(weak)]).err).toContain("not an eligible current-month candidate");
     expect(importer([good(old)]).err).toContain("not an eligible current-month candidate");
     expect(importer([good(fine)]).code).toBe(0);
+  }, SLOW_TEST_MS);
+
+  test("replaying a score cannot replace a different coarse-filter decision", async () => {
+    const { ids, importer, db } = await setup(1);
+    const dropped = good(ids[0], { passed_a: 0, tier: "✗", reason_if_dropped: "No evidence" });
+    expect(importer([dropped]).code).toBe(0);
+    // Same dimensions, total and tier; a different failing question is still a conflict.
+    const result = importer([{ ...dropped, passed_a: 1, passed_b: 0 }]);
+    expect(result.code).not.toBe(0);
+    expect(result.err).toContain("already has a different coarse filter");
+    expect(db.query("SELECT passed_a, passed_b FROM filtered WHERE candidate_id = ?").get(ids[0]))
+      .toEqual({ passed_a: 0, passed_b: 1 });
   });
 
   test("re-importing the identical score is idempotent, a conflicting score is refused and leaves the old one intact", async () => {
@@ -215,7 +257,7 @@ describe("import-scores.ts (LLM score validation gate)", () => {
     expect(changed.code).not.toBe(0);
     expect(changed.err).toContain("already has a different score");
     expect((db.query("SELECT total FROM scored").get() as { total: number }).total).toBe(28);
-  });
+  }, SLOW_TEST_MS);
 });
 
 describe("import-scores.ts atomic apply", () => {
@@ -232,7 +274,7 @@ describe("import-scores.ts atomic apply", () => {
     expect(r.err).toContain("simulated disk failure");
     expect((db.query("SELECT COUNT(*) AS n FROM scored").get() as { n: number }).n).toBe(0);
     expect((db.query("SELECT COUNT(*) AS n FROM filtered").get() as { n: number }).n).toBe(0);
-  });
+  }, SLOW_TEST_MS);
 
   test("the conflicting-score guard is what refuses a changed score (identical rows are accepted, changed ones are not)", async () => {
     const dir = project();
@@ -248,7 +290,7 @@ describe("import-scores.ts atomic apply", () => {
     // an identical score with a re-worded summary is accepted and refreshes the text
     expect(importer(good(id, { summary: "新的点评" })).code).toBe(0);
     expect((db.query("SELECT summary_zh FROM scored").get() as { summary_zh: string }).summary_zh).toBe("新的点评");
-  });
+  }, SLOW_TEST_MS);
 });
 
 describe("export-unscored.ts", () => {
@@ -271,7 +313,7 @@ describe("export-unscored.ts", () => {
     expect(rows[0].trend_6m).toBe("new-trend");
     expect(rows[1].id).toBe(mid);
     expect(statSync(output).mode & 0o777).toBe(0o600);
-  });
+  }, SLOW_TEST_MS);
 
   test("--limit is honoured, capped at 100 and falls back to 30 when invalid", async () => {
     const dir = project();
@@ -286,7 +328,7 @@ describe("export-unscored.ts", () => {
     expect(count("500")).toBe(100);
     expect(count("abc")).toBe(30);
     expect(count("-3")).toBe(30);
-  });
+  }, SLOW_TEST_MS);
 });
 
 describe("source parsers (fetch mocked)", () => {
@@ -322,7 +364,7 @@ describe("source parsers (fetch mocked)", () => {
     db.query("UPDATE candidates SET first_seen = '2020-01-01 00:00:00', last_seen = '2020-01-01 00:00:00'").run();
     expect(await fetchHackerNews()).toBe(0);
     expect((db.query("SELECT COUNT(*) AS n FROM candidates").get() as { n: number }).n).toBe(2);
-  });
+  }, SLOW_TEST_MS);
 
   test("hackernews: an API error is raised (so the pipeline reports the source as failed) and stores nothing", async () => {
     const dir = project();
@@ -331,7 +373,7 @@ describe("source parsers (fetch mocked)", () => {
     mockFetch(() => json({ message: "unavailable" }, 503));
     await expect(fetchHackerNews()).rejects.toThrow("HN API 503");
     expect((db.query("SELECT COUNT(*) AS n FROM candidates").get() as { n: number }).n).toBe(0);
-  });
+  }, SLOW_TEST_MS);
 
   test("reddit: skips NSFW and low-score posts, prefers the external link, isolates failing subreddits, sends a custom User-Agent", async () => {
     const dir = project();
@@ -356,7 +398,7 @@ describe("source parsers (fetch mocked)", () => {
     expect(rows[1].url).toBe("https://www.reddit.com/r/SideProject/comments/b/d/");
     expect(calls.length).toBeGreaterThanOrEqual(9); // every subreddit was still attempted after the failures
     expect(new Headers(calls[0].init?.headers).get("User-Agent")).toContain("smart-programs-research");
-  }, 30_000);
+  }, SLOW_TEST_MS);
 });
 
 describe("daily-digest.ts", () => {
@@ -378,7 +420,7 @@ describe("daily-digest.ts", () => {
     expect(html).toContain("今日无新增候选");
     expect(md).toContain("# 机会简报 — 2026-03-15");
     expect(md).toContain("_无_");
-  });
+  }, SLOW_TEST_MS);
 
   test("scored candidates and the day's fresh signals appear in both formats; Chinese fields win, English is the fallback", async () => {
     const { r, html, md } = await digest(({ db, upsertCandidate }) => {
@@ -396,7 +438,7 @@ describe("daily-digest.ts", () => {
     expect(html).toContain('<span class="zh">阿尔法工具</span><span class="en">AlphaTool</span>');
     expect(html).toContain("中文点评甲");
     expect(html).toContain('<div class="stat t3"><div class="n">1</div>');
-  });
+  }, SLOW_TEST_MS);
 
   test("hostile names, descriptions and URLs are HTML-escaped", async () => {
     const { html } = await digest(({ db, upsertCandidate }) => {
@@ -408,7 +450,7 @@ describe("daily-digest.ts", () => {
     expect(html).not.toContain('href="https://e.com/"onmouseover');
     expect(html).toContain("&lt;img src=x onerror=alert(1)&gt;");
     expect(html).toContain("https://e.com/&quot;onmouseover=&quot;alert(2)");
-  });
+  }, SLOW_TEST_MS);
 
   test("scores older than the look-back window are left out", async () => {
     const { r } = await digest(({ db, upsertCandidate }) => {
@@ -416,5 +458,5 @@ describe("daily-digest.ts", () => {
       db.query("INSERT INTO scored (candidate_id, total, tier, scored_at) VALUES (?, 30, '⭐⭐⭐', '2000-01-01 00:00:00')").run(id);
     });
     expect(r.out).toContain("⭐⭐⭐=0");
-  });
+  }, SLOW_TEST_MS);
 });

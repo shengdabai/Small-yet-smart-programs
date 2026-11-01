@@ -3,6 +3,10 @@ import { existsSync, mkdtempSync, mkdirSync, readdirSync, readFileSync, rmSync, 
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 
+// bun 1.3.x ignores [test] timeout in bunfig.toml and every test defaults to 5 s, but a test that starts a bash or bun
+// child process can take 20-70 s when the machine is busy. These tests therefore carry an explicit per-test timeout.
+const SLOW_TEST_MS = 60_000;
+
 // Process-lock regression tests. Ported from the desktop clone's ededc86 hardening (tests/automation-security.test.ts),
 // adapted to the runtime copy: LOGDIR / LOCKD names and the SMART_PROGRAMS_LIBRARY_ONLY
 // source guard. acquire_lock exit codes: 0 = acquired, 75 = busy, anything else = error.
@@ -74,7 +78,7 @@ describe("daily-scan process lock", () => {
     const contender = bash(logdir, 'source "$1"; acquire_lock; exit $?');
     expect(contender.exitCode).toBe(BUSY);
     expect(await owner.exited).toBe(0);
-  });
+  }, SLOW_TEST_MS);
 
   test("allows exactly one concurrent contender to recover a valid stale lock", async () => {
     const logdir = freshLogdir();
@@ -85,7 +89,7 @@ describe("daily-scan process lock", () => {
     expect(await a.exited).toBe(0);
     expect(await b.exited).toBe(0);
     expect(names(logdir, "entered.").length).toBe(1);
-  });
+  }, SLOW_TEST_MS);
 
   test("recovers when a crashed claimant left an orphaned guard file", async () => {
     const logdir = freshLogdir();
@@ -98,7 +102,7 @@ describe("daily-scan process lock", () => {
     expect(await a.exited).toBe(0);
     expect(await b.exited).toBe(0);
     expect(names(logdir, "recovered.").length).toBe(1);
-  });
+  }, SLOW_TEST_MS);
 
   test("exactly one contender recovers an old lock directory with no metadata", async () => {
     const logdir = freshLogdir();
@@ -111,7 +115,7 @@ describe("daily-scan process lock", () => {
     expect(await a.exited).toBe(0);
     expect(await b.exited).toBe(0);
     expect(names(logdir, "empty-recovered.").length).toBe(1);
-  });
+  }, SLOW_TEST_MS);
 
   test("old partial or invalid metadata is recoverable only under the guard", () => {
     const logdir = freshLogdir();
@@ -122,7 +126,7 @@ describe("daily-scan process lock", () => {
     makeLock(logdir, { pid: "not-a-pid\n", started: "1\n" });
     utimesSync(lock, new Date(0), new Date(0));
     expect(bash(logdir, 'source "$1"; acquire_lock && release_lock').exitCode).toBe(0);
-  });
+  }, SLOW_TEST_MS);
 
   test("does not take an incomplete lock while its creator holds the kernel guard", async () => {
     const logdir = freshLogdir();
@@ -144,7 +148,7 @@ describe("daily-scan process lock", () => {
     const contender = bash(logdir, 'source "$1"; acquire_lock; exit $?', "0");
     expect(contender.exitCode).toBe(BUSY);
     expect(await creator.exited).toBe(0);
-  });
+  }, SLOW_TEST_MS);
 
   test("a live owner in another user's namespace (kill -0 EPERM) keeps the lock", () => {
     const logdir = freshLogdir();
@@ -154,7 +158,7 @@ describe("daily-scan process lock", () => {
 
     expect(result.exitCode).toBe(BUSY);
     expect(readFileSync(join(lock, "pid"), "utf8").trim()).toBe("1");
-  });
+  }, SLOW_TEST_MS);
 
   test("a dead owner's lock is reclaimed only after the stale-age threshold", () => {
     const logdir = freshLogdir();
@@ -169,7 +173,7 @@ describe("daily-scan process lock", () => {
     const old = bash(logdir, 'source "$1"; acquire_lock && release_lock', "900");
     expect(old.exitCode).toBe(0);
     expect(existsSync(lock)).toBe(false);
-  });
+  }, SLOW_TEST_MS);
 
   test("reclaim renames the old lock away and keeps files it does not recognise", () => {
     const logdir = freshLogdir();
@@ -184,7 +188,7 @@ describe("daily-scan process lock", () => {
     expect(parked.length).toBe(1);
     expect(readFileSync(join(logdir, parked[0], "keep.txt"), "utf8")).toBe("do not delete\n");
     expect(existsSync(lock)).toBe(true);
-  });
+  }, SLOW_TEST_MS);
 
   test("a legacy pid-only lock (the shape left by the old script / archiver) is reclaimed by age", () => {
     const logdir = freshLogdir();
@@ -197,7 +201,7 @@ describe("daily-scan process lock", () => {
     const old = bash(logdir, 'source "$1"; acquire_lock && release_lock', "900");
     expect(old.exitCode).toBe(0);
     expect(existsSync(lock)).toBe(false);
-  });
+  }, SLOW_TEST_MS);
 
   test("a legacy pid-only lock whose owner is still alive is never reclaimed, however old", () => {
     const logdir = freshLogdir();
@@ -209,7 +213,7 @@ describe("daily-scan process lock", () => {
     expect(existsSync(lock)).toBe(true);
     expect(readFileSync(join(lock, "pid"), "utf8")).toBe(`${process.pid}\n`);
     expect(names(logdir, ".smart-programs.lockd.stale.").length).toBe(0);
-  });
+  }, SLOW_TEST_MS);
 
   test("a lock whose recorded process identity no longer matches its pid (pid reused) is reclaimed", () => {
     const logdir = freshLogdir();
@@ -221,7 +225,7 @@ describe("daily-scan process lock", () => {
     const result = bash(logdir, 'source "$1"; acquire_lock && release_lock', "900");
     expect(result.exitCode).toBe(0);
     expect(existsSync(lock)).toBe(false);
-  });
+  }, SLOW_TEST_MS);
 
   test("a lock whose recorded identity matches the live pid stays held, however old", () => {
     const logdir = freshLogdir();
@@ -233,7 +237,7 @@ describe("daily-scan process lock", () => {
     const result = bash(logdir, 'source "$1"; acquire_lock; exit $?', "900");
     expect(result.exitCode).toBe(BUSY);
     expect(existsSync(lock)).toBe(true);
-  });
+  }, SLOW_TEST_MS);
 
   test("a live owner stays held when the contender runs in a different time zone", () => {
     const logdir = freshLogdir();
@@ -250,7 +254,7 @@ describe("daily-scan process lock", () => {
       expect(result.exitCode).toBe(BUSY);
     }
     expect(existsSync(lock)).toBe(true);
-  });
+  }, SLOW_TEST_MS);
 
   test("an identity without the version tag cannot be verified, so a live owner keeps the lock", () => {
     const logdir = freshLogdir();
@@ -258,27 +262,27 @@ describe("daily-scan process lock", () => {
     const result = bash(logdir, 'source "$1"; acquire_lock; exit $?', "900");
     expect(result.exitCode).toBe(BUSY);
     expect(existsSync(lock)).toBe(true);
-  });
+  }, SLOW_TEST_MS);
 
   test("an acquired lock records the owner's identity and release removes every metadata file", () => {
     const logdir = freshLogdir();
     const result = bash(logdir, 'source "$1"; acquire_lock || exit 9; grep -Eq "^v2 [A-Z][a-z]{2} " "$LOCKD/identity" || exit 8; release_lock; exit 0');
     expect(result.exitCode).toBe(0);
     expect(existsSync(lockPath(logdir))).toBe(false);
-  });
+  }, SLOW_TEST_MS);
 
   test("release_lock never removes a lock owned by another process", () => {
     const logdir = freshLogdir();
     const lock = staleLock(logdir, "424242", "1");
     expect(bash(logdir, 'source "$1"; release_lock').exitCode).toBe(0);
     expect(readFileSync(join(lock, "pid"), "utf8").trim()).toBe("424242");
-  });
+  }, SLOW_TEST_MS);
 
   test("release_lock leaves no directory behind so the post-delivery archiver can mkdir it", () => {
     const logdir = freshLogdir();
     expect(bash(logdir, 'source "$1"; acquire_lock && release_lock').exitCode).toBe(0);
     expect(existsSync(lockPath(logdir))).toBe(false);
-  });
+  }, SLOW_TEST_MS);
 
   test("a live holder is reported through LOCK_HELD_PID so the watchdog can age it", async () => {
     const logdir = freshLogdir();
@@ -288,7 +292,7 @@ describe("daily-scan process lock", () => {
     const contender = bash(logdir, 'source "$1"; acquire_lock; echo "rc=$? held=$LOCK_HELD_PID"');
     expect(contender.stdout.toString()).toMatch(/rc=75 held=\d+/);
     expect(await owner.exited).toBe(0);
-  });
+  }, SLOW_TEST_MS);
 
   test("an unusable python is an error, not a silent skip", () => {
     const logdir = freshLogdir();
@@ -298,5 +302,5 @@ describe("daily-scan process lock", () => {
     });
     expect(result.exitCode).not.toBe(0);
     expect(result.exitCode).not.toBe(BUSY);
-  });
+  }, SLOW_TEST_MS);
 });

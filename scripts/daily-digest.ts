@@ -14,6 +14,8 @@
  * 用法: bun run scripts/daily-digest.ts [--date YYYY-MM-DD] [--days 30]
  */
 import { db, init } from "./db.ts";
+import { candidateHref } from "./report-links.ts";
+import { reportDays, reportNumber } from "./report-values.ts";
 import { writeFileSync, mkdirSync, existsSync } from "node:fs";
 
 init();
@@ -24,7 +26,14 @@ function arg(name: string, def: string): string {
   return i >= 0 && args[i + 1] ? args[i + 1] : def;
 }
 const today = arg("--date", new Date().toISOString().slice(0, 10));
-const lookbackDays = parseInt(arg("--days", "30"), 10);
+if (!/^\d{4}-\d{2}-\d{2}$/.test(today) ||
+    !Number.isFinite(Date.parse(today)) || new Date(today).toISOString().slice(0, 10) !== today) {
+  throw new Error("--date must be a real YYYY-MM-DD date");
+}
+if (args.includes("--date") && (!args[args.indexOf("--date") + 1] || args[args.indexOf("--date") + 1].startsWith("--"))) {
+  throw new Error("--date must be a real YYYY-MM-DD date");
+}
+const lookbackDays = reportDays(args, 30);
 
 const ROOT = decodeURIComponent(new URL("../", import.meta.url).pathname);
 const DAILY_DIR = ROOT + "daily/";
@@ -58,10 +67,15 @@ const fresh = db.query(`
          NULL as replication_difficulty, NULL as why_them,
          c.first_seen, NULL as scored_at
   FROM candidates c
-  WHERE date(c.first_seen) = date('${today}')
+  WHERE date(c.first_seen) = date(?)
   ORDER BY c.signal_score DESC NULLS LAST
   LIMIT 15
-`).all() as Row[];
+`).all(today) as Row[];
+
+for (const row of [...longTerm, ...fresh]) {
+  row.total = reportNumber(row.total, 7, 35);
+  row.signal_score = reportNumber(row.signal_score);
+}
 
 const triple = longTerm.filter((r) => r.tier === "⭐⭐⭐");
 const double = longTerm.filter((r) => r.tier === "⭐⭐");
@@ -113,12 +127,12 @@ function card(r: Row): string {
   const diff = r.replication_difficulty ? `<span class="pill">复刻 ${esc(r.replication_difficulty)}</span>` : "";
   return `<article class="card">
     <div class="card-head">
-      <a class="name" href="${esc(r.url)}" target="_blank" rel="noopener"><span class="zh">${esc(zhName(r))}</span><span class="en">${esc(r.name)}</span></a>${badge}
+      <a class="name" href="${esc(candidateHref(r.url))}" target="_blank" rel="noopener"><span class="zh">${esc(zhName(r))}</span><span class="en">${esc(r.name)}</span></a>${badge}
     </div>
     <div class="src">${esc(r.source)}</div>
     <p class="desc"><span class="zh">${short(zhDesc(r))}</span><span class="en">${short(r.description)}</span></p>
     <div class="pills">${win}${diff}</div>
-    <a class="src-link" href="${esc(r.url)}" target="_blank" rel="noopener">🔗 <span class="zh">查看原项目</span><span class="en">View source</span> ↗</a>
+    <a class="src-link" href="${esc(candidateHref(r.url))}" target="_blank" rel="noopener">🔗 <span class="zh">查看原项目</span><span class="en">View source</span> ↗</a>
   </article>`;
 }
 function htmlSection(rows: Row[], emptyZh: string, emptyEn: string): string {
