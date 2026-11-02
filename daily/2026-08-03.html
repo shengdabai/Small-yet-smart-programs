@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>机会简报 2026-08-03 · Opportunity Briefing</title>
+<style>
+:root{--bg:#0f1115;--card:#171a21;--line:#262b36;--ink:#e8eaed;--mut:#9aa3b2;--gold:#d4a72c;--p3:#b06cd4;--acc:#4a9eff}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--ink);font-family:-apple-system,"PingFang SC","Segoe UI",system-ui,sans-serif;line-height:1.6}
+.wrap{max-width:1100px;margin:0 auto;padding:32px 20px 80px}
+header{border-bottom:1px solid var(--line);padding-bottom:20px;margin-bottom:28px;display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:12px}
+h1{font-size:1.7rem;letter-spacing:-.01em}
+.date{color:var(--mut);font-family:ui-monospace,monospace;font-size:.85rem}
+.toggle{display:flex;gap:6px}
+.toggle button{background:var(--card);color:var(--mut);border:1px solid var(--line);padding:6px 14px;border-radius:6px;cursor:pointer;font-size:.85rem}
+.toggle button.on{background:var(--acc);color:#fff;border-color:var(--acc)}
+.summary{display:flex;gap:18px;margin-bottom:28px;flex-wrap:wrap}
+.stat{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px 20px;min-width:120px}
+.stat .n{font-size:2rem;font-weight:700}
+.stat.t3 .n{color:var(--p3)} .stat.t2 .n{color:var(--gold)}
+.stat .l{color:var(--mut);font-size:.78rem;text-transform:uppercase;letter-spacing:.05em}
+h2{font-size:1.15rem;margin:32px 0 14px;padding-left:10px;border-left:3px solid var(--acc)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:14px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:16px}
+.card-head{display:flex;justify-content:space-between;align-items:start;gap:8px;margin-bottom:4px}
+.name{color:var(--ink);font-weight:600;text-decoration:none;font-size:1.02rem}
+.name:hover{color:var(--acc)}
+.badge{font-size:.72rem;font-family:ui-monospace,monospace;padding:2px 8px;border-radius:20px;white-space:nowrap;background:#222}
+.badge.t3{background:rgba(176,108,212,.2);color:var(--p3)} .badge.t2{background:rgba(212,167,44,.2);color:var(--gold)} .badge.sig{color:var(--mut)}
+.src{color:var(--mut);font-size:.72rem;font-family:ui-monospace,monospace;margin-bottom:8px}
+.desc{color:#c4cad6;font-size:.9rem;margin-bottom:10px}
+.pills{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
+.src-link{display:inline-block;font-size:.82rem;color:var(--acc);text-decoration:none;border:1px solid var(--acc);border-radius:6px;padding:5px 12px;transition:.15s}
+.src-link:hover{background:var(--acc);color:#fff}
+.pill{font-size:.7rem;color:var(--mut);border:1px solid var(--line);padding:2px 8px;border-radius:20px}
+.muted{color:var(--mut);font-style:italic;padding:8px 0}
+.disclaimer{margin-top:40px;padding:16px 20px;background:rgba(212,167,44,.08);border:1px solid rgba(212,167,44,.3);border-radius:10px;color:var(--mut);font-size:.86rem}
+footer{margin-top:40px;color:var(--mut);font-size:.78rem;text-align:center;font-family:ui-monospace,monospace}
+.en{display:none}
+body.lang-en .zh{display:none} body.lang-en .en{display:inline}
+</style>
+</head>
+<body class="lang-zh">
+<div class="wrap">
+<header>
+  <div>
+    <h1><span class="zh">机会简报</span><span class="en">Opportunity Briefing</span></h1>
+    <div class="date">2026-08-03 · smart-programs</div>
+  </div>
+  <div class="toggle">
+    <button id="b-zh" class="on" onclick="setLang('zh')">中文</button>
+    <button id="b-en" onclick="setLang('en')">EN</button>
+  </div>
+</header>
+
+<div class="summary">
+  <div class="stat t3"><div class="n">0</div><div class="l">⭐⭐⭐</div></div>
+  <div class="stat t2"><div class="n">3</div><div class="l">⭐⭐</div></div>
+  <div class="stat"><div class="n">15</div><div class="l"><span class="zh">今日新信号</span><span class="en">fresh today</span></div></div>
+</div>
+
+<h2><span class="zh">值得长期推进</span><span class="en">Worth pursuing — top picks</span></h2>
+<p class="muted"><span class="zh">本期暂无 ⭐⭐⭐(诚实结果,继续手头项目)</span><span class="en">No ⭐⭐⭐ this round (an honest result — keep building).</span></p>
+
+<h2><span class="zh">备选(3 个月后回访)</span><span class="en">Shortlist (revisit in 3 months)</span></h2>
+<div class="grid"><article class="card">
+    <div class="card-head">
+      <a class="name" href="https://github.com/Rodiun/frugon" target="_blank" rel="noopener"><span class="zh">Frugon – Find which LLM calls a cheaper model could handle (local, MIT)</span><span class="en">Frugon – Find which LLM calls a cheaper model could handle (local, MIT)</span></a><span class="badge t2">⭐⭐ 24</span>
+    </div>
+    <div class="src">hackernews</div>
+    <p class="desc"><span class="zh">LLM 调用成本优化 CLI，分析日志找可降级调用，演示省 37%；赛道热但竞品多且有融资</span><span class="en">I started leaning in on AI heavily this year, as I wanted to get more done autonomously, but then my token usage climbed dramatically to the point where my weekly quota would run out before the end of…</span></p>
+    <div class="pills"><span class="pill">6-12 months — LLM cost tools consolidating rapidly</span><span class="pill">复刻 low — Python CLI + RouteLLM is well-documented; could replicate in days</span></div>
+    <a class="src-link" href="https://github.com/Rodiun/frugon" target="_blank" rel="noopener">🔗 <span class="zh">查看原项目</span><span class="en">View source</span> ↗</a>
+  </article><article class="card">
+    <div class="card-head">
+      <a class="name" href="https://github.com/dicroce/wyrm_math" target="_blank" rel="noopener"><span class="zh">Wyrm – Solve algebra by touch, built on an open-source soundness engine</span><span class="en">Wyrm – Solve algebra by touch, built on an open-source soundness engine</span></a><span class="badge t2">⭐⭐ 23</span>
+    </div>
+    <div class="src">hackernews</div>
+    <p class="desc"><span class="zh">触屏代数解题游戏，$4.99 已上架 iOS/Android；DragonBox 验证了品类，开源引擎可中文化</span><span class="en">There is a mobile game called DragonBox. It sort of tricks you into learning algebra by starting with very abstract manipulations of a puzzle that must follow rules... gradually the game teaches you m…</span></p>
+    <div class="pills"><span class="pill">evergreen — no closing window, steady demand</span><span class="pill">复刻 moderate — math engine is open source but game UX/polish is the real barrier</span></div>
+    <a class="src-link" href="https://github.com/dicroce/wyrm_math" target="_blank" rel="noopener">🔗 <span class="zh">查看原项目</span><span class="en">View source</span> ↗</a>
+  </article><article class="card">
+    <div class="card-head">
+      <a class="name" href="https://deepsql.ai/" target="_blank" rel="noopener"><span class="zh">DeepSQL – A self-hostable DBA agent for Postgres and MySQL</span><span class="en">DeepSQL – A self-hostable DBA agent for Postgres and MySQL</span></a><span class="badge t2">⭐⭐ 22</span>
+    </div>
+    <div class="src">hackernews</div>
+    <p class="desc"><span class="zh">Hi HN - I&amp;#x27;m Venkat, founder of Stayflexi (YC), CMU CS grad and Ex-Oracle Query Engine team (patents in core databases)DeepSQL started as an internal tool to stop our own databases from becoming t…</span><span class="en">Hi HN - I&amp;#x27;m Venkat, founder of Stayflexi (YC), CMU CS grad and Ex-Oracle Query Engine team (patents in core databases)DeepSQL started as an internal tool to stop our own databases from becoming t…</span></p>
+    <div class="pills"><span class="pill">6-12月</span></div>
+    <a class="src-link" href="https://deepsql.ai/" target="_blank" rel="noopener">🔗 <span class="zh">查看原项目</span><span class="en">View source</span> ↗</a>
+  </article></div>
+
+<h2><span class="zh">最新产品信号</span><span class="en">Fresh signals today</span></h2>
+<div class="grid"><article class="card">
+    <div class="card-head">
+      <a class="name" href="https://github.com/wie-project/kakehashi" target="_blank" rel="noopener"><span class="zh">Kakehashi – Experimental userspace to run macOS binaries on Linux ARM</span><span class="en">Kakehashi – Experimental userspace to run macOS binaries on Linux ARM</span></a><span class="badge sig"><span class="zh">热度 194</span><span class="en">signal 194</span></span>
+    </div>
+    <div class="src">hackernews</div>
+    <p class="desc"><span class="zh"></span><span class="en"></span></p>
+    <div class="pills"></div>
+    <a class="src-link" href="https://github.com/wie-project/kakehashi" target="_blank" rel="noopener">🔗 <span class="zh">查看原项目</span><span class="en">View source</span> ↗</a>
+  </article><article class="card">
+    <div class="card-head">
+      <a class="name" href="https://getbor.dev/blog/2026-08-02-bor-v080-release/" target="_blank" rel="noopener"><span class="zh">Bor – Open-source policy management for Linux desktops</span><span class="en">Bor – Open-source policy management for Linux desktops</span></a><span class="badge sig"><span class="zh">热度 172</span><span class="en">signal 172</span></span>
+    </div>
+    <div class="src">hackernews</div>
+    <p class="desc"><span class="zh">Hi HN! I&amp;#x27;ve been working on Bor, an open-source system for centralized Linux desktop management.Bor consists of a lightweight Go agent and a central server. Policies are streamed to clients over …</span><span class="en">Hi HN! I&amp;#x27;ve been working on Bor, an open-source system for centralized Linux desktop management.Bor consists of a lightweight Go agent and a central server. Policies are streamed to clients over …</span></p>
+    <div class="pills"></div>
+    <a class="src-link" href="https://getbor.dev/blog/2026-08-02-bor-v080-release/" target="_blank" rel="noopener">🔗 <span class="zh">查看原项目</span><span class="en">View source</span> ↗</a>
+  </article><article class="card">
+    <div class="card-head">
+      <a class="name" href="https://sprocket-demo.spikonado.com" target="_blank" rel="noopener"><span class="zh">Sprocket – The Best AI Agent for Hardware and Software Development</span><span class="en">Sprocket – The Best AI Agent for Hardware and Software Development</span></a><span class="badge sig"><span class="zh">热度 123</span><span class="en">signal 123</span></span>
+    </div>
+    <div class="src">hackernews</div>
+    <p class="desc"><span class="zh">Hey HN, I am 16y&amp;#x2F;o and have been working on Sprocket for a while. It&amp;#x27;s an open-source AI agent that beats every other agent out there at both hardware and software.And here&amp;#x27;s the best p…</span><span class="en">Hey HN, I am 16y&amp;#x2F;o and have been working on Sprocket for a while. It&amp;#x27;s an open-source AI agent that beats every other agent out there at both hardware and software.And here&amp;#x27;s the best p…</span></p>
+    <div class="pills"></div>
+    <a class="src-link" href="https://sprocket-demo.spikonado.com" target="_blank" rel="noopener">🔗 <span class="zh">查看原项目</span><span class="en">View source</span> ↗</a>
+  </article><article class="card">
+    <div class="card-head">
+      <a class="name" href="https://fuselang.org" target="_blank" rel="noopener"><span class="zh">Fuse – statically typed functional programming language</span><span class="en">Fuse – statically typed functional programming language</span></a><span class="badge sig"><span class="zh">热度 106</span><span class="en">signal 106</span></span>
+    </div>
+    <div class="src">hackernews</div>
+    <p class="desc"><span class="zh">Hi HN! I&amp;#x27;ve been working on the fuse programming language, it&amp;#x27;s a statically typed purely functional language with higher-kinder types and ad-hoc polymorphism. It compiles to the GRIN whole-…</span><span class="en">Hi HN! I&amp;#x27;ve been working on the fuse programming language, it&amp;#x27;s a statically typed purely functional language with higher-kinder types and ad-hoc polymorphism. It compiles to the GRIN whole-…</span></p>
+    <div class="pills"></div>
+    <a class="src-link" href="https://fuselang.org" target="_blank" rel="noopener">🔗 <span class="zh">查看原项目</span><span class="en">View source</span> ↗</a>
+  </article><article class="card">
+    <div class="card-head">
+      <a class="name" href="https://github.com/pg83/shitty" target="_blank" rel="noopener"><span class="zh">Shitty – fast terminal. Memory-unsafe and faster than yours</span><span class="en">Shitty – fast terminal. Memory-unsafe and faster than yours</span></a><span class="badge sig"><span class="zh">热度 104</span><span class="en">signal 104</span></span>
+    </div>
+    <div class="src">hackernews</div>
+    <p class="desc"><span class="zh"></span><span class="en"></span></p>
+    <div class="pills"></div>
+    <a class="src-link" href="https://github.com/pg83/shitty" target="_blank" rel="noopener">🔗 <span class="zh">查看原项目</span><span class="en">View source</span> ↗</a>
+  </article><article class="card">
+    <div class="card-head">
+      <a class="name" href="https://github.com/graham33/nixos-dgx-spark" target="_blank" rel="noopener"><span class="zh">NixOS-DGX-Spark – Nix and NixOS on the DGX Spark</span><span class="en">NixOS-DGX-Spark – Nix and NixOS on the DGX Spark</span></a><span class="badge sig"><span class="zh">热度 103</span><span class="en">signal 103</span></span>
+    </div>
+    <div class="src">hackernews</div>
+    <p class="desc"><span class="zh">Try DGX Spark playbooks using Nix on DGX OS, or install NixOS on your DGX Spark for the full Nix experience. The repository provides USB images and a NixOS module with settings for DGX Spark systems.T…</span><span class="en">Try DGX Spark playbooks using Nix on DGX OS, or install NixOS on your DGX Spark for the full Nix experience. The repository provides USB images and a NixOS module with settings for DGX Spark systems.T…</span></p>
+    <div class="pills"></div>
+    <a class="src-link" href="https://github.com/graham33/nixos-dgx-spark" target="_blank" rel="noopener">🔗 <span class="zh">查看原项目</span><span class="en">View source</span> ↗</a>
+  </article><article class="card">
+    <div class="card-head">
+      <a class="name" href="https://sf.isopolis.city/" target="_blank" rel="noopener"><span class="zh">Isopolis – Isometric pixel map of SF</span><span class="en">Isopolis – Isometric pixel map of SF</span></a><span class="badge sig"><span class="zh">热度 102</span><span class="en">signal 102</span></span>
+    </div>
+    <div class="src">hackernews</div>
+    <p class="desc"><span class="zh"></span><span class="en"></span></p>
+    <div class="pills"></div>
+    <a class="src-link" href="https://sf.isopolis.city/" target="_blank" rel="noopener">🔗 <span class="zh">查看原项目</span><span class="en">View source</span> ↗</a>
+  </article><article class="card">
+    <div class="card-head">
+      <a class="name" href="https://github.com/syncular/syncular" target="_blank" rel="noopener"><span class="zh">Syncular – offline-first SQL sync with TypeScript and Rust cores</span><span class="en">Syncular – offline-first SQL sync with TypeScript and Rust cores</span></a><span class="badge sig"><span class="zh">热度 75</span><span class="en">signal 75</span></span>
+    </div>
+    <div class="src">hackernews</div>
+    <p class="desc"><span class="zh"></span><span class="en"></span></p>
+    <div class="pills"></div>
+    <a class="src-link" href="https://github.com/syncular/syncular" target="_blank" rel="noopener">🔗 <span class="zh">查看原项目</span><span class="en">View source</span> ↗</a>
+  </article><article class="card">
+    <div class="card-head">
+      <a class="name" href="https://ssh.place" target="_blank" rel="noopener"><span class="zh">ssh ssh.place</span><span class="en">ssh ssh.place</span></a><span class="badge sig"><span class="zh">热度 66</span><span class="en">signal 66</span></span>
+    </div>
+    <div class="src">hackernews</div>
+    <p class="desc"><span class="zh"></span><span class="en"></span></p>
+    <div class="pills"></div>
+    <a class="src-link" href="https://ssh.place" target="_blank" rel="noopener">🔗 <span class="zh">查看原项目</span><span class="en">View source</span> ↗</a>
+  </article><article class="card">
+    <div class="card-head">
+      <a class="name" href="https://github.com/ArcaEge/creakwork12" target="_blank" rel="noopener"><span class="zh">Make your Framework 12 sound like a creaky door</span><span class="en">Make your Framework 12 sound like a creaky door</span></a><span class="badge sig"><span class="zh">热度 62</span><span class="en">signal 62</span></span>
+    </div>
+    <div class="src">hackernews</div>
+    <p class="desc"><span class="zh">I was poking through the iio devices on my Framework the other day and turns out Framework 12s have a pretty accurate hinge angle sensor! So I made a version of LidAngleSensor (https:&amp;#x2F;&amp;#x2F;githu…</span><span class="en">I was poking through the iio devices on my Framework the other day and turns out Framework 12s have a pretty accurate hinge angle sensor! So I made a version of LidAngleSensor (https:&amp;#x2F;&amp;#x2F;githu…</span></p>
+    <div class="pills"></div>
+    <a class="src-link" href="https://github.com/ArcaEge/creakwork12" target="_blank" rel="noopener">🔗 <span class="zh">查看原项目</span><span class="en">View source</span> ↗</a>
+  </article><article class="card">
+    <div class="card-head">
+      <a class="name" href="https://www.toolify.ai/tool/seedance-2-5-ai-video-generator" target="_blank" rel="noopener"><span class="zh">seedance 2 5 ai video generator</span><span class="en">seedance 2 5 ai video generator</span></a><span class="badge sig"><span class="zh">热度 5</span><span class="en">signal 5</span></span>
+    </div>
+    <div class="src">toolify</div>
+    <p class="desc"><span class="zh"></span><span class="en"></span></p>
+    <div class="pills"></div>
+    <a class="src-link" href="https://www.toolify.ai/tool/seedance-2-5-ai-video-generator" target="_blank" rel="noopener">🔗 <span class="zh">查看原项目</span><span class="en">View source</span> ↗</a>
+  </article><article class="card">
+    <div class="card-head">
+      <a class="name" href="https://www.toolify.ai/tool/trushot-ai" target="_blank" rel="noopener"><span class="zh">trushot ai</span><span class="en">trushot ai</span></a><span class="badge sig"><span class="zh">热度 5</span><span class="en">signal 5</span></span>
+    </div>
+    <div class="src">toolify</div>
+    <p class="desc"><span class="zh"></span><span class="en"></span></p>
+    <div class="pills"></div>
+    <a class="src-link" href="https://www.toolify.ai/tool/trushot-ai" target="_blank" rel="noopener">🔗 <span class="zh">查看原项目</span><span class="en">View source</span> ↗</a>
+  </article><article class="card">
+    <div class="card-head">
+      <a class="name" href="https://www.toolify.ai/tool/flux-3-ai-image-and-video-generator" target="_blank" rel="noopener"><span class="zh">flux 3 ai image and video generator</span><span class="en">flux 3 ai image and video generator</span></a><span class="badge sig"><span class="zh">热度 5</span><span class="en">signal 5</span></span>
+    </div>
+    <div class="src">toolify</div>
+    <p class="desc"><span class="zh"></span><span class="en"></span></p>
+    <div class="pills"></div>
+    <a class="src-link" href="https://www.toolify.ai/tool/flux-3-ai-image-and-video-generator" target="_blank" rel="noopener">🔗 <span class="zh">查看原项目</span><span class="en">View source</span> ↗</a>
+  </article><article class="card">
+    <div class="card-head">
+      <a class="name" href="https://www.toolify.ai/tool/makead" target="_blank" rel="noopener"><span class="zh">makead</span><span class="en">makead</span></a><span class="badge sig"><span class="zh">热度 5</span><span class="en">signal 5</span></span>
+    </div>
+    <div class="src">toolify</div>
+    <p class="desc"><span class="zh"></span><span class="en"></span></p>
+    <div class="pills"></div>
+    <a class="src-link" href="https://www.toolify.ai/tool/makead" target="_blank" rel="noopener">🔗 <span class="zh">查看原项目</span><span class="en">View source</span> ↗</a>
+  </article><article class="card">
+    <div class="card-head">
+      <a class="name" href="https://www.toolify.ai/tool/minimaxh3-app" target="_blank" rel="noopener"><span class="zh">minimaxh3 app</span><span class="en">minimaxh3 app</span></a><span class="badge sig"><span class="zh">热度 5</span><span class="en">signal 5</span></span>
+    </div>
+    <div class="src">toolify</div>
+    <p class="desc"><span class="zh"></span><span class="en"></span></p>
+    <div class="pills"></div>
+    <a class="src-link" href="https://www.toolify.ai/tool/minimaxh3-app" target="_blank" rel="noopener">🔗 <span class="zh">查看原项目</span><span class="en">View source</span> ↗</a>
+  </article></div>
+
+<div class="disclaimer">
+  <span class="zh">机器初筛 + LLM 初评。⭐⭐⭐ 仅代表"值得人工 review",不是"立刻 pivot"。pivot 前必须和手头项目比较,差 +5 分才动(见 METHODOLOGY.md 反陷阱 5)。</span>
+  <span class="en">Machine pre-filter + LLM first-pass scoring. ⭐⭐⭐ means "worth a human review", not "pivot now". Only switch if it beats your current project by +5 points (see METHODOLOGY.md, anti-trap 5).</span>
+</div>
+
+<footer>smart-programs · 7-dimension rubric (v5 SOP) · 2026-08-03</footer>
+</div>
+<script>
+function setLang(l){
+  document.body.className = 'lang-' + l;
+  document.getElementById('b-zh').classList.toggle('on', l==='zh');
+  document.getElementById('b-en').classList.toggle('on', l==='en');
+  try{ localStorage.setItem('sp-lang', l); }catch(e){}
+}
+try{ const s = localStorage.getItem('sp-lang'); if(s) setLang(s); }catch(e){}
+</script>
+</body>
+</html>

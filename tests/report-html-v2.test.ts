@@ -101,7 +101,7 @@ describe("report-html-v2.ts", () => {
     const files = readdirSync(outDir).filter((f) => f.endsWith("-report-v2.html"));
     const html = readFileSync(join(outDir, files[0]), "utf8");
     // 40 raw chars of "Tom &amp; Jerry Tools Builder Studio Pro XL", then escaped: no half entity
-    expect(html).toContain('<td class="cand-name">Tom &amp;amp; Jerry Tools Builder Studio Pro</td>');
+    expect(html).toContain('<td class="cand-name"><a href="#" target="_blank" rel="noopener">Tom &amp;amp; Jerry Tools Builder Studio Pro</a></td>');
     for (const id of ["f-tier", "f-source", "f-diff", "f-sort"]) {
       expect(html).toMatch(new RegExp(`<label class="fl">[^<]+<select id="${id}">`));
     }

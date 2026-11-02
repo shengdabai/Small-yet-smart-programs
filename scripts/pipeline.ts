@@ -11,6 +11,7 @@
  * 抓不到的源(PH / IH 反爬)会把 target_urls 写到 data/firecrawl-todo.json,
  * slash command 末尾用 Firecrawl MCP 兜底抓。
  */
+import { existsSync, readFileSync } from "node:fs";
 import { init, db } from "./db.ts";
 import { fetchHackerNews } from "./sources/hackernews.ts";
 import { fetchReddit } from "./sources/reddit.ts";
@@ -98,10 +99,9 @@ function printStats() {
 }
 
 function printFirecrawlTodo() {
-  const fs = require("node:fs");
   const path = decodeURIComponent(new URL("../data/firecrawl-todo.json", import.meta.url).pathname);
-  if (!fs.existsSync(path)) return;
-  const todo = JSON.parse(fs.readFileSync(path, "utf8"));
+  if (!existsSync(path)) return;
+  const todo = JSON.parse(readFileSync(path, "utf8"));
   const keys = Object.keys(todo);
   if (keys.length > 0) {
     console.log(`[firecrawl-todo] 待 Firecrawl MCP 兜底: ${keys.join(", ")}`);

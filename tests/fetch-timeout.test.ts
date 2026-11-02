@@ -1,4 +1,6 @@
 import { afterAll, describe, expect, test } from "bun:test";
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
 import { DEFAULT_TIMEOUT_MS, fetchWithTimeout } from "../scripts/lib/fetch.ts";
 
 // A local server that accepts the request and never answers on /hang.
@@ -38,6 +40,20 @@ describe("fetchWithTimeout", () => {
     expect(error).toBeInstanceOf(Error);
     expect((error as Error).name).toBe("TimeoutError");
     expect(Date.now() - t0).toBeLessThan(3_000);
+  });
+
+  test("no script calls fetch() directly, so every outbound request has a deadline", () => {
+    const root = join(import.meta.dir, "..", "scripts");
+    const offenders: string[] = [];
+    for (const rel of new Bun.Glob("**/*.ts").scanSync(root)) {
+      if (rel === "lib/fetch.ts") continue;
+      readFileSync(join(root, rel), "utf8").split("\n").forEach((line, i) => {
+        if (/(^|[^\w.])fetch\(/.test(line) && !line.trim().startsWith("//") && !line.trim().startsWith("*")) {
+          offenders.push(`${rel}:${i + 1}`);
+        }
+      });
+    }
+    expect(offenders).toEqual([]);
   });
 
   test("keeps a caller-supplied signal", async () => {

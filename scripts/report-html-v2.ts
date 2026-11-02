@@ -14,9 +14,11 @@
  */
 import { db, init } from "./db.ts";
 import { writeFileSync, mkdirSync, existsSync, readFileSync } from "node:fs";
-import { execSync } from "node:child_process";
+import { execFileSync } from "node:child_process";
 import { loadProfile } from "./profile.ts";
-import { esc, positiveInt, safeHref, short } from "./lib/html.ts";
+import { esc, short } from "./lib/html.ts";
+import { candidateHref } from "./report-links.ts";
+import { reportDays, reportNumber } from "./report-values.ts";
 
 init();
 const profile = loadProfile();
@@ -28,8 +30,7 @@ const REPORTS_DIR = (outIdx >= 0 && args[outIdx + 1]
   : decodeURIComponent(new URL("../reports/", import.meta.url).pathname)).replace(/\/?$/, "/");
 if (!existsSync(REPORTS_DIR)) mkdirSync(REPORTS_DIR, { recursive: true });
 
-const daysIdx = args.indexOf("--days");
-const days = positiveInt(daysIdx >= 0 ? args[daysIdx + 1] : undefined, 60);
+const days = reportDays(args, 60);
 
 type Cand = {
   id: number;
@@ -67,6 +68,14 @@ const rows = db
      LIMIT 500`,
   )
   .all() as Cand[];
+
+for (const row of rows) {
+  row.total = reportNumber(row.total, 7, 35);
+  row.signal_score = reportNumber(row.signal_score);
+  for (const key of ["d1_market", "d2_pain", "d3_paying", "d4_replicable", "d5_window", "d6_assets_fit", "d7_moat"] as const) {
+    row[key] = reportNumber(row[key], 1, 5);
+  }
+}
 
 const triple = rows.filter((r) => r.tier === "⭐⭐⭐");
 const double = rows.filter((r) => r.tier === "⭐⭐");
@@ -147,7 +156,7 @@ function scatterPlot(): string {
     const y = H - P - ((total - 7) / (35 - 7)) * (H - 2 * P);
     const radius = Math.max(4, Math.min(18, sig * 4));
     const color = c.tier === "⭐⭐⭐" ? "#7A1F8E" : c.tier === "⭐⭐" ? "#B5891A" : "#8E1F2E";
-    return `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${radius.toFixed(1)}" fill="${color}" fill-opacity="0.55" stroke="${color}" stroke-width="1"><title>${esc(c.name)} | ${total}/35 | ${esc(c.replication_difficulty ?? "-")}</title></circle>`;
+    return `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${radius.toFixed(1)}" fill="${color}" fill-opacity="0.55" stroke="${color}" stroke-width="1"><title>${esc(c.name)} | ${total}/35 | ${esc(c.replication_difficulty)}</title></circle>`;
   }).join("");
 
   // 轴
@@ -206,8 +215,8 @@ function decisionMatrix(): string {
     const maxDiff = Math.max(...ownerProjects.map((p) => (c.total ?? 0) - p.est));
     const advice = maxDiff >= 5 ? "严肃考虑 pivot" : maxDiff >= 2 ? "观察 3 月" : "继续手头";
     html += `<tr>
-      <td class="cand-name">${safeHref(c.url) ? `<a href="${safeHref(c.url)}" target="_blank" rel="noopener">${esc((c.name ?? "").slice(0, 40))}</a>` : esc((c.name ?? "").slice(0, 40))}</td>
-      <td class="center">${c.total}</td><td class="center">${esc(c.window_estimate ?? "-")}</td>
+      <td class="cand-name"><a href="${esc(candidateHref(c.url))}" target="_blank" rel="noopener">${esc((c.name ?? "").slice(0, 40))}</a></td>
+      <td class="center">${esc(String(c.total ?? "-"))}</td><td class="center">${esc(c.window_estimate ?? "-")}</td>
       ${diffs}
       <td class="advice">${advice}</td>
     </tr>`;
@@ -238,7 +247,10 @@ function whyThemBlock(why: string | null): string {
 }
 function rawPayload(c: Cand): { mrr?: string | number; mrr_text?: string; founder?: string; category?: string } {
   if (!c.raw_payload) return {};
-  try { return JSON.parse(c.raw_payload); } catch { return {}; }
+  try {
+    const value = JSON.parse(c.raw_payload);
+    return value !== null && typeof value === "object" && !Array.isArray(value) ? value : {};
+  } catch { return {}; }
 }
 function cardOf(c: Cand): string {
   const tierClass = c.tier === "⭐⭐⭐" ? "triple" : c.tier === "⭐⭐" ? "double" : c.tier === "✗" ? "drop" : "pending";
@@ -257,7 +269,7 @@ function cardOf(c: Cand): string {
     <div class="card-grid">
       <div class="card-main">
         <h3 class="name">${esc(c.name)}</h3>
-        <div class="url">${safeHref(c.url) ? `<a href="${safeHref(c.url)}" target="_blank" rel="noopener">${esc(c.url)}</a>` : esc(c.url)}</div>
+        <div class="url"><a href="${esc(candidateHref(c.url))}" target="_blank" rel="noopener">${esc(c.url)}</a></div>
         <div class="meta">
           <span class="src-tag">${esc(c.source)}</span>
           <span class="src-tag">signal ${c.signal_score ?? "-"}</span>
@@ -575,7 +587,7 @@ console.error(`[report-html-v2] written: ${outPath}`);
 console.error(`                  rows=${rows.length}  ⭐⭐⭐=${triple.length}  ⭐⭐=${double.length}  ✗=${dropped.length}  pending=${unscored.length}`);
 
 try {
-  execSync(`open "${outPath}"`, { stdio: "ignore" });
+  execFileSync("open", [outPath], { stdio: "ignore" });
   console.error("[report-html-v2] opened in browser");
 } catch {
   console.error("[report-html-v2] open browser manually:", outPath);

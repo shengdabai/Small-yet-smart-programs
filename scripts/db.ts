@@ -130,13 +130,12 @@ const upsertStmt = db.query(`
     raw_payload = excluded.raw_payload
   RETURNING id
 `);
-const existsStmt = db.query(`SELECT id FROM candidates WHERE source = $source AND external_id = $external_id`);
 
-export function upsertCandidate(c: CandidateInput): { id: number; is_new: boolean } {
-  // "new" means the row did not exist before this call. Comparing first_seen
-  // with last_seen (second resolution) misreported a re-upsert within the same
-  // second as new, e.g. duplicate ids inside one fetch.
-  const existed = existsStmt.get({ $source: c.source, $external_id: c.external_id }) !== null;
+// 是否新增看插入前是否已存在;旧写法比较 first_seen = last_seen,同一秒内重复出现会被误算成新增
+const existsStmt = db.query(`SELECT 1 FROM candidates WHERE source = $source AND external_id = $external_id`);
+
+export const upsertCandidate = db.transaction((c: CandidateInput): { id: number; is_new: boolean } => {
+  const existed = existsStmt.get({ $source: c.source, $external_id: c.external_id }) != null;
   const row = upsertStmt.get({
     $source: c.source,
     $external_id: c.external_id,
@@ -148,7 +147,7 @@ export function upsertCandidate(c: CandidateInput): { id: number; is_new: boolea
     $raw_payload: c.raw_payload ? JSON.stringify(c.raw_payload) : null,
   }) as { id: number };
   return { id: row.id, is_new: !existed };
-}
+});
 
 export function listRecentCandidates(opts: { days?: number; source?: string; limit?: number } = {}) {
   const days = opts.days ?? 7;

@@ -2,9 +2,9 @@
  * fetch() with a hard deadline.
  *
  * Every source talks to third-party hosts from an unattended launchd job.
- * A host that accepts the connection and never answers would otherwise hang
- * the pipeline process forever; the lock in daily-scan.sh is only reclaimed
- * when the owner PID is dead, so one hung fetch would block every later run.
+ * daily-scan.sh limits the whole scan step, but a host that accepts the
+ * connection and never answers would use up that limit, and the sources after
+ * it would never run. A deadline per request keeps the damage to one source.
  */
 export const DEFAULT_TIMEOUT_MS = 20_000;
 

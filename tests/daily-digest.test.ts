@@ -46,8 +46,8 @@ afterAll(() => rmSync(scratch, { force: true, recursive: true }));
 describe("daily-digest.ts", () => {
   test("rejects a --date that is not a calendar date and writes nothing", () => {
     const r = run("daily-digest.ts", ["--date", "../../pwned", "--out", outDir]);
-    expect(r.code).toBe(2);
-    expect(r.err).toContain("invalid --date");
+    expect(r.code).not.toBe(0);
+    expect(r.err).toContain("--date must be a real YYYY-MM-DD date");
     expect(readdirSync(outDir)).toEqual([]);
   });
 

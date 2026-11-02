@@ -14,8 +14,10 @@
  * 用法: bun run scripts/daily-digest.ts [--date YYYY-MM-DD] [--days 30] [--out <dir>]
  */
 import { db, init } from "./db.ts";
+import { candidateHref } from "./report-links.ts";
+import { reportDays, reportNumber } from "./report-values.ts";
 import { writeFileSync, mkdirSync, existsSync } from "node:fs";
-import { esc, isIsoDate, positiveInt, safeHref, short } from "./lib/html.ts";
+import { esc, short } from "./lib/html.ts";
 
 init();
 
@@ -25,13 +27,14 @@ function arg(name: string, def: string): string {
   return i >= 0 && args[i + 1] ? args[i + 1] : def;
 }
 const today = arg("--date", new Date().toISOString().slice(0, 10));
-// `today` reaches both a SQL literal and the output file name, so accept only
-// a plain calendar date (no "../" or quotes can get through).
-if (!isIsoDate(today)) {
-  console.error(`[daily-digest] invalid --date "${today}", expected YYYY-MM-DD`);
-  process.exit(2);
+if (!/^\d{4}-\d{2}-\d{2}$/.test(today) ||
+    !Number.isFinite(Date.parse(today)) || new Date(today).toISOString().slice(0, 10) !== today) {
+  throw new Error("--date must be a real YYYY-MM-DD date");
 }
-const lookbackDays = positiveInt(arg("--days", "30"), 30);
+if (args.includes("--date") && (!args[args.indexOf("--date") + 1] || args[args.indexOf("--date") + 1].startsWith("--"))) {
+  throw new Error("--date must be a real YYYY-MM-DD date");
+}
+const lookbackDays = reportDays(args, 30);
 
 const ROOT = decodeURIComponent(new URL("../", import.meta.url).pathname);
 const DAILY_DIR = arg("--out", ROOT + "daily/").replace(/\/?$/, "/");
@@ -69,6 +72,11 @@ const fresh = db.query(`
   ORDER BY c.signal_score DESC NULLS LAST
   LIMIT 15
 `).all(today) as Row[];
+
+for (const row of [...longTerm, ...fresh]) {
+  row.total = reportNumber(row.total, 7, 35);
+  row.signal_score = reportNumber(row.signal_score);
+}
 
 const triple = longTerm.filter((r) => r.tier === "⭐⭐⭐");
 const double = longTerm.filter((r) => r.tier === "⭐⭐");
@@ -111,22 +119,14 @@ function card(r: Row): string {
     : r.signal_score != null ? `<span class="badge sig"><span class="zh">热度 ${Math.round(r.signal_score)}</span><span class="en">signal ${Math.round(r.signal_score)}</span></span>` : "";
   const win = r.window_estimate ? `<span class="pill">${esc(r.window_estimate)}</span>` : "";
   const diff = r.replication_difficulty ? `<span class="pill">复刻 ${esc(r.replication_difficulty)}</span>` : "";
-  const href = safeHref(r.url);
-  const nameInner = `<span class="zh">${esc(zhName(r))}</span><span class="en">${esc(enName(r))}</span>`;
-  const nameEl = href
-    ? `<a class="name" href="${href}" target="_blank" rel="noopener">${nameInner}</a>`
-    : `<span class="name">${nameInner}</span>`;
-  const srcLink = href
-    ? `<a class="src-link" href="${href}" target="_blank" rel="noopener">🔗 <span class="zh">查看原项目</span><span class="en">View source</span> ↗</a>`
-    : "";
   return `<article class="card">
     <div class="card-head">
-      ${nameEl}${badge}
+      <a class="name" href="${esc(candidateHref(r.url))}" target="_blank" rel="noopener"><span class="zh">${esc(zhName(r))}</span><span class="en">${esc(enName(r))}</span></a>${badge}
     </div>
     <div class="src">${esc(r.source)}</div>
     <p class="desc"><span class="zh">${short(zhDesc(r))}</span><span class="en">${short(r.description)}</span></p>
     <div class="pills">${win}${diff}</div>
-    ${srcLink}
+    <a class="src-link" href="${esc(candidateHref(r.url))}" target="_blank" rel="noopener">🔗 <span class="zh">查看原项目</span><span class="en">View source</span> ↗</a>
   </article>`;
 }
 function htmlSection(rows: Row[], emptyZh: string, emptyEn: string): string {

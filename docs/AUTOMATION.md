@@ -1,12 +1,12 @@
 # Automation & Deployment Guide
 
 The daily pipeline: **collect → LLM score → bilingual briefing → publish → Feishu**,
-driven by a launchd job on the Mac at **12:30**, publishing to a China-reachable
+driven by a launchd job on the Mac at **12:00**, publishing to a China-reachable
 URL on a Shanghai cloud host.
 
 ```
-12:30 launchd ──► daily-scan.sh ──► scan:daily (collect)
-                                  └► claude -p  (7-dim scoring → SQLite)
+12:00 launchd ──► daily-scan.sh ──► scan:daily (collect)
+                                  └► codex exec (7-dim scoring → SQLite)
                                   └► daily-digest.ts (zh/en briefing → daily/)
                                   └► build-site.ts   (→ site/)
                                   └► git push        (daily/ archive on GitHub)
@@ -29,15 +29,21 @@ bun run init
 
 # install the launchd job (replace placeholders first)
 sed -e "s/__USER__/$USER/g" \
+    -e "s|__CODEX_BIN__|$(command -v codex)|g" \
     -e "s/__FEISHU_OPEN_ID__/<your-feishu-dm-open_id>/g" \
+    -e "s|__SITE_URL__|http://<your-server>:8082|g" \
     deploy/com.smart-programs.daily.plist > ~/Library/LaunchAgents/com.smart-programs.daily.plist
 launchctl load ~/Library/LaunchAgents/com.smart-programs.daily.plist
 ```
 
-- Logs: `~/.claude/logs/smart-programs-daily.log`
+- Logs: `~/.local/share/smart-programs/.logs/smart-programs-daily.log`
 - Manual run: `bash ~/.local/share/smart-programs/daily-scan.sh`
-- Force re-run: `rm ~/.claude/logs/.smart-programs-done-$(date +%F)` then run manually
-- Idempotent: one success per day (done-marker), 13:15 is a backstop retry.
+- Scoring-only probe: `bash ~/.local/share/smart-programs/daily-scan.sh --score-only`
+- Force re-run: remove `~/.local/share/smart-programs/.logs/.smart-programs-done-$(date +%F)` then run manually
+- Idempotent: one confirmed success per day (done-marker); 12:30 and 13:00 are backstop retries.
+- Delivery-aware: the done-marker is written only after build, Git push, Shanghai deploy, and Feishu delivery all return confirmed success.
+- Failure-aware: hard failures send one deduplicated Feishu alert; scoring/source failures are surfaced as a degraded-mode note in the delivered briefing.
+- Network-aware: launchd sets `SMART_PROGRAMS_PROXY_URL`; the script exports it for Bun/curl and probes the public-signal route before collection.
 
 ## 2. Shanghai cloud (the publisher)
 
@@ -65,8 +71,9 @@ launchd plist as `feishu:oc_xxxx` (your Feishu DM). The send command is:
 "$HOME/.local/bin/hermes" send -t "$FEISHU_TARGET" "<message>"
 ```
 
-The send step is non-fatal (logs and continues) so it never blocks publishing.
-If `hermes` is unavailable, leave `FEISHU_TARGET` empty to skip the push.
+Feishu delivery is part of the completion contract. The job retries Hermes or
+webhook delivery three times; if no delivery channel succeeds it exits non-zero,
+does not write the done-marker, and the next launchd window retries.
 
 ## 4. Config
 
@@ -76,12 +83,14 @@ If `hermes` is unavailable, leave `FEISHU_TARGET` empty to skip the push.
 | `SITE_URL` | `http://YOUR_SERVER:8082` | public site root (used in Feishu msg) |
 | `SHANGHAI_DEST` | `shanghai:/var/www/smart-programs` | rsync target (SSH alias) |
 | `FEISHU_TARGET` | _(empty)_ | your Feishu DM open_id; empty = skip push |
+| `CODEX_BIN` | discovered from `PATH` | absolute Codex CLI path for launchd |
+| `SMART_PROGRAMS_PROXY_URL` | _(empty)_ | optional local HTTP proxy exported to Bun/curl |
 
 ## 5. Troubleshooting
 
-- **Nothing published**: check `smart-programs-daily.log`; verify `bun` on PATH.
+- **Nothing published**: check `.logs/smart-programs-daily.log`; verify `bun` on PATH.
 - **国内打不开**: confirm 8082 is open in the Tencent console and the systemd
   service is `active` (`ssh shanghai systemctl status smart-programs-site`).
-- **No scores**: the `claude -p` step may have hit a usage limit — existing
+- **No scores**: the `codex exec` step may have hit a usage limit — existing
   scores are still used; the briefing degrades gracefully.
 - **rsync fails**: confirm the `shanghai` SSH alias resolves (`ssh shanghai true`).
