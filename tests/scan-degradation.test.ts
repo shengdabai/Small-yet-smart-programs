@@ -56,6 +56,12 @@ describe("summarize_source_failures", () => {
     expect(r.out).toBe("");
   }, SLOW_TEST_MS);
 
+  test("a board served by the fallback after rdt failed is not counted as failed", () => {
+    const r = summarize(`[reddit] /r/SaaS rdt failed (rdt exit 1), trying the public endpoint\n${allHealthy}`);
+    expect(r.code).toBe(0);
+    expect(r.out).toBe("");
+  });
+
   test("counts only the boards that failed and keeps the distinct HTTP codes", () => {
     const log = [
       ...HEAD,

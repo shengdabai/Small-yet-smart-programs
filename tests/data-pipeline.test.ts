@@ -16,6 +16,8 @@ const SLOW_TEST_MS = 60_000;
 const repo = join(import.meta.dir, "..");
 const dirs: string[] = [];
 const realFetch = globalThis.fetch;
+// Reddit's main path is the real rdt CLI with its saved login. No test in this file may reach it.
+process.env.RDT_BIN = "/nonexistent/rdt";
 
 afterEach(() => {
   globalThis.fetch = realFetch;
@@ -399,6 +401,71 @@ describe("source parsers (fetch mocked)", () => {
     expect(calls.length).toBeGreaterThanOrEqual(9); // every subreddit was still attempted after the failures
     expect(new Headers(calls[0].init?.headers).get("User-Agent")).toContain("smart-programs-research");
   }, SLOW_TEST_MS);
+
+  describe("toolify", () => {
+    const realKey = process.env.FIRECRAWL_API_KEY;
+    const logged = (fn: "log" | "warn") => {
+      const lines: string[] = [];
+      const original = console[fn];
+      console[fn] = (...args: unknown[]) => void lines.push(args.join(" "));
+      return { lines, restore: () => { console[fn] = original; } };
+    };
+    afterEach(() => {
+      if (realKey === undefined) delete process.env.FIRECRAWL_API_KEY;
+      else process.env.FIRECRAWL_API_KEY = realKey;
+    });
+
+    test("stores the first 30 tools from the ranking page and prints the line the digest reads", async () => {
+      process.env.FIRECRAWL_API_KEY = "test-key";
+      const dir = project();
+      const { db } = await loadDb(dir);
+      const { fetchToolify } = await import(join(dir, "scripts", "sources", "toolify.ts"));
+      const links = Array.from({ length: 35 }, (_, i) => `https://www.toolify.ai/tool/tool-${i}`);
+      const calls = mockFetch(() => json({ success: true, data: { links, metadata: { statusCode: 200 } } }));
+      const out = logged("log");
+      try {
+        expect(await fetchToolify()).toBe(30);
+      } finally {
+        out.restore();
+      }
+      expect(out.lines).toContain("[toolify] tools_found=35  new=30");
+      expect(calls[0].url).toContain("api.firecrawl.dev");
+      expect(JSON.parse(String(calls[0].init?.body))).toMatchObject({ url: "https://www.toolify.ai/Best-trending-AI-Tools", formats: ["links"], proxy: "auto" });
+      const row = db.query("SELECT source, name, url, signal_score FROM candidates WHERE external_id = 'tool-0'").get();
+      expect(row).toEqual({ source: "toolify", name: "tool 0", url: "https://www.toolify.ai/tool/tool-0", signal_score: 5 });
+    }, SLOW_TEST_MS);
+
+    test("a missing page stores nothing and prints the line the degradation notice reads", async () => {
+      process.env.FIRECRAWL_API_KEY = "test-key";
+      const dir = project();
+      const { db } = await loadDb(dir);
+      const { fetchToolify } = await import(join(dir, "scripts", "sources", "toolify.ts"));
+      mockFetch(() => json({ success: true, data: { links: [], metadata: { statusCode: 404 } } }));
+      const out = logged("warn");
+      try {
+        expect(await fetchToolify()).toBe(0);
+      } finally {
+        out.restore();
+      }
+      expect(out.lines.some((line) => /^\[toolify\] unreachable/.test(line))).toBe(true);
+      expect((db.query("SELECT COUNT(*) AS n FROM candidates").get() as { n: number }).n).toBe(0);
+    }, SLOW_TEST_MS);
+
+    test("a missing Firecrawl key reports the source as unreachable instead of crashing", async () => {
+      // Runs in its own process: homedir() only follows HOME at process start. The fake HOME has no
+      // .config/firecrawl/.env, so the operator's key is not read, and the dead proxy stops any request.
+      const dir = project();
+      await loadDb(dir);
+      const { FIRECRAWL_API_KEY: _key, ...env } = process.env;
+      const result = Bun.spawnSync({
+        cmd: [process.execPath, "run", join(dir, "scripts", "sources", "toolify.ts")],
+        cwd: dir,
+        env: { ...env, HOME: dir, HTTPS_PROXY: "http://127.0.0.1:1", HTTP_PROXY: "http://127.0.0.1:1", ALL_PROXY: "http://127.0.0.1:1" },
+      });
+      expect(result.exitCode).toBe(0);
+      expect(result.stderr.toString()).toMatch(/^\[toolify\] unreachable — FIRECRAWL_API_KEY missing/m);
+    }, SLOW_TEST_MS);
+  });
 });
 
 describe("daily-digest.ts", () => {

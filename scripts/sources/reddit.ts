@@ -4,38 +4,16 @@
  * 对应 v5 §03 Reddit 信号源:
  *   - r/SideProject 每周 top
  *   - r/SaaS 用关键词搜 "wish there was a tool for"(需求清单)
- *   - 公开 JSON 端点(URL 后加 .json),无需 OAuth
- *
- * 注意 Reddit 对 User-Agent 严格,必须自定义。
+ *   - 取数通路(rdt CLI 优先,公开 .json 兜底)见 reddit-listing.ts
  */
 import { upsertCandidate } from "../db.ts";
+import { createListingFetcher, type ListingFetcher } from "./reddit-listing.ts";
 
-const UA = "smart-programs-research/0.1 (public data research)";
-
-type RedditPost = {
-  data: {
-    id: string;
-    title: string;
-    selftext: string;
-    url: string;
-    permalink: string;
-    score: number;
-    num_comments: number;
-    author: string;
-    created_utc: number;
-    subreddit: string;
-    over_18: boolean;
-  };
-};
-
-async function fetchSub(path: string, sort: "top" | "hot" | "new", time: string, min_score: number) {
-  const url = `https://www.reddit.com${path}/${sort}.json?t=${time}&limit=100`;
-  const res = await fetch(url, { headers: { "User-Agent": UA } });
-  if (!res.ok) throw new Error(`Reddit ${url} ${res.status}`);
-  const json = (await res.json()) as { data: { children: RedditPost[] } };
+async function fetchSub(fetchListing: ListingFetcher, path: string, sort: "top" | "hot" | "new", time: string, min_score: number) {
+  const children = await fetchListing(path, sort, time);
 
   let newCount = 0;
-  for (const { data: p } of json.data.children) {
+  for (const { data: p } of children) {
     if (p.over_18) continue;
     if (p.score < min_score) continue;
 
@@ -62,11 +40,12 @@ async function fetchSub(path: string, sort: "top" | "hot" | "new", time: string,
     });
     if (is_new) newCount++;
   }
-  return { fetched: json.data.children.length, newCount };
+  return { fetched: children.length, newCount };
 }
 
 export async function fetchReddit(): Promise<number> {
   let total = 0;
+  const fetchListing = createListingFetcher();
 
   // 7 个 sub × top/week,覆盖 v5 §03 提到的"原始用户声音 + 痛点 + 需求清单"
   const subs: Array<{ path: string; min: number; t?: string }> = [
@@ -83,7 +62,7 @@ export async function fetchReddit(): Promise<number> {
 
   for (const s of subs) {
     try {
-      const r = await fetchSub(s.path, "top", s.t ?? "week", s.min);
+      const r = await fetchSub(fetchListing, s.path, "top", s.t ?? "week", s.min);
       console.log(`[reddit] ${s.path} fetched=${r.fetched} new=${r.newCount}`);
       total += r.newCount;
     } catch (e) {
