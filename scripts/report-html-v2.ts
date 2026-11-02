@@ -10,7 +10,7 @@
  *   - 来源覆盖热力图
  *   - 长读体验:Stratechery 风格的深度长读
  *
- * 用法: bun run scripts/report-html-v2.ts [--days 60] [--out <dir>]
+ * 用法: bun run scripts/report-html-v2.ts [--days 60]
  */
 import { db, init } from "./db.ts";
 import { writeFileSync, mkdirSync, existsSync, readFileSync } from "node:fs";
@@ -23,13 +23,10 @@ import { reportDays, reportNumber } from "./report-values.ts";
 init();
 const profile = loadProfile();
 
-const args = process.argv.slice(2);
-const outIdx = args.indexOf("--out");
-const REPORTS_DIR = (outIdx >= 0 && args[outIdx + 1]
-  ? args[outIdx + 1]
-  : decodeURIComponent(new URL("../reports/", import.meta.url).pathname)).replace(/\/?$/, "/");
+const REPORTS_DIR = decodeURIComponent(new URL("../reports/", import.meta.url).pathname);
 if (!existsSync(REPORTS_DIR)) mkdirSync(REPORTS_DIR, { recursive: true });
 
+const args = process.argv.slice(2);
 const days = reportDays(args, 60);
 
 type Cand = {

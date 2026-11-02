@@ -11,7 +11,7 @@
  * 中文字段(name_zh / description_zh / summary_zh)由评分步骤的 LLM 产出;
  * 缺失时优雅回退到英文原文。
  *
- * 用法: bun run scripts/daily-digest.ts [--date YYYY-MM-DD] [--days 30] [--out <dir>]
+ * 用法: bun run scripts/daily-digest.ts [--date YYYY-MM-DD] [--days 30]
  */
 import { db, init } from "./db.ts";
 import { candidateHref } from "./report-links.ts";
@@ -37,7 +37,7 @@ if (args.includes("--date") && (!args[args.indexOf("--date") + 1] || args[args.i
 const lookbackDays = reportDays(args, 30);
 
 const ROOT = decodeURIComponent(new URL("../", import.meta.url).pathname);
-const DAILY_DIR = arg("--out", ROOT + "daily/").replace(/\/?$/, "/");
+const DAILY_DIR = ROOT + "daily/";
 if (!existsSync(DAILY_DIR)) mkdirSync(DAILY_DIR, { recursive: true });
 
 type Row = {
@@ -226,4 +226,4 @@ try{ const s = localStorage.getItem('sp-lang'); if(s) setLang(s); }catch(e){}
 writeFileSync(DAILY_DIR + `${today}.html`, html, "utf8");
 
 console.log(`[daily-digest] ${today}: ⭐⭐⭐=${triple.length} ⭐⭐=${double.length} fresh=${fresh.length}`);
-console.log(`[daily-digest] wrote ${DAILY_DIR}${today}.html + .md`);
+console.log(`[daily-digest] wrote daily/${today}.html + .md`);

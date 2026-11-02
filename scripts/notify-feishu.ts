@@ -19,7 +19,7 @@ init();
 
 const args = process.argv.slice(2);
 const di = args.indexOf("--date");
-const date = di >= 0 && args[di + 1] ? args[di + 1] : new Date().toISOString().slice(0, 10);
+const date = di >= 0 ? args[di + 1] ?? "" : new Date().toISOString().slice(0, 10);
 if (!isIsoDate(date)) {
   console.error(`[notify-feishu] invalid --date "${date}", expected YYYY-MM-DD`);
   process.exit(2);
@@ -28,6 +28,10 @@ const useWebhook = args.includes("--webhook");
 const SITE_URL = (process.env.SITE_URL || "http://YOUR_SERVER:8082").replace(/\/+$/, "");
 const LINK = `${SITE_URL}/latest.html`;
 const DEGRADED_REASON = (process.env.DEGRADED_REASON || "").trim();
+// daily-scan.sh gives this process 60 s and then retries, so stay under that limit and report the timeout here.
+// A timeout does not prove that Feishu did not get the message, so a retry can send the brief twice: delivery is
+// at least once.
+const WEBHOOK_TIMEOUT_MS = 50_000;
 
 type R = { name: string | null; name_zh: string | null; total: number; tier: string; window_estimate: string | null };
 
@@ -68,7 +72,7 @@ async function sendWebhook(url: string) {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(payload),
-  });
+  }, WEBHOOK_TIMEOUT_MS);
   const body = await res.text();
   console.log(`[feishu-webhook] HTTP ${res.status} ${body}`);
   if (!res.ok || /"code":[1-9]/.test(body)) process.exit(1);

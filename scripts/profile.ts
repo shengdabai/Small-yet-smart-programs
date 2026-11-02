@@ -20,10 +20,7 @@ const CONFIG_DIR = decodeURIComponent(new URL("../config/", import.meta.url).pat
 export function loadProfile(): Profile {
   const local = CONFIG_DIR + "profile.local.json";
   const example = CONFIG_DIR + "profile.example.json";
-  // SMART_PROGRAMS_PROFILE points at an explicit profile file (tests); otherwise
-  // the operator's local profile wins over the repo example.
-  const override = process.env.SMART_PROGRAMS_PROFILE;
-  const path = override && existsSync(override) ? override : existsSync(local) ? local : example;
+  const path = existsSync(local) ? local : example;
   const raw = JSON.parse(readFileSync(path, "utf8"));
   return {
     owner: raw.owner ?? "the operator",

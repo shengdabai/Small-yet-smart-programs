@@ -56,6 +56,27 @@ describe("fetchWithTimeout", () => {
     expect(offenders).toEqual([]);
   });
 
+  test("a caller's signal does not remove the deadline", async () => {
+    let error: unknown;
+    try {
+      await fetchWithTimeout(`http://localhost:${server.port}/hang`, { signal: new AbortController().signal }, 200);
+    } catch (e) {
+      error = e;
+    }
+    expect((error as Error).name).toBe("TimeoutError");
+  });
+
+  test("the webhook deadline is longer than the default and stays under the limit in daily-scan.sh", () => {
+    const repo = join(import.meta.dir, "..");
+    const notify = readFileSync(join(repo, "scripts", "notify-feishu.ts"), "utf8");
+    const scan = readFileSync(join(repo, "daily-scan.sh"), "utf8");
+    const deadlineMs = Number(/WEBHOOK_TIMEOUT_MS = ([\d_]+)/.exec(notify)?.[1].replaceAll("_", ""));
+    const limitSeconds = Number(/timeout (\d+) env FEISHU_WEBHOOK=/.exec(scan)?.[1]);
+    expect(deadlineMs).toBeGreaterThan(DEFAULT_TIMEOUT_MS);
+    expect(deadlineMs).toBeLessThan(limitSeconds * 1000);
+    expect(notify).toContain("}, WEBHOOK_TIMEOUT_MS);");
+  });
+
   test("keeps a caller-supplied signal", async () => {
     const ctrl = new AbortController();
     ctrl.abort();

@@ -13,11 +13,9 @@ import { homedir } from "node:os";
 import { join } from "node:path";
 import { fetchWithTimeout } from "../lib/fetch.ts";
 
-// FIRECRAWL_ENV_FILE points at an alternative key file (tests use a path that
-// does not exist so the real operator key is never touched).
-const ENV_PATH = process.env.FIRECRAWL_ENV_FILE || join(homedir(), ".config/firecrawl/.env");
+const ENV_PATH = join(homedir(), ".config/firecrawl/.env");
 
-export function loadKey(): string {
+function loadKey(): string {
   if (process.env.FIRECRAWL_API_KEY) return process.env.FIRECRAWL_API_KEY;
   if (existsSync(ENV_PATH)) {
     const txt = readFileSync(ENV_PATH, "utf8");

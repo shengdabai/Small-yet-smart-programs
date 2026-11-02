@@ -3,7 +3,7 @@
  *
  * 用法:
  *   bun run scripts/report.ts --mode weekly
- *   bun run scripts/report.ts --mode monthly [--out <dir>]
+ *   bun run scripts/report.ts --mode monthly
  *
  * 输出: reports/<YYYY>-W<NN>-weekly.md / <YYYY>-<MM>-monthly.md
  */
@@ -12,11 +12,7 @@ import { writeFileSync, mkdirSync, existsSync } from "node:fs";
 
 init();
 
-const args = process.argv.slice(2);
-const outIdx = args.indexOf("--out");
-const REPORTS_DIR = (outIdx >= 0 && args[outIdx + 1]
-  ? args[outIdx + 1]
-  : decodeURIComponent(new URL("../reports/", import.meta.url).pathname)).replace(/\/?$/, "/");
+const REPORTS_DIR = decodeURIComponent(new URL("../reports/", import.meta.url).pathname);
 if (!existsSync(REPORTS_DIR)) mkdirSync(REPORTS_DIR, { recursive: true });
 
 function isoWeek(d: Date): string {
@@ -171,6 +167,7 @@ function writeMonthly() {
   return path;
 }
 
+const args = process.argv.slice(2);
 const modeIdx = args.indexOf("--mode");
 const mode = modeIdx >= 0 ? args[modeIdx + 1] : undefined;
 

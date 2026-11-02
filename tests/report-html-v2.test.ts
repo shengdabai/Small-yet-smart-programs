@@ -1,32 +1,21 @@
 import { afterAll, beforeAll, describe, expect, test } from "bun:test";
-import { chmodSync, existsSync, mkdtempSync, readFileSync, readdirSync, rmSync, writeFileSync } from "node:fs";
-import { tmpdir } from "node:os";
+import { readFileSync, readdirSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
-import { runScript, seed } from "./helpers/run.ts";
+import { makeProject } from "./helpers/run.ts";
 
-const scratch = mkdtempSync(join(tmpdir(), "smart-programs-htmlv2-"));
-const DB = join(scratch, "miner.db");
-const outDir = join(scratch, "reports");
-const binDir = join(scratch, "bin");
-const profilePath = join(scratch, "profile.json");
-const openLog = join(scratch, "open.log");
+const project = makeProject();
+const reportsDir = join(project.dir, "reports");
+const SLOW_TEST_MS = 60_000;
 
 beforeAll(() => {
-  Bun.spawnSync({ cmd: ["mkdir", "-p", binDir, outDir] });
-  // The script opens the finished page with `open`; a shim records the call so
-  // no browser is launched and the test can prove the shim was what ran.
-  const fakeOpen = join(binDir, "open");
-  writeFileSync(fakeOpen, `#!/bin/sh\nprintf '%s\\n' "$@" >> "${openLog}"\n`);
-  chmodSync(fakeOpen, 0o755);
-
-  // Operator profile with markup in every string field.
-  writeFileSync(profilePath, JSON.stringify({
+  // Operator profile with markup in every string field. The loader prefers profile.local.json in the copy's config/.
+  writeFileSync(join(project.dir, "config", "profile.local.json"), JSON.stringify({
     owner: `Op <b>bold</b>`,
     assets: [],
     currentProjects: [{ name: `<img src=x onerror="alert(3)">`, stage: `"><i>stage</i>`, est: 20, fit: "x" }],
   }));
 
-  seed(DB, [
+  project.seed([
     {
       // ⭐⭐⭐ with hostile LLM output in why_them / replication_difficulty and a non-web URL.
       source: "hackernews",
@@ -55,24 +44,20 @@ beforeAll(() => {
     // Unscored candidate whose name is NULL (sources may store none).
     { source: "toolify", external_id: "noname", url: "https://example.com/n", signal_score: 1 },
   ]);
-});
+}, SLOW_TEST_MS);
 
-afterAll(() => rmSync(scratch, { force: true, recursive: true }));
+afterAll(() => project.cleanup());
 
 describe("report-html-v2.ts", () => {
-  test("writes to --out, escapes stored and profile data, and never emits executable markup", () => {
-    const r = runScript(DB, "report-html-v2.ts", ["--out", outDir], {
-      PATH: `${binDir}:${process.env.PATH ?? ""}`,
-      SMART_PROGRAMS_PROFILE: profilePath,
-    });
+  test("escapes stored and profile data and never emits executable markup", () => {
+    const r = project.run("report-html-v2.ts");
     expect(r.code).toBe(0);
-    const files = readdirSync(outDir).filter((f) => f.endsWith("-report-v2.html"));
+    const files = readdirSync(reportsDir).filter((f) => f.endsWith("-report-v2.html"));
     expect(files).toHaveLength(1);
-    const outPath = join(outDir, files[0]);
+    const outPath = join(reportsDir, files[0]);
     expect(r.out.trim()).toBe(outPath);
     // the shim was invoked with the page, so a real browser was never opened
-    expect(existsSync(openLog)).toBe(true);
-    expect(readFileSync(openLog, "utf8").trim()).toBe(outPath);
+    expect(project.opened()).toEqual([outPath]);
 
     const html = readFileSync(outPath, "utf8");
     // link targets
@@ -95,16 +80,16 @@ describe("report-html-v2.ts", () => {
     expect(html).toContain("Op &lt;b&gt;bold&lt;/b&gt;");
     // a NULL name renders as an empty heading instead of "null"
     expect(html).not.toContain(">null<");
-  });
+  }, SLOW_TEST_MS);
 
   test("truncates matrix names before escaping and labels every filter control", () => {
-    const files = readdirSync(outDir).filter((f) => f.endsWith("-report-v2.html"));
-    const html = readFileSync(join(outDir, files[0]), "utf8");
+    const files = readdirSync(reportsDir).filter((f) => f.endsWith("-report-v2.html"));
+    const html = readFileSync(join(reportsDir, files[0]), "utf8");
     // 40 raw chars of "Tom &amp; Jerry Tools Builder Studio Pro XL", then escaped: no half entity
     expect(html).toContain('<td class="cand-name"><a href="#" target="_blank" rel="noopener">Tom &amp;amp; Jerry Tools Builder Studio Pro</a></td>');
     for (const id of ["f-tier", "f-source", "f-diff", "f-sort"]) {
       expect(html).toMatch(new RegExp(`<label class="fl">[^<]+<select id="${id}">`));
     }
     expect(html).toContain('<th scope="col">候选</th>');
-  });
+  }, SLOW_TEST_MS);
 });

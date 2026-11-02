@@ -146,6 +146,17 @@ describe("db.ts upsert / dedupe", () => {
     expect((listTopScored() as { name: string }[]).map((r) => r.name)).toEqual(["high"]);
     expect(listTopScored({ minTotal: 10 })).toHaveLength(2);
   }, SLOW_TEST_MS);
+
+  test("listRecentCandidates binds source and limit: a hostile source matches nothing, the limit is honoured", async () => {
+    const { db, upsertCandidate, listRecentCandidates } = await loadDb(project());
+    seed(db, upsertCandidate, "one", 60);
+    seed(db, upsertCandidate, "two", 70);
+    seed(db, upsertCandidate, "three", 80);
+    const top = listRecentCandidates({ days: 7, source: "test", limit: 2 }) as { name: string }[];
+    expect(top.map((r) => r.name)).toEqual(["three", "two"]);
+    expect(listRecentCandidates({ days: 7, source: "test'; DROP TABLE candidates; --" })).toEqual([]);
+    expect((db.query("SELECT COUNT(*) n FROM candidates").get() as { n: number }).n).toBe(3);
+  }, SLOW_TEST_MS);
 });
 
 describe("import-scores.ts (LLM score validation gate)", () => {

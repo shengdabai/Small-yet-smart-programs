@@ -3,8 +3,9 @@
  *
  * Every source talks to third-party hosts from an unattended launchd job.
  * daily-scan.sh limits the whole scan step, but a host that accepts the
- * connection and never answers would use up that limit, and the sources after
- * it would never run. A deadline per request keeps the damage to one source.
+ * connection and never answers would hold the step until that limit, and the
+ * scan would count as timed out. A deadline per request limits the damage to
+ * one source.
  */
 export const DEFAULT_TIMEOUT_MS = 20_000;
 
@@ -13,5 +14,6 @@ export function fetchWithTimeout(
   init: RequestInit = {},
   timeoutMs = DEFAULT_TIMEOUT_MS,
 ): Promise<Response> {
-  return fetch(input, { ...init, signal: init.signal ?? AbortSignal.timeout(timeoutMs) });
+  const deadline = AbortSignal.timeout(timeoutMs);
+  return fetch(input, { ...init, signal: init.signal ? AbortSignal.any([init.signal, deadline]) : deadline });
 }

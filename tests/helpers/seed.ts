@@ -1,7 +1,6 @@
 /**
- * Test-only seeder, run as a subprocess so each test file can point
- * SMART_PROGRAMS_DB at its own throwaway database (scripts/db.ts fixes the
- * path on first import, and bun runs every test file in one process).
+ * Test-only seeder. makeProject() copies it next to a private copy of scripts/ and runs it as a subprocess, so it
+ * opens that copy's database.
  *
  * stdin: JSON { candidates: [{ ...CandidateInput, first_seen?, scored? }] }
  *   scored: { total, tier, window_estimate?, summary_zh?, why_them?, replication_difficulty? }
@@ -12,8 +11,8 @@ import { db, upsertCandidate, type CandidateInput } from "../../scripts/db.ts";
 type Seed = CandidateInput & {
   first_seen?: string;
   scored?: {
-    total: number;
-    tier: string;
+    total: number | null;
+    tier: string | null;
     window_estimate?: string | null;
     summary_zh?: string | null;
     why_them?: string | null;

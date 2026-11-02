@@ -14,9 +14,7 @@ import { Database } from "bun:sqlite";
 import { mkdirSync, existsSync } from "node:fs";
 import { dirname } from "node:path";
 
-// SMART_PROGRAMS_DB overrides the database location (tests, or a runtime clone
-// that keeps its data outside the repo). Default: <repo>/data/miner.db.
-const DB_PATH = process.env.SMART_PROGRAMS_DB || decodeURIComponent(new URL("../data/miner.db", import.meta.url).pathname);
+const DB_PATH = decodeURIComponent(new URL("../data/miner.db", import.meta.url).pathname);
 if (!existsSync(dirname(DB_PATH))) mkdirSync(dirname(DB_PATH), { recursive: true });
 
 export const db = new Database(DB_PATH, { create: true });
