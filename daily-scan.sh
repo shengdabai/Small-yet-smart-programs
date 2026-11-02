@@ -392,9 +392,11 @@ public_signal_preflight() {
 # 读本次采集输出(stdin),只按 reddit.ts / toolify.ts 固定的日志行统计真实的单源失败,例如
 # 「Reddit 9/9 个板块 403；Toolify 不可达」;没有失败时输出为空。
 # 行首锚定,避免日志里别处(如 Codex 输出)出现同样的字样被误计。
+# 板块失败且 rdt 也失败时,最可能是 rdt 保存的登录过期(公开接口本来就 403),所以直接写出下一步。
 summarize_source_failures() {
   awk '
     /^\[reddit\] \/r\/[^ ]+ fetched=/ { total++ }
+    /^\[reddit\] \/r\/[^ ]+ rdt failed/ { rdt_failed = 1 }
     /^\[reddit\] \/r\/[^ ]+ skip:/ {
       total++; failed++
       code = $NF
@@ -404,7 +406,7 @@ summarize_source_failures() {
     /^\[toolify\] unreachable/ { toolify = 1 }
     END {
       out = ""
-      if (failed > 0) out = "Reddit " failed "/" total " 个板块 " codes
+      if (failed > 0) out = "Reddit " failed "/" total " 个板块 " codes (rdt_failed ? "（rdt 也失败，先运行 rdt status）" : "")
       if (toolify) out = out (out == "" ? "" : "；") "Toolify 不可达"
       printf "%s", out
     }

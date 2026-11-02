@@ -60,7 +60,22 @@ describe("summarize_source_failures", () => {
     const r = summarize(`[reddit] /r/SaaS rdt failed (rdt exit 1), trying the public endpoint\n${allHealthy}`);
     expect(r.code).toBe(0);
     expect(r.out).toBe("");
-  });
+  }, SLOW_TEST_MS);
+
+  test("a failed board with a failed rdt names the next step, which is checking the rdt login", () => {
+    const rdtFailed = (path: string) => `[reddit] ${path} rdt failed (rdt exit 1), trying the public endpoint`;
+    const log = [
+      ...HEAD,
+      ...REDDIT_PATHS.flatMap(([p, t]) => [rdtFailed(p), redditSkip(p, t, "403")]),
+      "[toolify] tools_found=30  new=3", ...TAIL,
+    ].join("\n");
+    expect(summarize(log).out).toBe("Reddit 9/9 个板块 403（rdt 也失败，先运行 rdt status）");
+  }, SLOW_TEST_MS);
+
+  test("the rdt hint does not come from text elsewhere in the log", () => {
+    const log = ["codex said: [reddit] /r/SaaS rdt failed", allRedditBlocked].join("\n");
+    expect(summarize(log).out).toBe("Reddit 9/9 个板块 403；Toolify 不可达");
+  }, SLOW_TEST_MS);
 
   test("counts only the boards that failed and keeps the distinct HTTP codes", () => {
     const log = [
