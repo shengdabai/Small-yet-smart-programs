@@ -31,8 +31,8 @@ type Cand = {
   id: number;
   source: string;
   name: string | null;
-  url: string;
-  description: string;
+  url: string | null;
+  description: string | null;
   signal_score: number | null;
   first_seen: string;
   total: number | null;
@@ -65,12 +65,15 @@ function bySource(rows: Cand[]) {
   return map;
 }
 
+// candidates.name is nullable; a source that stored no name must not crash the report.
+const displayName = (c: Cand) => c.name?.trim() || `(unnamed #${c.id})`;
+
 function fmtCandidate(c: Cand): string {
   const score = c.total ? ` **${c.tier ?? ""} ${c.total}/35**` : "";
   const diff = c.replication_difficulty ? ` _[${c.replication_difficulty}]_` : "";
   const win = c.window_estimate ? ` ⏱${c.window_estimate}` : "";
   const desc = (c.description || "").replace(/\n/g, " ").slice(0, 160);
-  return `- **${c.name}**${score}${diff}${win}\n  - 源: \`${c.source}\` · signal=${c.signal_score ?? "-"}\n  - <${c.url}>\n  - ${desc}${desc.length >= 160 ? "..." : ""}`;
+  return `- **${displayName(c)}**${score}${diff}${win}\n  - 源: \`${c.source}\` · signal=${c.signal_score ?? "-"}\n  - <${c.url ?? ""}>\n  - ${desc}${desc.length >= 160 ? "..." : ""}`;
 }
 
 function writeWeekly() {
@@ -149,7 +152,7 @@ function writeMonthly() {
   md += `| 候选 | 评分 | 当前手头项目 | 差距 | 建议 |\n`;
   md += `|------|------|------------|------|------|\n`;
   for (const c of triple) {
-    md += `| ${c.name} | ${c.total} | (你填) | (你算) | (>+5 严肃 pivot / >+2 观察 / ≤ 继续手头) |\n`;
+    md += `| ${displayName(c)} | ${c.total} | (你填) | (你算) | (>+5 严肃 pivot / >+2 观察 / ≤ 继续手头) |\n`;
   }
 
   md += `\n## 反陷阱月度检查\n\n`;
@@ -165,7 +168,8 @@ function writeMonthly() {
 }
 
 const args = process.argv.slice(2);
-const mode = args[args.indexOf("--mode") + 1];
+const modeIdx = args.indexOf("--mode");
+const mode = modeIdx >= 0 ? args[modeIdx + 1] : undefined;
 
 if (mode === "monthly") writeMonthly();
 else writeWeekly();

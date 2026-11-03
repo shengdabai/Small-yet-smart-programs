@@ -13,17 +13,27 @@
  * 环境: SITE_URL(国内可访问站点根,默认上海云 8082)
  */
 import { db, init } from "./db.ts";
+import { isIsoDate } from "./lib/html.ts";
+import { fetchWithTimeout } from "./lib/fetch.ts";
 init();
 
 const args = process.argv.slice(2);
 const di = args.indexOf("--date");
-const date = di >= 0 && args[di + 1] ? args[di + 1] : new Date().toISOString().slice(0, 10);
+const date = di >= 0 ? args[di + 1] ?? "" : new Date().toISOString().slice(0, 10);
+if (!isIsoDate(date)) {
+  console.error(`[notify-feishu] invalid --date "${date}", expected YYYY-MM-DD`);
+  process.exit(2);
+}
 const useWebhook = args.includes("--webhook");
 const SITE_URL = (process.env.SITE_URL || "http://YOUR_SERVER:8082").replace(/\/+$/, "");
 const LINK = `${SITE_URL}/latest.html`;
 const DEGRADED_REASON = (process.env.DEGRADED_REASON || "").trim();
+// daily-scan.sh gives this process 60 s and then retries, so stay under that limit and report the timeout here.
+// A timeout does not prove that Feishu did not get the message, so a retry can send the brief twice: delivery is
+// at least once.
+const WEBHOOK_TIMEOUT_MS = 50_000;
 
-type R = { name: string; name_zh: string | null; total: number; tier: string; window_estimate: string | null };
+type R = { name: string | null; name_zh: string | null; total: number; tier: string; window_estimate: string | null };
 
 const top = db.query(`
   SELECT c.name, c.name_zh, s.total, s.tier, s.window_estimate
@@ -35,10 +45,10 @@ const top = db.query(`
 
 const triple = top.filter((r) => r.tier === "⭐⭐⭐").length;
 const double = top.filter((r) => r.tier === "⭐⭐").length;
-const fresh = (db.query(`SELECT COUNT(*) n FROM candidates WHERE date(first_seen)=date('${date}')`).get() as { n: number }).n;
+const fresh = (db.query("SELECT COUNT(*) n FROM candidates WHERE date(first_seen)=date(?)").get(date) as { n: number }).n;
 
 const pickLines = top.length
-  ? top.map((r, i) => `${i + 1}. ${r.name_zh || r.name} ${r.total}/35 ${r.tier}${r.window_estimate ? ` · 窗口 ${r.window_estimate}` : ""}`)
+  ? top.map((r, i) => `${i + 1}. ${r.name_zh || r.name || "(未命名)"} ${r.total}/35 ${r.tier}${r.window_estimate ? ` · 窗口 ${r.window_estimate}` : ""}`)
   : ["本期暂无 ⭐⭐+ 候选 —— 诚实结果,继续手头项目。"];
 
 // ---------- webhook(post 富文本,链接可点)----------
@@ -58,11 +68,11 @@ async function sendWebhook(url: string) {
     msg_type: "post",
     content: { post: { zh_cn: { title: `📡 机会简报 ${date}`, content: contentRows } } },
   };
-  const res = await fetch(url, {
+  const res = await fetchWithTimeout(url, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(payload),
-  });
+  }, WEBHOOK_TIMEOUT_MS);
   const body = await res.text();
   console.log(`[feishu-webhook] HTTP ${res.status} ${body}`);
   if (!res.ok || /"code":[1-9]/.test(body)) process.exit(1);
@@ -70,7 +80,7 @@ async function sendWebhook(url: string) {
 
 // ---------- 纯文本(hermes fallback)----------
 function printText() {
-  const focus = top.length ? (top[0].name_zh || top[0].name) : "";
+  const focus = top.length ? (top[0].name_zh || top[0].name || "(未命名)") : "";
   const summary = top.length
     ? `今日扫描 ${fresh} 个新信号,评分后${triple > 0 ? ` ${triple} 个 ⭐⭐⭐ 强候选` : "无 ⭐⭐⭐"}${double > 0 ? `、${double} 个 ⭐⭐ 备选` : ""}。重点关注:${focus}。`
     : `今日扫描 ${fresh} 个新信号,暂无 ⭐⭐+ 候选 —— 诚实结果,继续手头项目。`;

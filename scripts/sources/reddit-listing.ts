@@ -9,6 +9,7 @@
  * rdt stdout contains a session value (modhash). Never log or rethrow stdout.
  * When every board falls back and fails, check the login with `rdt status`.
  */
+import { fetchWithTimeout } from "../lib/fetch.ts";
 import { homedir } from "node:os";
 import { join } from "node:path";
 
@@ -81,7 +82,7 @@ async function fetchViaRdt(path: string, sort: RedditSort, time: string, timeout
 
 async function fetchViaPublicJson(path: string, sort: RedditSort, time: string): Promise<RedditPost[]> {
   const url = `https://www.reddit.com${path}/${sort}.json?t=${time}&limit=100`;
-  const res = await fetch(url, { headers: { "User-Agent": UA } });
+  const res = await fetchWithTimeout(url, { headers: { "User-Agent": UA } });
   // daily-scan.sh reads the HTTP status from the last word of the "skip:" log line.
   if (!res.ok) throw new Error(`Reddit ${url} ${res.status}`);
   const json = (await res.json()) as { data: { children: RedditPost[] } };

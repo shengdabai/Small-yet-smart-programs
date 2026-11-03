@@ -21,7 +21,9 @@
     "report:monthly": "bun run scripts/report.ts --mode monthly",
     "report:html": "bun run scripts/report-html-v2.ts",
     "notify": "bun run scripts/notify.ts",
-    "stats": "bun run scripts/db.ts --stats"
+    "stats": "bun run scripts/db.ts --stats",
+    "test": "bun test",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {},
   "devDependencies": {

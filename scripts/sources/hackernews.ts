@@ -9,6 +9,7 @@
  * https://hn.algolia.com/api
  */
 import { upsertCandidate } from "../db.ts";
+import { fetchWithTimeout } from "../lib/fetch.ts";
 
 const MIN_POINTS = 50;
 const WINDOW_DAYS = 30;
@@ -31,7 +32,7 @@ export async function fetchHackerNews(): Promise<number> {
   url.searchParams.set("numericFilters", `created_at_i>${since},points>=${MIN_POINTS}`);
   url.searchParams.set("hitsPerPage", "100");
 
-  const res = await fetch(url);
+  const res = await fetchWithTimeout(url);
   if (!res.ok) throw new Error(`HN API ${res.status}`);
   const json = (await res.json()) as { hits: HnHit[] };
 

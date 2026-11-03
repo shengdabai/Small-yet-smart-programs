@@ -17,6 +17,7 @@ import { db, init } from "./db.ts";
 import { candidateHref } from "./report-links.ts";
 import { reportDays, reportNumber } from "./report-values.ts";
 import { writeFileSync, mkdirSync, existsSync } from "node:fs";
+import { esc, short } from "./lib/html.ts";
 
 init();
 
@@ -40,7 +41,7 @@ const DAILY_DIR = ROOT + "daily/";
 if (!existsSync(DAILY_DIR)) mkdirSync(DAILY_DIR, { recursive: true });
 
 type Row = {
-  name: string; name_zh: string | null; url: string;
+  name: string | null; name_zh: string | null; url: string | null;
   description: string | null; description_zh: string | null; summary_zh: string | null;
   source: string; signal_score: number | null;
   total: number | null; tier: string | null;
@@ -55,10 +56,10 @@ const longTerm = db.query(`
          c.first_seen, s.scored_at
   FROM scored s JOIN candidates c ON c.id = s.candidate_id
   WHERE s.tier IN ('⭐⭐⭐','⭐⭐')
-    AND s.scored_at >= datetime('now', '-${lookbackDays} days')
+    AND s.scored_at >= datetime('now', ?)
   ORDER BY s.total DESC, c.signal_score DESC NULLS LAST
   LIMIT 20
-`).all() as Row[];
+`).all(`-${lookbackDays} days`) as Row[];
 
 const fresh = db.query(`
   SELECT c.name, c.name_zh, c.url, c.description, c.description_zh, NULL as summary_zh,
@@ -80,16 +81,9 @@ for (const row of [...longTerm, ...fresh]) {
 const triple = longTerm.filter((r) => r.tier === "⭐⭐⭐");
 const double = longTerm.filter((r) => r.tier === "⭐⭐");
 
-function esc(s: string | null | undefined): string {
-  if (!s) return "";
-  return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
-}
-function short(s: string | null, n = 200): string {
-  if (!s) return "";
-  const c = s.replace(/<[^>]+>/g, "").replace(/\s+/g, " ").trim();
-  return esc(c.length > n ? c.slice(0, n) + "…" : c);
-}
-const zhName = (r: Row) => r.name_zh || r.name;
+// candidates.name is nullable; never print "null" in the briefing.
+const zhName = (r: Row) => r.name_zh || r.name || "(未命名)";
+const enName = (r: Row) => r.name || "(unnamed)";
 const zhDesc = (r: Row) => r.summary_zh || r.description_zh || r.description;
 
 // ---------- Markdown(中文留档)----------
@@ -99,7 +93,7 @@ function mdSection(title: string, rows: Row[]): string {
   for (const r of rows) {
     const score = r.total ? ` · ${r.total}/35 ${r.tier ?? ""}` : r.signal_score ? ` · 热度 ${Math.round(r.signal_score)}` : "";
     const win = r.window_estimate ? ` · 窗口 ${r.window_estimate}` : "";
-    s += `- **${zhName(r)}**${score}${win}\n  ${short(zhDesc(r), 120)}\n  ${r.url}\n`;
+    s += `- **${zhName(r)}**${score}${win}\n  ${short(zhDesc(r), 120)}\n  ${r.url ?? ""}\n`;
   }
   return s + "\n";
 }
@@ -127,7 +121,7 @@ function card(r: Row): string {
   const diff = r.replication_difficulty ? `<span class="pill">复刻 ${esc(r.replication_difficulty)}</span>` : "";
   return `<article class="card">
     <div class="card-head">
-      <a class="name" href="${esc(candidateHref(r.url))}" target="_blank" rel="noopener"><span class="zh">${esc(zhName(r))}</span><span class="en">${esc(r.name)}</span></a>${badge}
+      <a class="name" href="${esc(candidateHref(r.url))}" target="_blank" rel="noopener"><span class="zh">${esc(zhName(r))}</span><span class="en">${esc(enName(r))}</span></a>${badge}
     </div>
     <div class="src">${esc(r.source)}</div>
     <p class="desc"><span class="zh">${short(zhDesc(r))}</span><span class="en">${short(r.description)}</span></p>

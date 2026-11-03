@@ -10,12 +10,13 @@
  *   - 来源覆盖热力图
  *   - 长读体验:Stratechery 风格的深度长读
  *
- * 用法: bun run scripts/report-html-v2.ts
+ * 用法: bun run scripts/report-html-v2.ts [--days 60]
  */
 import { db, init } from "./db.ts";
 import { writeFileSync, mkdirSync, existsSync, readFileSync } from "node:fs";
-import { execSync } from "node:child_process";
+import { execFileSync } from "node:child_process";
 import { loadProfile } from "./profile.ts";
+import { esc, short } from "./lib/html.ts";
 import { candidateHref } from "./report-links.ts";
 import { reportDays, reportNumber } from "./report-values.ts";
 
@@ -31,9 +32,9 @@ const days = reportDays(args, 60);
 type Cand = {
   id: number;
   source: string;
-  name: string;
-  url: string;
-  description: string;
+  name: string | null;
+  url: string | null;
+  description: string | null;
   signal_score: number | null;
   first_seen: string;
   raw_payload: string | null;
@@ -89,15 +90,7 @@ const now = new Date();
 const ym = now.toISOString().slice(0, 7);
 const dateStr = now.toISOString().slice(0, 10);
 
-function esc(s: string | null | undefined): string {
-  if (!s) return "";
-  return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
-}
-function shortDesc(s: string | null, n = 220): string {
-  if (!s) return "";
-  const clean = s.replace(/<[^>]+>/g, "").replace(/\s+/g, " ").trim();
-  return esc(clean.length > n ? clean.slice(0, n) + "…" : clean);
-}
+const shortDesc = (s: string | null, n = 220) => short(s, n);
 
 // === SVG 雷达图 ===
 function radar(c: Cand, size = 180): string {
@@ -206,9 +199,9 @@ function decisionMatrix(): string {
   if (ownerProjects.length === 0) return `<p class="muted">未配置手头项目(config/profile.local.json),跳过候选 vs 在手项目的决策对比。</p>`;
   let html = `<table class="matrix">
     <thead><tr>
-      <th>候选</th><th>评分</th><th>窗口</th>
-      ${ownerProjects.map((p) => `<th><div class="proj-name">${esc(p.name)}</div><div class="proj-stage">${esc(p.stage)} (est ${esc(String(p.est))})</div></th>`).join("")}
-      <th>建议</th>
+      <th scope="col">候选</th><th scope="col">评分</th><th scope="col">窗口</th>
+      ${ownerProjects.map((p) => `<th scope="col"><div class="proj-name">${esc(p.name)}</div><div class="proj-stage">${esc(p.stage)} (est ${esc(String(p.est))})</div></th>`).join("")}
+      <th scope="col">建议</th>
     </tr></thead><tbody>`;
   for (const c of candidates) {
     const diffs = ownerProjects.map((p) => {
@@ -219,7 +212,7 @@ function decisionMatrix(): string {
     const maxDiff = Math.max(...ownerProjects.map((p) => (c.total ?? 0) - p.est));
     const advice = maxDiff >= 5 ? "严肃考虑 pivot" : maxDiff >= 2 ? "观察 3 月" : "继续手头";
     html += `<tr>
-      <td class="cand-name"><a href="${esc(candidateHref(c.url))}" target="_blank" rel="noopener">${esc(c.name).slice(0, 40)}</a></td>
+      <td class="cand-name"><a href="${esc(candidateHref(c.url))}" target="_blank" rel="noopener">${esc((c.name ?? "").slice(0, 40))}</a></td>
       <td class="center">${esc(String(c.total ?? "-"))}</td><td class="center">${esc(c.window_estimate ?? "-")}</td>
       ${diffs}
       <td class="advice">${advice}</td>
@@ -234,10 +227,12 @@ function whyThemBlock(why: string | null): string {
   if (!why) return "";
   try {
     const j = JSON.parse(why);
-    const ta = (j.ta_has || []).slice(0, 6).map((s: string) => `<li>${esc(s)}</li>`).join("");
-    const operatorAssets = (j.operator_has || []).slice(0, 6).map((s: string) => `<li>${esc(s)}</li>`).join("");
-    const gap = j.gap_severity ?? "unknown";
-    const gapClass = ["low", "mid", "high"].includes(gap) ? gap : "unknown";
+    const items = (v: unknown) => (Array.isArray(v) ? v : []).slice(0, 6).map((s) => `<li>${esc(String(s))}</li>`).join("");
+    const ta = items(j.ta_has);
+    const operatorAssets = items(j.operator_has);
+    const gap = String(j.gap_severity ?? "unknown");
+    // why_them is LLM output stored in the DB; only a known value may become a class name.
+    const gapClass = gap === "low" || gap === "mid" || gap === "high" ? gap : "unknown";
     return `<div class="why-them">
       <div class="wt-col"><strong>ta 有的</strong><ul>${ta || "<li>—</li>"}</ul></div>
       <div class="wt-col"><strong>你也有的</strong><ul>${operatorAssets || "<li>—</li>"}</ul></div>
@@ -509,11 +504,11 @@ ${double.length > 0 ? `
   <div class="sec-num">§ 06 / 全部候选 + 筛选</div>
   <h2>全部 <em>${rows.length}</em> 候选 · 客户端筛选</h2>
   <div class="filters">
-    <div class="fl">Tier <select id="f-tier"><option value="">all</option><option value="⭐⭐⭐">⭐⭐⭐</option><option value="⭐⭐">⭐⭐</option><option value="✗">✗</option><option value="pending">未评分</option></select></div>
-    <div class="fl">源 <select id="f-source"><option value="">all</option>${[...grouped.keys()].sort().map((s) => `<option>${esc(s)}</option>`).join("")}</select></div>
-    <div class="fl">复刻 <select id="f-diff"><option value="">all</option><option>Low</option><option>Mid</option><option>High</option><option>Unknown</option></select></div>
-    <div class="fl">排序 <select id="f-sort"><option value="total">总分↓</option><option value="signal">signal↓</option></select></div>
-    <span class="count" id="f-count"></span>
+    <label class="fl">Tier <select id="f-tier"><option value="">all</option><option value="⭐⭐⭐">⭐⭐⭐</option><option value="⭐⭐">⭐⭐</option><option value="✗">✗</option><option value="pending">未评分</option></select></label>
+    <label class="fl">源 <select id="f-source"><option value="">all</option>${[...grouped.keys()].sort().map((s) => `<option>${esc(s)}</option>`).join("")}</select></label>
+    <label class="fl">复刻 <select id="f-diff"><option value="">all</option><option>Low</option><option>Mid</option><option>High</option><option>Unknown</option></select></label>
+    <label class="fl">排序 <select id="f-sort"><option value="total">总分↓</option><option value="signal">signal↓</option></select></label>
+    <span class="count" id="f-count" aria-live="polite"></span>
   </div>
   <div class="sources" id="all-cards">${rows.map(cardOf).join("")}</div>
 </section>
@@ -589,7 +584,7 @@ console.error(`[report-html-v2] written: ${outPath}`);
 console.error(`                  rows=${rows.length}  ⭐⭐⭐=${triple.length}  ⭐⭐=${double.length}  ✗=${dropped.length}  pending=${unscored.length}`);
 
 try {
-  execSync(`open "${outPath}"`, { stdio: "ignore" });
+  execFileSync("open", [outPath], { stdio: "ignore" });
   console.error("[report-html-v2] opened in browser");
 } catch {
   console.error("[report-html-v2] open browser manually:", outPath);

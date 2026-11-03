@@ -29,7 +29,14 @@ export function osascriptNotify(
   }
 }
 
-async function checkNewTriple() {
+type TripleRow = { name: string | null; url: string | null; total: number; scored_at: string };
+
+/** One line for the macOS notification body; candidates.name may be NULL. */
+export function formatTripleBody(rows: TripleRow[]): string {
+  return rows.map((r) => `${r.name?.trim() || "(unnamed)"} (${r.total}/35)`).join(" · ");
+}
+
+async function checkNewTriple(): Promise<TripleRow[]> {
   const { db, init } = await import("./db.ts");
   init();
   const rows = db
@@ -41,7 +48,7 @@ async function checkNewTriple() {
        ORDER BY s.total DESC
        LIMIT 5`,
     )
-    .all() as { name: string; url: string; total: number; scored_at: string }[];
+    .all() as TripleRow[];
   return rows;
 }
 
@@ -58,7 +65,7 @@ if (import.meta.main) {
     if (triple.length === 0) {
       console.log("[notify] 最近 24h 无新 ⭐⭐⭐,不通知");
     } else {
-      const body = triple.map((r) => `${r.name} (${r.total}/35)`).join(" · ");
+      const body = formatTripleBody(triple);
       osascriptNotify(`扫描器: ${triple.length} 个 ⭐⭐⭐`, body);
       console.log(`[notify] 通知 ${triple.length} 个新 ⭐⭐⭐`);
     }

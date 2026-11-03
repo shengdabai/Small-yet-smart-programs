@@ -154,12 +154,15 @@ export function listRecentCandidates(opts: { days?: number; source?: string; lim
     SELECT c.*, s.total, s.tier
     FROM candidates c
     LEFT JOIN scored s ON s.candidate_id = c.id
-    WHERE c.first_seen >= datetime('now', '-${days} days')
+    WHERE c.first_seen >= datetime('now', ?)
     ${opts.source ? "AND c.source = ?" : ""}
     ORDER BY c.signal_score DESC NULLS LAST, c.first_seen DESC
-    LIMIT ${limit}
+    LIMIT ?
   `;
-  return opts.source ? db.query(sql).all(opts.source) : db.query(sql).all();
+  const params: (string | number)[] = [`-${days} days`];
+  if (opts.source) params.push(opts.source);
+  params.push(limit);
+  return db.query(sql).all(...params);
 }
 
 export function listTopScored(opts: { limit?: number; minTotal?: number } = {}) {
@@ -184,7 +187,9 @@ if (import.meta.main) {
   } else if (args.includes("--stats")) {
     init();
     const { count } = db.query("SELECT COUNT(*) AS count FROM candidates").get() as { count: number };
-    const { scored } = db.query("SELECT COUNT(*) AS scored FROM scored").get() as { scored: number };
+    // builtwith enrichment pre-creates scored rows with a NULL total; only rows
+    // with a real 7-dimension total count as scored (same rule as pipeline.ts).
+    const { scored } = db.query("SELECT COUNT(*) AS scored FROM scored WHERE total IS NOT NULL").get() as { scored: number };
     const { triple } = db.query("SELECT COUNT(*) AS triple FROM scored WHERE tier = '⭐⭐⭐'").get() as { triple: number };
     console.log(`candidates=${count}  scored=${scored}  ⭐⭐⭐=${triple}`);
   } else {

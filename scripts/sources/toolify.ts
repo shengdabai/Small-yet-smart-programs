@@ -8,13 +8,12 @@
  * 取不到就记一行 unreachable 并返回 0,不阻塞 pipeline;日报降级说明读这一行。
  */
 import { upsertCandidate } from "../db.ts";
+import { fcScrape } from "../firecrawl/client.ts";
 import { scrapeToolSlugs } from "./toolify-links.ts";
 
 export async function fetchToolify(): Promise<number> {
   let slugs: string[];
   try {
-    // Imported here because client.ts throws at import time when the Firecrawl key is missing.
-    const { fcScrape } = await import("../firecrawl/client.ts");
     slugs = await scrapeToolSlugs(fcScrape);
   } catch (e) {
     console.warn(`[toolify] unreachable — ${(e as Error).message}`);
