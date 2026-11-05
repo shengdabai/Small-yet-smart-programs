@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>机会简报 2026-11-05 · Opportunity Briefing</title>
+<style>
+:root{--bg:#0f1115;--card:#171a21;--line:#262b36;--ink:#e8eaed;--mut:#9aa3b2;--gold:#d4a72c;--p3:#b06cd4;--acc:#4a9eff}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--ink);font-family:-apple-system,"PingFang SC","Segoe UI",system-ui,sans-serif;line-height:1.6}
+.wrap{max-width:1100px;margin:0 auto;padding:32px 20px 80px}
+header{border-bottom:1px solid var(--line);padding-bottom:20px;margin-bottom:28px;display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:12px}
+h1{font-size:1.7rem;letter-spacing:-.01em}
+.date{color:var(--mut);font-family:ui-monospace,monospace;font-size:.85rem}
+.toggle{display:flex;gap:6px}
+.toggle button{background:var(--card);color:var(--mut);border:1px solid var(--line);padding:6px 14px;border-radius:6px;cursor:pointer;font-size:.85rem}
+.toggle button.on{background:var(--acc);color:#fff;border-color:var(--acc)}
+.summary{display:flex;gap:18px;margin-bottom:28px;flex-wrap:wrap}
+.stat{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px 20px;min-width:120px}
+.stat .n{font-size:2rem;font-weight:700}
+.stat.t3 .n{color:var(--p3)} .stat.t2 .n{color:var(--gold)}
+.stat .l{color:var(--mut);font-size:.78rem;text-transform:uppercase;letter-spacing:.05em}
+h2{font-size:1.15rem;margin:32px 0 14px;padding-left:10px;border-left:3px solid var(--acc)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:14px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:16px}
+.card-head{display:flex;justify-content:space-between;align-items:start;gap:8px;margin-bottom:4px}
+.name{color:var(--ink);font-weight:600;text-decoration:none;font-size:1.02rem}
+.name:hover{color:var(--acc)}
+.badge{font-size:.72rem;font-family:ui-monospace,monospace;padding:2px 8px;border-radius:20px;white-space:nowrap;background:#222}
+.badge.t3{background:rgba(176,108,212,.2);color:var(--p3)} .badge.t2{background:rgba(212,167,44,.2);color:var(--gold)} .badge.sig{color:var(--mut)}
+.src{color:var(--mut);font-size:.72rem;font-family:ui-monospace,monospace;margin-bottom:8px}
+.desc{color:#c4cad6;font-size:.9rem;margin-bottom:10px}
+.pills{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
+.src-link{display:inline-block;font-size:.82rem;color:var(--acc);text-decoration:none;border:1px solid var(--acc);border-radius:6px;padding:5px 12px;transition:.15s}
+.src-link:hover{background:var(--acc);color:#fff}
+.pill{font-size:.7rem;color:var(--mut);border:1px solid var(--line);padding:2px 8px;border-radius:20px}
+.muted{color:var(--mut);font-style:italic;padding:8px 0}
+.disclaimer{margin-top:40px;padding:16px 20px;background:rgba(212,167,44,.08);border:1px solid rgba(212,167,44,.3);border-radius:10px;color:var(--mut);font-size:.86rem}
+footer{margin-top:40px;color:var(--mut);font-size:.78rem;text-align:center;font-family:ui-monospace,monospace}
+.en{display:none}
+body.lang-en .zh{display:none} body.lang-en .en{display:inline}
+</style>
+</head>
+<body class="lang-zh">
+<div class="wrap">
+<header>
+  <div>
+    <h1><span class="zh">机会简报</span><span class="en">Opportunity Briefing</span></h1>
+    <div class="date">2026-11-05 · smart-programs</div>
+  </div>
+  <div class="toggle">
+    <button id="b-zh" class="on" onclick="setLang('zh')">中文</button>
+    <button id="b-en" onclick="setLang('en')">EN</button>
+  </div>
+</header>
+
+<div class="summary">
+  <div class="stat t3"><div class="n">0</div><div class="l">⭐⭐⭐</div></div>
+  <div class="stat t2"><div class="n">0</div><div class="l">⭐⭐</div></div>
+  <div class="stat"><div class="n">15</div><div class="l"><span class="zh">今日新信号</span><span class="en">fresh today</span></div></div>
+</div>
+
+<h2><span class="zh">值得长期推进</span><span class="en">Worth pursuing — top picks</span></h2>
+<p class="muted"><span class="zh">本期暂无 ⭐⭐⭐(诚实结果,继续手头项目)</span><span class="en">No ⭐⭐⭐ this round (an honest result — keep building).</span></p>
+
+<h2><span class="zh">备选(3 个月后回访)</span><span class="en">Shortlist (revisit in 3 months)</span></h2>
+<p class="muted"><span class="zh">暂无 ⭐⭐ 备选</span><span class="en">No ⭐⭐ shortlist yet.</span></p>
+
+<h2><span class="zh">最新产品信号</span><span class="en">Fresh signals today</span></h2>
+<div class="grid"><article class="card">
+    <div class="card-head">
+      <a class="name" href="https://v.redd.it/bwamvl9uyizh1" target="_blank" rel="noopener"><span class="zh">I made a cable playground in the browser</span><span class="en">I made a cable playground in the browser</span></a><span class="badge sig"><span class="zh">热度 249</span><span class="en">signal 249</span></span>
+    </div>
+    <div class="src">reddit/SideProject</div>
+    <p class="desc"><span class="zh">Pocket Factory is my side project: a playground of tactile hardware controls for the web, such as keys, knobs, switches and cables that plug into little devices. This is the cable playground. Pull a c…</span><span class="en">Pocket Factory is my side project: a playground of tactile hardware controls for the web, such as keys, knobs, switches and cables that plug into little devices. This is the cable playground. Pull a c…</span></p>
+    <div class="pills"></div>
+    <a class="src-link" href="https://v.redd.it/bwamvl9uyizh1" target="_blank" rel="noopener">🔗 <span class="zh">查看原项目</span><span class="en">View source</span> ↗</a>
+  </article><article class="card">
+    <div class="card-head">
+      <a class="name" href="https://v.redd.it/vavxcd9x1nzh1" target="_blank" rel="noopener"><span class="zh">After months of job rejections, I spent 2 years building a database GUI. It just</span><span class="en">After months of job rejections, I spent 2 years building a database GUI. It just</span></a><span class="badge sig"><span class="zh">热度 129</span><span class="en">signal 129</span></span>
+    </div>
+    <div class="src">reddit/SideProject</div>
+    <p class="desc"><span class="zh">After struggling to land a job in 2024, when the market was pretty rough, I decided to take a different route and build something real. My goal was simple: either build something genuinely useful or g…</span><span class="en">After struggling to land a job in 2024, when the market was pretty rough, I decided to take a different route and build something real. My goal was simple: either build something genuinely useful or g…</span></p>
+    <div class="pills"></div>
+    <a class="src-link" href="https://v.redd.it/vavxcd9x1nzh1" target="_blank" rel="noopener">🔗 <span class="zh">查看原项目</span><span class="en">View source</span> ↗</a>
+  </article><article class="card">
+    <div class="card-head">
+      <a class="name" href="https://fireflyk64.github.io/wcmulti/" target="_blank" rel="noopener"><span class="zh">After a decade of reversing, I got co-op working in DOS Wing Commander</span><span class="en">After a decade of reversing, I got co-op working in DOS Wing Commander</span></a><span class="badge sig"><span class="zh">热度 123</span><span class="en">signal 123</span></span>
+    </div>
+    <div class="src">hackernews</div>
+    <p class="desc"><span class="zh"></span><span class="en"></span></p>
+    <div class="pills"></div>
+    <a class="src-link" href="https://fireflyk64.github.io/wcmulti/" target="_blank" rel="noopener">🔗 <span class="zh">查看原项目</span><span class="en">View source</span> ↗</a>
+  </article><article class="card">
+    <div class="card-head">
+      <a class="name" href="https://uncracked.city" target="_blank" rel="noopener"><span class="zh">Uncracked City, detective game where you question LLM suspects that lie</span><span class="en">Uncracked City, detective game where you question LLM suspects that lie</span></a><span class="badge sig"><span class="zh">热度 123</span><span class="en">signal 123</span></span>
+    </div>
+    <div class="src">hackernews</div>
+    <p class="desc"><span class="zh">To give you some context on the project. I&amp;#x27;m a solo founder and I use AI heavily in my work. The idea came from wanting players to discover cities. Each city has its own history, so every case is…</span><span class="en">To give you some context on the project. I&amp;#x27;m a solo founder and I use AI heavily in my work. The idea came from wanting players to discover cities. Each city has its own history, so every case is…</span></p>
+    <div class="pills"></div>
+    <a class="src-link" href="https://uncracked.city" target="_blank" rel="noopener">🔗 <span class="zh">查看原项目</span><span class="en">View source</span> ↗</a>
+  </article><article class="card">
+    <div class="card-head">
+      <a class="name" href="https://pcdealcheck.com/" target="_blank" rel="noopener"><span class="zh">I built a tool that prices a pre-built PC part by part</span><span class="en">I built a tool that prices a pre-built PC part by part</span></a><span class="badge sig"><span class="zh">热度 97</span><span class="en">signal 97</span></span>
+    </div>
+    <div class="src">hackernews</div>
+    <p class="desc"><span class="zh">I&amp;#x27;ve missed out on an awesome computer that I could use for a project because figuring out value took too long. Users paste a listing and receive a value grade, dated component estimates and a sh…</span><span class="en">I&amp;#x27;ve missed out on an awesome computer that I could use for a project because figuring out value took too long. Users paste a listing and receive a value grade, dated component estimates and a sh…</span></p>
+    <div class="pills"></div>
+    <a class="src-link" href="https://pcdealcheck.com/" target="_blank" rel="noopener">🔗 <span class="zh">查看原项目</span><span class="en">View source</span> ↗</a>
+  </article><article class="card">
+    <div class="card-head">
+      <a class="name" href="https://v.redd.it/dkhjiczcgmzh1" target="_blank" rel="noopener"><span class="zh">I made a Mac app that turns your desktop into a living pond</span><span class="en">I made a Mac app that turns your desktop into a living pond</span></a><span class="badge sig"><span class="zh">热度 86</span><span class="en">signal 86</span></span>
+    </div>
+    <div class="src">reddit/SideProject</div>
+    <p class="desc"><span class="zh">Hey everyone, I've been working on a Mac app called Solas that turns your desktop into a little living pond. Fish swim around behind your windows while you’re using your Mac. The video probably explai…</span><span class="en">Hey everyone, I've been working on a Mac app called Solas that turns your desktop into a little living pond. Fish swim around behind your windows while you’re using your Mac. The video probably explai…</span></p>
+    <div class="pills"></div>
+    <a class="src-link" href="https://v.redd.it/dkhjiczcgmzh1" target="_blank" rel="noopener">🔗 <span class="zh">查看原项目</span><span class="en">View source</span> ↗</a>
+  </article><article class="card">
+    <div class="card-head">
+      <a class="name" href="https://www.reddit.com/r/SideProject/comments/1xnjvwa/gazabased_developer_and_father_of_two_seeking/" target="_blank" rel="noopener"><span class="zh">Gaza</span><span class="en">Gaza</span></a><span class="badge sig"><span class="zh">热度 82</span><span class="en">signal 82</span></span>
+    </div>
+    <div class="src">reddit/SideProject</div>
+    <p class="desc"><span class="zh">Hello everyone, My name is [Abdulrahman](https://www.linkedin.com/in/iv7l?utm_source=share_via&amp;utm_content=profile&amp;utm_medium=member_ios). I'm a software developer from Gaza, Palestine, a father of tw…</span><span class="en">Hello everyone, My name is [Abdulrahman](https://www.linkedin.com/in/iv7l?utm_source=share_via&amp;utm_content=profile&amp;utm_medium=member_ios). I'm a software developer from Gaza, Palestine, a father of tw…</span></p>
+    <div class="pills"></div>
+    <a class="src-link" href="https://www.reddit.com/r/SideProject/comments/1xnjvwa/gazabased_developer_and_father_of_two_seeking/" target="_blank" rel="noopener">🔗 <span class="zh">查看原项目</span><span class="en">View source</span> ↗</a>
+  </article><article class="card">
+    <div class="card-head">
+      <a class="name" href="https://www.reddit.com/r/sidehustle/comments/1xngrx0/looking_for_a_side_hustle_that_gives_stable/" target="_blank" rel="noopener"><span class="zh">Looking for a side hustle that gives stable $500</span><span class="en">Looking for a side hustle that gives stable $500</span></a><span class="badge sig"><span class="zh">热度 81</span><span class="en">signal 81</span></span>
+    </div>
+    <div class="src">reddit/sidehustle</div>
+    <p class="desc"><span class="zh">Hey everyone, I am a student and looking for a side hustle to pay my tuition fee and other expenses. Please give me ideas and advice.</span><span class="en">Hey everyone, I am a student and looking for a side hustle to pay my tuition fee and other expenses. Please give me ideas and advice.</span></p>
+    <div class="pills"></div>
+    <a class="src-link" href="https://www.reddit.com/r/sidehustle/comments/1xngrx0/looking_for_a_side_hustle_that_gives_stable/" target="_blank" rel="noopener">🔗 <span class="zh">查看原项目</span><span class="en">View source</span> ↗</a>
+  </article><article class="card">
+    <div class="card-head">
+      <a class="name" href="https://www.reddit.com/r/SaaS/comments/1xnmhli/claude_codex_is_making_a_lot_of_us_broke/" target="_blank" rel="noopener"><span class="zh">Claude / Codex is making a lot of us broke.</span><span class="en">Claude / Codex is making a lot of us broke.</span></a><span class="badge sig"><span class="zh">热度 63</span><span class="en">signal 63</span></span>
+    </div>
+    <div class="src">reddit/SaaS</div>
+    <p class="desc"><span class="zh">Building with AI can get addictive. I give Claude an instruction, watch it build something, review the result and think of the next improvement. There is always something else I can work on, and every…</span><span class="en">Building with AI can get addictive. I give Claude an instruction, watch it build something, review the result and think of the next improvement. There is always something else I can work on, and every…</span></p>
+    <div class="pills"></div>
+    <a class="src-link" href="https://www.reddit.com/r/SaaS/comments/1xnmhli/claude_codex_is_making_a_lot_of_us_broke/" target="_blank" rel="noopener">🔗 <span class="zh">查看原项目</span><span class="en">View source</span> ↗</a>
+  </article><article class="card">
+    <div class="card-head">
+      <a class="name" href="https://www.reddit.com/r/SideProject/comments/1xnnj6z/guys_my_app_just_passed_2k_in_revenue/" target="_blank" rel="noopener"><span class="zh">Guys, my app just passed 2k in revenue!</span><span class="en">Guys, my app just passed 2k in revenue!</span></a><span class="badge sig"><span class="zh">热度 62</span><span class="en">signal 62</span></span>
+    </div>
+    <div class="src">reddit/SideProject</div>
+    <p class="desc"><span class="zh">It's been a little over one year since I launched and it has been quite a journey. No exponential growth or huge user spikes but rather slow and steady growth. But in my opinion that is the best for b…</span><span class="en">It's been a little over one year since I launched and it has been quite a journey. No exponential growth or huge user spikes but rather slow and steady growth. But in my opinion that is the best for b…</span></p>
+    <div class="pills"></div>
+    <a class="src-link" href="https://www.reddit.com/r/SideProject/comments/1xnnj6z/guys_my_app_just_passed_2k_in_revenue/" target="_blank" rel="noopener">🔗 <span class="zh">查看原项目</span><span class="en">View source</span> ↗</a>
+  </article><article class="card">
+    <div class="card-head">
+      <a class="name" href="https://v.redd.it/phsyuz4vrdzh1" target="_blank" rel="noopener"><span class="zh">I’m a designer who never really coded. I spent two months building an interactiv</span><span class="en">I’m a designer who never really coded. I spent two months building an interactiv</span></a><span class="badge sig"><span class="zh">热度 57</span><span class="en">signal 57</span></span>
+    </div>
+    <div class="src">reddit/SideProject</div>
+    <p class="desc"><span class="zh">I live in a forest, so I rarely see the stars. I wanted one place that explains space without overwhelming people, but still has depth if you dig. SOLARIA runs in the browser: [https://solaria3d.com](…</span><span class="en">I live in a forest, so I rarely see the stars. I wanted one place that explains space without overwhelming people, but still has depth if you dig. SOLARIA runs in the browser: [https://solaria3d.com](…</span></p>
+    <div class="pills"></div>
+    <a class="src-link" href="https://v.redd.it/phsyuz4vrdzh1" target="_blank" rel="noopener">🔗 <span class="zh">查看原项目</span><span class="en">View source</span> ↗</a>
+  </article><article class="card">
+    <div class="card-head">
+      <a class="name" href="https://www.reddit.com/r/SideProject/comments/1xnx1fi/quitting_my_job_to_start_a_lego_store_in_the/" target="_blank" rel="noopener"><span class="zh">Quitting my job to start a Lego store in The Netherlands and help autistic peopl</span><span class="en">Quitting my job to start a Lego store in The Netherlands and help autistic peopl</span></a><span class="badge sig"><span class="zh">热度 52</span><span class="en">signal 52</span></span>
+    </div>
+    <div class="src">reddit/SideProject</div>
+    <p class="desc"><span class="zh">I'm opening a Lego (&amp; K'nex) store in the Netherlands! Currently I'm running a small webshop to test all the processes. My main job right now is coaching 18-27 year olds who dropped out of school or l…</span><span class="en">I'm opening a Lego (&amp; K'nex) store in the Netherlands! Currently I'm running a small webshop to test all the processes. My main job right now is coaching 18-27 year olds who dropped out of school or l…</span></p>
+    <div class="pills"></div>
+    <a class="src-link" href="https://www.reddit.com/r/SideProject/comments/1xnx1fi/quitting_my_job_to_start_a_lego_store_in_the/" target="_blank" rel="noopener">🔗 <span class="zh">查看原项目</span><span class="en">View source</span> ↗</a>
+  </article><article class="card">
+    <div class="card-head">
+      <a class="name" href="https://www.reddit.com/r/digitalnomad/comments/1x2shvq/places_you_dont_want_to_visit_even_though_many/" target="_blank" rel="noopener"><span class="zh">Places you don't want to visit even though many love them?</span><span class="en">Places you don't want to visit even though many love them?</span></a><span class="badge sig"><span class="zh">热度 52</span><span class="en">signal 52</span></span>
+    </div>
+    <div class="src">reddit/digitalnomad</div>
+    <p class="desc"><span class="zh">Not talking about the DN hotspots like Bali, or Da Nang, or Medellin. I'm talking about places more &quot;adventurous&quot; but still having *that* *one* issue that dissuades you from visiting.</span><span class="en">Not talking about the DN hotspots like Bali, or Da Nang, or Medellin. I'm talking about places more &quot;adventurous&quot; but still having *that* *one* issue that dissuades you from visiting.</span></p>
+    <div class="pills"></div>
+    <a class="src-link" href="https://www.reddit.com/r/digitalnomad/comments/1x2shvq/places_you_dont_want_to_visit_even_though_many/" target="_blank" rel="noopener">🔗 <span class="zh">查看原项目</span><span class="en">View source</span> ↗</a>
+  </article><article class="card">
+    <div class="card-head">
+      <a class="name" href="https://v.redd.it/8xyn9qt88fzh1" target="_blank" rel="noopener"><span class="zh">I built a cool product, but no one cares</span><span class="en">I built a cool product, but no one cares</span></a><span class="badge sig"><span class="zh">热度 38</span><span class="en">signal 38</span></span>
+    </div>
+    <div class="src">reddit/SaaS</div>
+    <p class="desc"><span class="zh">I genuinely believe it provides a real solution, I don't want to charge money and hope to run solely on donations but I want people to discover this. What should I do? [https://polyglotsubs.com/](http…</span><span class="en">I genuinely believe it provides a real solution, I don't want to charge money and hope to run solely on donations but I want people to discover this. What should I do? [https://polyglotsubs.com/](http…</span></p>
+    <div class="pills"></div>
+    <a class="src-link" href="https://v.redd.it/8xyn9qt88fzh1" target="_blank" rel="noopener">🔗 <span class="zh">查看原项目</span><span class="en">View source</span> ↗</a>
+  </article><article class="card">
+    <div class="card-head">
+      <a class="name" href="https://www.reddit.com/r/SaaS/comments/1xno0yq/anyone_worried_about_fake_versions_of_their_saas/" target="_blank" rel="noopener"><span class="zh">Anyone worried about fake versions of their SaaS popping up?</span><span class="en">Anyone worried about fake versions of their SaaS popping up?</span></a><span class="badge sig"><span class="zh">热度 30</span><span class="en">signal 30</span></span>
+    </div>
+    <div class="src">reddit/SaaS</div>
+    <p class="desc"><span class="zh">I'm seeing a lot of discussions about fake login pages and lookalike domains and it got me thinking, most of us spend so much time securing the actual product but what happens when someone just copies…</span><span class="en">I'm seeing a lot of discussions about fake login pages and lookalike domains and it got me thinking, most of us spend so much time securing the actual product but what happens when someone just copies…</span></p>
+    <div class="pills"></div>
+    <a class="src-link" href="https://www.reddit.com/r/SaaS/comments/1xno0yq/anyone_worried_about_fake_versions_of_their_saas/" target="_blank" rel="noopener">🔗 <span class="zh">查看原项目</span><span class="en">View source</span> ↗</a>
+  </article></div>
+
+<div class="disclaimer">
+  <span class="zh">机器初筛 + LLM 初评。⭐⭐⭐ 仅代表"值得人工 review",不是"立刻 pivot"。pivot 前必须和手头项目比较,差 +5 分才动(见 METHODOLOGY.md 反陷阱 5)。</span>
+  <span class="en">Machine pre-filter + LLM first-pass scoring. ⭐⭐⭐ means "worth a human review", not "pivot now". Only switch if it beats your current project by +5 points (see METHODOLOGY.md, anti-trap 5).</span>
+</div>
+
+<footer>smart-programs · 7-dimension rubric (v5 SOP) · 2026-11-05</footer>
+</div>
+<script>
+function setLang(l){
+  document.body.className = 'lang-' + l;
+  document.getElementById('b-zh').classList.toggle('on', l==='zh');
+  document.getElementById('b-en').classList.toggle('on', l==='en');
+  try{ localStorage.setItem('sp-lang', l); }catch(e){}
+}
+try{ const s = localStorage.getItem('sp-lang'); if(s) setLang(s); }catch(e){}
+</script>
+</body>
+</html>
