@@ -35,17 +35,78 @@ function fixture() {
   git("commit", "-m", "initial");
   git("remote", "add", "origin", remote);
   git("push", "-u", "origin", "main");
-  const run = (command: string) => Bun.spawnSync(["/bin/bash", "-c", 'source "$1"; ' + command, "_", script], {
+  const run = (command: string, extraEnv: Record<string, string> = {}) => Bun.spawnSync(["/bin/bash", "-c", 'source "$1"; ' + command, "_", script], {
     cwd: repo,
     env: { ...process.env, SMART_PROGRAMS_LIBRARY_ONLY: "1", SMART_PROGRAMS_DIR: repo,
       LOGDIR: logs, SMART_PROGRAMS_GIT_BIN: gitBin, FEISHU_TARGET: "", FEISHU_WEBHOOK: "",
-      TASK_BRIDGE: "/nonexistent", HERMES: "/nonexistent", STEP_TIMEOUT_SECONDS: "10" },
+      TASK_BRIDGE: "/nonexistent", HERMES: "/nonexistent", STEP_TIMEOUT_SECONDS: "10", ...extraEnv },
   });
   return { repo, remote, logs, git, run };
 }
 
 test("main tracking origin/main is accepted", () => {
   expect(fixture().run("require_runtime_branch").exitCode).toBe(0);
+});
+
+function transport(f: ReturnType<typeof fixture>, mode: string) {
+  const wrapper = join(f.logs, "git-wrapper");
+  const count = join(f.logs, "fetch-count");
+  writeFileSync(wrapper, `#!/bin/bash
+case " $* " in
+  *" fetch "*)
+    n=0; [ ! -f "$FETCH_COUNT" ] || read -r n < "$FETCH_COUNT"
+    n=$((n + 1)); printf '%s\\n' "$n" > "$FETCH_COUNT"
+    if [ "$FETCH_MODE" = auth ]; then echo 'fatal: Authentication failed' >&2; exit 128; fi
+    if [ "$FETCH_MODE" = timeout ]; then exit 124; fi
+    if [ "$FETCH_MODE" = persistent ] || { [ "$FETCH_MODE" = transient ] && [ "$n" -le 2 ]; }; then
+      echo 'TLS connect error: unexpected eof while reading' >&2; exit 128
+    fi
+    ;;
+esac
+exec "$FIXTURE_GIT" "$@"
+`, { mode: 0o700 });
+  const env = { SMART_PROGRAMS_GIT_BIN: wrapper, FETCH_COUNT: count, FETCH_MODE: mode, FIXTURE_GIT: gitBin };
+  return { run: () => f.run('sleep() { :; }; sync_runtime_repository', env),
+    attempts: () => Number(readFileSync(count, "utf8").trim()) };
+}
+
+test("repository sync recovers from two TLS failures without changing dirty files", () => {
+  const f = fixture();
+  writeFileSync(join(f.repo, "README.md"), "user work\n");
+  const head = f.git("rev-parse", "HEAD");
+  const t = transport(f, "transient");
+  expect(t.run().exitCode).toBe(0);
+  expect(t.attempts()).toBe(3);
+  expect(f.git("rev-parse", "HEAD")).toBe(head);
+  expect(readFileSync(join(f.repo, "README.md"), "utf8")).toBe("user work\n");
+});
+
+test.each(["persistent", "timeout"])("repository sync bounds %s failures to three reads", (mode) => {
+  const f = fixture(); const t = transport(f, mode);
+  const head = f.git("rev-parse", "HEAD");
+  expect(t.run().exitCode).not.toBe(0);
+  expect(t.attempts()).toBe(3);
+  expect(f.git("rev-parse", "HEAD")).toBe(head);
+});
+
+test("repository sync does not retry authentication errors", () => {
+  const f = fixture(); const t = transport(f, "auth");
+  expect(t.run().exitCode).toBe(128);
+  expect(t.attempts()).toBe(1);
+});
+
+test("repository sync refuses divergence after one fetch without rebase or reset", () => {
+  const f = fixture(); const initial = f.git("rev-parse", "HEAD");
+  writeFileSync(join(f.repo, "daily", "remote.md"), "remote\n");
+  f.git("add", "daily/remote.md"); f.git("commit", "-m", "remote"); f.git("push");
+  // Move only this disposable fixture back to create independent history.
+  f.git("checkout", "-B", "main", initial);
+  writeFileSync(join(f.repo, "daily", "local.md"), "local\n");
+  f.git("add", "daily/local.md"); f.git("commit", "-m", "local");
+  const head = f.git("rev-parse", "HEAD"); const t = transport(f, "ok");
+  expect(t.run().exitCode).not.toBe(0);
+  expect(t.attempts()).toBe(1);
+  expect(f.git("rev-parse", "HEAD")).toBe(head);
 });
 
 test("task branch without upstream is refused without moving HEAD", () => {
