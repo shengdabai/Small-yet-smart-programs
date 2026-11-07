@@ -369,6 +369,34 @@ require_runtime_branch() {
   fi
 }
 
+sync_runtime_repository() {
+  require_runtime_branch || return 1
+  local attempt rc output
+  output="$(mktemp "$LOGDIR/.repository-sync.XXXXXX")" || return 1
+  for attempt in 1 2 3; do
+    # Retry only the network read. Keep proxy routing and TLS verification.
+    if GIT_TERMINAL_PROMPT=0 timeout "$STEP_TIMEOUT_SECONDS" "$GIT_BIN" \
+        -c http.version=HTTP/1.1 fetch --no-tags origin main >"$output" 2>&1; then
+      cat "$output" >>"$LOG"
+      rm -f "$output"
+      # Divergence and local-file conflicts are local errors, never network retries.
+      "$GIT_BIN" merge --ff-only origin/main >>"$LOG" 2>&1
+      return $?
+    else
+      rc=$?
+    fi
+    cat "$output" >>"$LOG"
+    log "repository fetch failed (attempt=${attempt}/3 rc=${rc})"
+    if [ "$attempt" -eq 3 ] || { [ "$rc" -ne 124 ] &&
+        ! grep -Eiq 'TLS|SSL|timed out|timeout|Could not resolve|Failed to connect|Connection (reset|refused)|unexpected (EOF|disconnect)|HTTP[^0-9]*(429|500|502|503|504)|error: (429|500|502|503|504)' "$output"; }; then
+      rm -f "$output"
+      return "$rc"
+    fi
+    log "transient repository transport failure; retrying after $((attempt * 2))s"
+    sleep "$((attempt * 2))"
+  done
+}
+
 publish_briefing() {
   # Check again after scoring: never publish an accidentally selected task branch.
   require_runtime_branch || fail "运行目录必须使用 main 并跟踪 origin/main；请保留改动后恢复运行分支"
@@ -487,7 +515,7 @@ PHASE="dependencies"
 
 PHASE="repository-sync"
 require_runtime_branch || fail "运行目录必须使用 main 并跟踪 origin/main；请保留改动后恢复运行分支"
-timeout "$STEP_TIMEOUT_SECONDS" "$GIT_BIN" pull --ff-only >>"$LOG" 2>&1 || fail "git pull --ff-only 失败或超时"
+sync_runtime_repository || fail "仓库同步失败：网络读取最多重试 3 次；具体错误见日志"
 
 # 1) 采集增量公开信号
 PHASE="source-scan"
